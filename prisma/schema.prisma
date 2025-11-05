@@ -3,26 +3,22 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../../generated/prisma"
+  output   = "../src/lib/prisma"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 model Product {
-  id            String     @id @default(cuid())
-  name          String
-  markup        Int
-  staffMarkup   Int
-  sold          Int
-  staffSold     Int
-  takenOut      Int
-  allSupplies   Int
-  suppliesPrice Int
-  SaleEvent     SaleEvent? @relation(fields: [saleEventId], references: [id])
-  saleEventId   String?
+  id          String      @id @default(cuid())
+  name        String
+  markup      Int
+  staffMarkup Int
+  allSupplies Int
+  supplyPrice Int
+  SaleEvents  SaleEvent[]
 }
 
 model SaleEvent {

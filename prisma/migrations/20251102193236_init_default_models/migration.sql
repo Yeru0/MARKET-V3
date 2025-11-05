@@ -8,7 +8,7 @@ CREATE TABLE "Product" (
     "staffSold" INTEGER NOT NULL,
     "takenOut" INTEGER NOT NULL,
     "allSupplies" INTEGER NOT NULL,
-    "suppliesPrice" INTEGER NOT NULL,
+    "supplyPrice" INTEGER NOT NULL,
     "saleEventId" TEXT,
     CONSTRAINT "Product_saleEventId_fkey" FOREIGN KEY ("saleEventId") REFERENCES "SaleEvent" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
