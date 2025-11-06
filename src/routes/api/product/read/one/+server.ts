@@ -4,7 +4,7 @@ import type { RequestEvent } from "@sveltejs/kit";
 import type { RequestReadJSONBody } from "$lib/types/api/product";
 import { validateReadRequestJSON } from "$lib/server/api/product";
 
-export const GET = async ({ request }: RequestEvent): Promise<Response> => {
+export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 	const json: RequestReadJSONBody = (await request.json()) as RequestReadJSONBody;
 
 	let response: Response = new Response(
@@ -33,6 +33,9 @@ export const GET = async ({ request }: RequestEvent): Promise<Response> => {
 		.findFirst({
 			where: {
 				id: json.id
+			},
+			include: {
+				SaleEvents: true
 			}
 		})
 		.then((result: Product | null) => {

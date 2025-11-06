@@ -37,6 +37,9 @@ export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 				staffMarkup: json.staffMarkup,
 				allSupplies: json.allSupplies,
 				supplyPrice: json.supplyPrice
+			},
+			include: {
+				SaleEvents: true
 			}
 		})
 		.then((result: Product) => {

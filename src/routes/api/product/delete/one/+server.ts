@@ -8,10 +8,10 @@ export const DELETE = async ({ request }: RequestEvent): Promise<Response> => {
 	const json: RequestReadJSONBody = (await request.json()) as RequestReadJSONBody;
 
 	let response: Response = new Response(
-		JSON.stringify("Database deleted single product action could not be performed!"),
+		JSON.stringify("Database delete single product action could not be performed!"),
 		{
 			status: 500,
-			statusText: "Database deleted single product action could not be performed!"
+			statusText: "Database delete single product action could not be performed!"
 		}
 	);
 

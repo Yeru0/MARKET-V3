@@ -1,41 +1,53 @@
-import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
 import type { RequestCreateJSONBody } from "$lib/types/api/sale";
 import { validateCreateRequestJSON } from "$lib/server/api/sale";
+import type { SaleEvent } from "$lib/prisma/client";
 
 export const POST = async ({ request }: RequestEvent): Promise<Response> => {
     const json: RequestCreateJSONBody = (await request.json()) as RequestCreateJSONBody;
 
-    let response: Response = new Response(JSON.stringify("Database create product action could not be performed!"), {
+    let response: Response = new Response(JSON.stringify("Database register sale action could not be performed!"), {
         status: 500,
-        statusText: "Database create product action could not be performed!"
+        statusText: "Database register sale action could not be performed!"
     });
 
     if (!validateCreateRequestJSON(json)) {
         response = new Response(
             JSON.stringify(
-                "Database create product action could not be performed, because body JSON is not formatted correctly."
+                "Database register sale action could not be performed, because body JSON is not formatted correctly."
             ),
             {
                 status: 500,
                 statusText:
-                    "Database create product action could not be performed, because body JSON is not formatted correctly."
+                    "Database register sale action could not be performed, because body JSON is not formatted correctly."
             }
         );
         return response;
     }
 
+    // Reformatting the input array from string[] to {id: string}[] for simplicity of input
+    let connectableIDs: {id: string}[] = []
+
+     for (let id of json.productIDs) {
+        connectableIDs.push({id})
+     }     
+
     await db.saleEvent
         .create({
             data: {
-                products: json.products
+                products: {
+                    connect: connectableIDs
+                }
+            },
+            include: {
+                products: true
             }
         })
-        .then((result: Product) => {
+        .then((result: SaleEvent) => {
             response = new Response(JSON.stringify(result), {
                 status: 201,
-                statusText: "Product created successfully!"
+                statusText: "Sale registered successfully!"
             });
         })
         .catch((err: Error) => {
