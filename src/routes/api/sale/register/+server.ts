@@ -1,8 +1,8 @@
 import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
-import type { RequestCreateJSONBody } from "$lib/types/api/product";
-import { validateCreateRequestJSON } from "$lib/server/api/product";
+import type { RequestCreateJSONBody } from "$lib/types/api/sale";
+import { validateCreateRequestJSON } from "$lib/server/api/sale";
 
 export const POST = async ({ request }: RequestEvent): Promise<Response> => {
     const json: RequestCreateJSONBody = (await request.json()) as RequestCreateJSONBody;
@@ -26,14 +26,10 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
         return response;
     }
 
-    await db.product
+    await db.saleEvent
         .create({
             data: {
-                name: json.name,
-                markup: json.markup,
-                staffMarkup: json.staffMarkup,
-                allSupplies: json.allSupplies,
-                supplyPrice: json.supplyPrice
+                products: json.products
             }
         })
         .then((result: Product) => {
