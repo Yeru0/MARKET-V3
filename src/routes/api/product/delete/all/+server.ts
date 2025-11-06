@@ -1,7 +1,7 @@
 import type { BatchPayload } from "$lib/prisma/internal/prismaNamespace";
 import { db } from "$lib/server/db";
 
-export const POST = async (): Promise<Response> => {
+export const DELETE = async (): Promise<Response> => {
 	let response: Response = new Response(JSON.stringify("Database read product action could not be performed!"), {
 		status: 500,
 		statusText: "Database delete all products action could not be performed!"

@@ -1,16 +1,20 @@
 import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
-import type { RequestUpdateJSONBody } from "$lib/types/api";
-import { validateUpdateRequestJSON } from "$lib/server/api";
+import type { RequestUpdateJSONBody } from "$lib/types/api/product";
+import { validateUpdateRequestJSON } from "$lib/server/api/product";
 
-export const POST = async ({ request }: RequestEvent): Promise<Response> => {
-	const json: RequestUpdateJSONBody = (await request.json()) as RequestUpdateJSONBody;
+export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
+	let json: RequestUpdateJSONBody
 
 	let response: Response = new Response(JSON.stringify("Database update product action could not be performed!"), {
 		status: 500,
 		statusText: "Database update product action could not be performed!"
 	});
+	
+	try {
+
+	json = (await request.json()) as RequestUpdateJSONBody;
 
 	if (!validateUpdateRequestJSON(json)) {
 		response = new Response(
@@ -37,6 +41,9 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				staffMarkup: json.staffMarkup,
 				allSupplies: json.allSupplies,
 				supplyPrice: json.supplyPrice
+			},
+			include: {
+				SaleEvents: true
 			}
 		})
 		.then((result: Product) => {
@@ -52,6 +59,10 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				statusText: err.message
 			});
 		});
+
+	} catch (error) {
+		console.error(error)
+	}
 
 	return response;
 };

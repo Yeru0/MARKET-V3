@@ -1,12 +1,11 @@
 import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
-import type { RequestReadJSONBody } from "$lib/types/api";
-import { validateReadRequestJSON } from "$lib/server/api";
+import type { RequestReadJSONBody } from "$lib/types/api/product";
+import { validateReadRequestJSON } from "$lib/server/api/product";
 
 export const POST = async ({ request }: RequestEvent): Promise<Response> => {
-	const json: RequestReadJSONBody = (await request.json()) as RequestReadJSONBody;
-
+	let json: RequestReadJSONBody
 	let response: Response = new Response(
 		JSON.stringify("Database read single product action could not be performed!"),
 		{
@@ -14,6 +13,10 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 			statusText: "Database read single product action could not be performed!"
 		}
 	);
+	
+	try {
+	json = (await request.json()) as RequestReadJSONBody;
+
 
 	if (!validateReadRequestJSON(json)) {
 		response = new Response(
@@ -33,6 +36,9 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 		.findFirst({
 			where: {
 				id: json.id
+			},
+			include: {
+				SaleEvents: true
 			}
 		})
 		.then((result: Product | null) => {
@@ -54,6 +60,9 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				statusText: err.message
 			});
 		});
+	}catch (error) {
+		console.error(error)
+	}
 
 	return response;
 };

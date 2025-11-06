@@ -1,19 +1,21 @@
 import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
-import type { RequestReadJSONBody } from "$lib/types/api";
-import { validateReadRequestJSON } from "$lib/server/api";
+import type { RequestReadJSONBody } from "$lib/types/api/product";
+import { validateReadRequestJSON } from "$lib/server/api/product";
 
-export const POST = async ({ request }: RequestEvent): Promise<Response> => {
-	const json: RequestReadJSONBody = (await request.json()) as RequestReadJSONBody;
-
+export const DELETE = async ({ request }: RequestEvent): Promise<Response> => {
+	let json: RequestReadJSONBody
 	let response: Response = new Response(
-		JSON.stringify("Database deleted single product action could not be performed!"),
+		JSON.stringify("Database delete single product action could not be performed!"),
 		{
 			status: 500,
-			statusText: "Database deleted single product action could not be performed!"
+			statusText: "Database delete single product action could not be performed!"
 		}
 	);
+	try {
+	json = (await request.json()) as RequestReadJSONBody;
+
 
 	if (!validateReadRequestJSON(json)) {
 		response = new Response(
@@ -54,6 +56,8 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				statusText: err.message
 			});
 		});
-
+	} catch (error) {
+		console.error(error)
+	}
 	return response;
 };

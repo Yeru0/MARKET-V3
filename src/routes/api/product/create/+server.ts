@@ -1,16 +1,19 @@
 import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
-import type { RequestCreateJSONBody } from "$lib/types/api";
-import { validateCreateRequestJSON } from "$lib/server/api";
+import type { RequestCreateJSONBody } from "$lib/types/api/product";
+import { validateCreateRequestJSON } from "$lib/server/api/product";
+import { error } from "console";
 
 export const POST = async ({ request }: RequestEvent): Promise<Response> => {
-	const json: RequestCreateJSONBody = (await request.json()) as RequestCreateJSONBody;
-
+	let json: RequestCreateJSONBody
 	let response: Response = new Response(JSON.stringify("Database create product action could not be performed!"), {
 		status: 500,
 		statusText: "Database create product action could not be performed!"
 	});
+	try {
+	json = (await request.json()) as RequestCreateJSONBody;
+
 
 	if (!validateCreateRequestJSON(json)) {
 		response = new Response(
@@ -34,6 +37,9 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				staffMarkup: json.staffMarkup,
 				allSupplies: json.allSupplies,
 				supplyPrice: json.supplyPrice
+			},
+			include: {
+				SaleEvents: true
 			}
 		})
 		.then((result: Product) => {
@@ -49,6 +55,8 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				statusText: err.message
 			});
 		});
-
+	} catch (error) {
+		console.error(error)
+	}
 	return response;
 };
