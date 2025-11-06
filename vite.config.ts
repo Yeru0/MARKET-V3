@@ -1,7 +1,7 @@
-import devtoolsJson from 'vite-plugin-devtools-json';
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vitest/config';
-import { sveltekit } from '@sveltejs/kit/vite';
+import devtoolsJson from "vite-plugin-devtools-json";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vitest/config";
+import { sveltekit } from "@sveltejs/kit/vite";
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
@@ -9,12 +9,12 @@ export default defineConfig({
 		expect: { requireAssertions: true },
 		projects: [
 			{
-				extends: './vite.config.ts',
+				extends: "./vite.config.ts",
 				test: {
-					name: 'server',
-					environment: 'node',
-					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
+					name: "server",
+					environment: "node",
+					include: ["src/**/*.{test,spec}.{js,ts}"],
+					exclude: ["src/**/*.svelte.{test,spec}.{js,ts}"]
 				}
 			}
 		]
