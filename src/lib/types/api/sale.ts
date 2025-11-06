@@ -1,9 +1,9 @@
 import type { Product } from "$lib/prisma/browser";
 
 export interface RequestCreateJSONBody {
-    productIDs: string[]
+	productIDs: string[];
 }
 
 export interface RequestReadJSONBody {
-    id: string
+	id: string;
 }

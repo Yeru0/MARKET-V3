@@ -18,7 +18,6 @@ export const POST = async (): Promise<Response> => {
 				status: 200,
 				statusText: "All products read successfully!"
 			});
-			
 		})
 		.catch((err: Error) => {
 			console.error(err);
