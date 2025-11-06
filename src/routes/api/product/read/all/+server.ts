@@ -2,7 +2,7 @@ import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
 
-export const POST = async (): Promise<Response> => {
+export const GET = async (): Promise<Response> => {
 	let response: Response = new Response(JSON.stringify("Database read product action could not be performed!"), {
 		status: 500,
 		statusText: "Database read all products action could not be performed!"

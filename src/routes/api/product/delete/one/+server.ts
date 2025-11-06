@@ -4,7 +4,7 @@ import type { RequestEvent } from "@sveltejs/kit";
 import type { RequestReadJSONBody } from "$lib/types/api";
 import { validateReadRequestJSON } from "$lib/server/api";
 
-export const POST = async ({ request }: RequestEvent): Promise<Response> => {
+export const DELETE = async ({ request }: RequestEvent): Promise<Response> => {
 	const json: RequestReadJSONBody = (await request.json()) as RequestReadJSONBody;
 
 	let response: Response = new Response(

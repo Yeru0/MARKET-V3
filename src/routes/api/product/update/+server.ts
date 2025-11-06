@@ -4,7 +4,7 @@ import type { RequestEvent } from "@sveltejs/kit";
 import type { RequestUpdateJSONBody } from "$lib/types/api";
 import { validateUpdateRequestJSON } from "$lib/server/api";
 
-export const POST = async ({ request }: RequestEvent): Promise<Response> => {
+export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 	const json: RequestUpdateJSONBody = (await request.json()) as RequestUpdateJSONBody;
 
 	let response: Response = new Response(JSON.stringify("Database update product action could not be performed!"), {
