@@ -5,12 +5,14 @@ import { validateCreateRequestJSON } from "$lib/server/api/sale";
 import type { SaleEvent } from "$lib/prisma/client";
 
 export const POST = async ({ request }: RequestEvent): Promise<Response> => {
-    const json: RequestCreateJSONBody = (await request.json()) as RequestCreateJSONBody;
-
+    let json: RequestCreateJSONBody
     let response: Response = new Response(JSON.stringify("Database register sale action could not be performed!"), {
         status: 500,
         statusText: "Database register sale action could not be performed!"
     });
+    
+    try {
+    json = (await request.json()) as RequestCreateJSONBody;
 
     if (!validateCreateRequestJSON(json)) {
         response = new Response(
@@ -57,6 +59,9 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
                 statusText: err.message
             });
         });
+    } catch (error) {
+        console.error(error)
+    }
 
     return response;
 };
