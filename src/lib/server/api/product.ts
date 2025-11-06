@@ -1,4 +1,4 @@
-import type { RequestCreateJSONBody, RequestReadJSONBody, RequestUpdateJSONBody } from "$lib/types/api";
+import type { RequestCreateJSONBody, RequestReadJSONBody, RequestUpdateJSONBody } from "$lib/types/api/product";
 
 export const validateCreateRequestJSON = (json: RequestCreateJSONBody) => {
 	if (!json.name || typeof json.name !== "string" || json.name === "") {

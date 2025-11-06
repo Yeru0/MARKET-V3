@@ -1,8 +1,8 @@
 import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
-import type { RequestUpdateJSONBody } from "$lib/types/api";
-import { validateUpdateRequestJSON } from "$lib/server/api";
+import type { RequestUpdateJSONBody } from "$lib/types/api/product";
+import { validateUpdateRequestJSON } from "$lib/server/api/product";
 
 export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 	const json: RequestUpdateJSONBody = (await request.json()) as RequestUpdateJSONBody;
