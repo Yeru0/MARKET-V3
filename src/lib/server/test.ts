@@ -28,8 +28,6 @@ export const createDummyProducts = async (
 		products.push(product);
 	}
 
-	console.log(products.length);
-
 	return products;
 };
 
