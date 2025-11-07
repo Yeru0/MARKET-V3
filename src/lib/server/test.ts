@@ -28,7 +28,13 @@ export const createDummyProducts = async (
 		products.push(product);
 	}
 
+	console.log(products.length);
+
 	return products;
+};
+
+export const readProductDB = async () => {
+	return await db.product.findMany();
 };
 
 export const eraseProductDB = async () => {
@@ -51,6 +57,10 @@ export const createDummySales = async (ids: { id: string }[], amount: number): P
 		sales.push(sale);
 	}
 	return sales;
+};
+
+export const readSaleDB = async () => {
+	return await db.saleEvent.findMany();
 };
 
 export const eraseSaleDB = async () => {

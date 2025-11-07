@@ -19,7 +19,7 @@ describe("API update product", async () => {
 			allSupplies: product.allSupplies,
 			supplyPrice: product.supplyPrice
 		});
-		product = await response.json();
+		product = (await response.json()) as Product;
 		expect(product.name).toEqual("test1");
 
 		response = await api("http://localhost:5173/api/product/update", "PUT", {
@@ -31,9 +31,9 @@ describe("API update product", async () => {
 			supplyPrice: product.supplyPrice
 		});
 
-		nuke(); //Nuke has to run when there's no more db manipulation
+		await nuke(); //Nuke has to run when there's no more db manipulation
 
-		product = await response.json();
+		product = (await response.json()) as Product;
 		expect(product.name).toEqual("test");
 	});
 });
