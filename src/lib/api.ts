@@ -3,7 +3,7 @@ export const api = async (
 	method: "POST" | "GET" | "PUT" | "DELETE" = "GET",
 	data: { [key: string]: string | number } = {}
 ): Promise<Response> => {
-	return await fetch(endpoint, {
+	return await fetch(`http://localhost:5173/api/${endpoint}`, {
 		method,
 		body: JSON.stringify(data)
 	});
