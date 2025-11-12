@@ -6,11 +6,11 @@ describe("Testing front end db interactions", () => {
 
 	beforeAll(async () => {
 		products = new ProductDB();
-		await products.erase();
+		await products.delete();
 	});
 
 	it("creates a new product", async () => {
-		let product = await products.new({
+		let product = await products.create({
 			name: "Test",
 			markup: 85,
 			staffMarkup: 25,
@@ -18,6 +18,6 @@ describe("Testing front end db interactions", () => {
 			supplyPrice: 500
 		});
 
-		expect(products).toContain(product);
+		expect(products.read()).toContain(product);
 	});
 });
