@@ -10,7 +10,7 @@ import {
 } from "$lib/server/api/test";
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 
-describe.sequential("Sale API CRUD operations", async () => {
+describe.sequential("API CRUD operations", async () => {
 	await nuke();
 	let amt: number;
 	let products: Product[];
