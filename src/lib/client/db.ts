@@ -1,5 +1,5 @@
 import { api } from "$lib/api";
-import type { Product } from "$lib/prisma/client";
+import type { Product, SaleEvent } from "$lib/prisma/client";
 
 export class ProductDB {
 	products: Product[] = [];
@@ -15,40 +15,94 @@ export class ProductDB {
 			});
 	}
 
-	async delete(): Promise<{ count: number }> {
-		let response = api("product/delete/all", "POST", {});
-
-		this.products = await this.read();
-
-		// Wait for response, then wait for json conversion, then return
-		return (await (await response).json()) as { count: number };
-	}
-
-	async create(obj: {
-		name: "Test";
-		markup: 85;
-		staffMarkup: 25;
-		allSupplies: 24;
-		supplyPrice: 500;
-	}): Promise<Product> {
-		let response = api("product/create", "POST", obj);
-
-		this.products = await this.read();
-
-		return (await (await response).json()) as Product;
-	}
-
-	async read(id: string = "all"): Promise<Product[]> {
-		let response: Promise<Response>;
+	async delete(id: string = "all"): Promise<{ count: number }> {
+		let response: Response;
 
 		switch (id) {
 			case "all":
-				response = api("product/read/all", "POST", {});
-				break;
+				response = await api("product/delete/all", "DELETE", {});
+				this.products = await this.read();
+				return (await response.json()) as { count: number };
 			default:
-				response = api("product/read/one", "POST", { id });
+				response = await api("product/delete/all", "DELETE", { id });
+				this.products = await this.read();
+				return (await response.json()) as { count: number };
 		}
+	}
 
-		return (await (await response).json()) as Product[];
+	async create(obj: {
+		name: string;
+		markup: number;
+		staffMarkup: number;
+		allSupplies: number;
+		supplyPrice: number;
+	}): Promise<Product> {
+		let response = await api("product/create", "POST", obj);
+
+		this.products = await this.read();
+
+		return (await response.json()) as Product;
+	}
+
+	async read(id: string = "all"): Promise<Product[]> {
+		let response: Response;
+
+		switch (id) {
+			case "all":
+				response = await api("product/read/all", "POST", {});
+				return (await response.json()) as Product[];
+			default:
+				response = await api("product/read/one", "POST", { id });
+				return [await response.json()] as Product[];
+		}
+	}
+
+	async update(
+		id: string,
+		obj: {
+			name: string;
+			markup: number;
+			staffMarkup: number;
+			allSupplies: number;
+			supplyPrice: number;
+		}
+	): Promise<Product> {
+		let response = await api("product/update", "PUT", { id, ...obj });
+		return (await response.json()) as Product;
+	}
+}
+export class SaleDB {
+	sales: SaleEvent[] = [];
+
+	constructor() {
+		api("sale/read/all", "POST", {})
+			.then(async (result) => {
+				this.sales = (await result.json()) as SaleEvent[];
+			})
+			.catch((err) => {
+				console.error(err);
+				throw new Error("UNHANDLED ERROR: Sales db could not be read"); // TODO Handle this error
+			});
+	}
+
+	async register(IDs: { productIDs: string[] }): Promise<SaleEvent> {
+		let response = await api("sale/register", "POST", IDs);
+
+		this.sales = await this.read();
+
+		return (await response.json()) as SaleEvent;
+	}
+
+	async read(id: string = "all"): Promise<SaleEvent[]> {
+		let response: Response;
+
+		switch (id) {
+			case "all":
+				response = await api("sale/read/all", "POST", {});
+				return (await response.json()) as SaleEvent[];
+			default:
+				response = await api("sale/read/one", "POST", { id });
+				return [await response.json()] as SaleEvent[];
+		}
 	}
 }
