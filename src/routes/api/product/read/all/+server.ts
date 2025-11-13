@@ -1,5 +1,6 @@
 import type { Product } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
+import type { ProductWE } from "$lib/types/db/product";
 
 export const POST = async (): Promise<Response> => {
 	let response: Response = new Response(JSON.stringify("Database read all products action could not be performed!"), {
@@ -13,7 +14,7 @@ export const POST = async (): Promise<Response> => {
 				SaleEvents: true
 			}
 		})
-		.then((result: Product[]) => {
+		.then((result: ProductWE[]) => {
 			response = new Response(JSON.stringify(result), {
 				status: 200,
 				statusText: "All products read successfully!"

@@ -40,7 +40,8 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				data: {
 					products: {
 						connect: connectableIDs
-					}
+					},
+					to: json.to
 				},
 				include: {
 					products: true

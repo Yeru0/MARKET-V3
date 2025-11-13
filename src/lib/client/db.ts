@@ -1,5 +1,6 @@
 import { api } from "$lib/api";
 import type { Product, SaleEvent } from "$lib/prisma/client";
+import type { ProductWE } from "$lib/types/db/product";
 
 export class ProductDB {
 	products: Product[] = [];
@@ -36,24 +37,24 @@ export class ProductDB {
 		staffMarkup: number;
 		allSupplies: number;
 		supplyPrice: number;
-	}): Promise<Product> {
+	}): Promise<ProductWE> {
 		let response = await api("product/create", "POST", obj);
 
 		this.products = await this.read();
 
-		return (await response.json()) as Product;
+		return (await response.json()) as ProductWE;
 	}
 
-	async read(id: string = "all"): Promise<Product[]> {
+	async read(id: string = "all"): Promise<ProductWE[]> {
 		let response: Response;
 
 		switch (id) {
 			case "all":
 				response = await api("product/read/all", "POST", {});
-				return (await response.json()) as Product[];
+				return (await response.json()) as ProductWE[];
 			default:
 				response = await api("product/read/one", "POST", { id });
-				return [await response.json()] as Product[];
+				return [await response.json()] as ProductWE[];
 		}
 	}
 
@@ -66,9 +67,9 @@ export class ProductDB {
 			allSupplies: number;
 			supplyPrice: number;
 		}
-	): Promise<Product> {
+	): Promise<ProductWE> {
 		let response = await api("product/update", "PUT", { id, ...obj });
-		return (await response.json()) as Product;
+		return (await response.json()) as ProductWE;
 	}
 }
 export class SaleDB {
@@ -85,7 +86,7 @@ export class SaleDB {
 			});
 	}
 
-	async register(IDs: { productIDs: string[] }): Promise<SaleEvent> {
+	async register(IDs: { productIDs: string[], to: "n" | "s" | "t"}): Promise<SaleEvent> {
 		let response = await api("sale/register", "POST", IDs);
 
 		this.sales = await this.read();
