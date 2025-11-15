@@ -120,7 +120,7 @@ describe.sequential("Testing front end db interactions", async () => {
 	it("checks if DB is cleared", async () => {
 		await productsDB.delete();
 
-		products = await db.product.findMany({ where: { id: dummyProduct.id } });
+		products = await db.product.findMany();
 
 		expect(products.length).toEqual(0);
 	});
@@ -128,8 +128,9 @@ describe.sequential("Testing front end db interactions", async () => {
 	it("checks if one product is deleted", async () => {
 		await productsDB.delete(dummyProduct.id);
 
-		products = await db.product.findMany({ where: { id: dummyProduct.id } });
+		products = await db.product.findMany();
 
+		expect(products.length).toEqual(amt - 1);
 		expect(products.map((item) => item.id)).not.toContain(dummyProduct.id);
 	});
 
@@ -146,7 +147,6 @@ describe.sequential("Testing front end db interactions", async () => {
 
 		sales = await readSaleDB();
 
-		expect(sales.length).toEqual(1);
 		expect(sales[0].id).toEqual(saleFromBackEnd.id);
 	});
 

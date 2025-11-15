@@ -23,7 +23,7 @@ model Product {
 
 model SaleEvent {
   id        String    @id @default(cuid())
-  products  Product[]
+  Products  Product[]
   to        String
   timestamp DateTime  @default(now())
 }

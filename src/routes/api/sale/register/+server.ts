@@ -38,13 +38,13 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 		await db.saleEvent
 			.create({
 				data: {
-					products: {
+					Products: {
 						connect: connectableIDs
 					},
 					to: json.to
 				},
 				include: {
-					products: true
+					Products: true
 				}
 			})
 			.then((result: SaleEvent) => {

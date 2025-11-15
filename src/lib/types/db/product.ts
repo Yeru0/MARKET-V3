@@ -1,6 +1,6 @@
-import type { SaleEvent } from "$lib/prisma/browser";
+import type { SaleEventWP } from "./sale";
 
-export type ProductWE = { SaleEvents: { id: string; to: string; timestamp: Date }[] } & {
+export type ProductWE = { SaleEvents: SaleEventWP[] } & {
 	id: string;
 	name: string;
 	markup: number;
