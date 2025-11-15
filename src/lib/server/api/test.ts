@@ -58,7 +58,7 @@ export const createDummySales = async (ids: { id: string }[], amount: number): P
 };
 
 export const readSaleDB = async () => {
-	return await db.saleEvent.findMany({include: {products: true}});
+	return await db.saleEvent.findMany({ include: { products: true } });
 };
 
 export const eraseSaleDB = async () => {

@@ -139,7 +139,10 @@ describe.sequential("Testing front end db interactions", async () => {
 		eraseSaleDB();
 
 		await eraseSaleDB();
-		let saleFromBackEnd = await salesDB.register({ productIDs: dummyProducts.map((item) => `${item.id}`), to: "t"});
+		let saleFromBackEnd = await salesDB.register({
+			productIDs: dummyProducts.map((item) => `${item.id}`),
+			to: "t"
+		});
 
 		sales = await readSaleDB();
 
