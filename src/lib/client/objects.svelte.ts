@@ -1,4 +1,3 @@
-import type { SaleEvent } from "$lib/prisma/browser";
 import type { ProductWE } from "$lib/types/db/product";
 import type { SaleEventWP } from "$lib/types/db/sale";
 import { ProductDB, SaleDB } from "./db";
@@ -63,12 +62,18 @@ export class ProductsC {
 		return new ProductC(product);
 	}
 
-	async get(id: string = "all"): Promise<ProductC[]> {
+	async get(id: string = "all", obj: { skip: number; limit: number } = { skip: 0, limit: 0 }): Promise<ProductC[]> {
+		let products: ProductWE[];
+		let returnProducts = [];
 		switch (id) {
 			case "all":
-				let products = await this.productsDB.read();
-				let returnProducts = [];
-
+				products = await this.productsDB.read();
+				for (let p of products) {
+					returnProducts.push(new ProductC({ ...p }));
+				}
+				return returnProducts;
+			case "next":
+				products = await this.productsDB.read("next", { skip: obj.skip, limit: obj.limit });
 				for (let p of products) {
 					returnProducts.push(new ProductC({ ...p }));
 				}
@@ -121,12 +126,18 @@ export class ProductsC {
 		});
 	}
 
-	async getSales(id: string = "all"): Promise<SaleC[]> {
+	async getSales(id: string = "all", obj: { skip: number; limit: number } = { skip: 0, limit: 0 }): Promise<SaleC[]> {
 		let sales: SaleEventWP[];
 		let returnValue: SaleC[] = [];
 		switch (id) {
 			case "all":
 				sales = await this.salesDB.read();
+				for (let s of sales) {
+					returnValue.push(new SaleC({ ...s }));
+				}
+				return returnValue;
+			case "next":
+				sales = await this.salesDB.read("next", { skip: obj.skip, limit: obj.limit });
 				for (let s of sales) {
 					returnValue.push(new SaleC({ ...s }));
 				}

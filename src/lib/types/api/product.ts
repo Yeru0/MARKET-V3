@@ -18,3 +18,8 @@ export interface RequestUpdateJSONBody {
 	allSupplies: number;
 	supplyPrice: number;
 }
+
+export interface RequestReadNextJSONBody {
+	skip: number;
+	limit: number;
+}

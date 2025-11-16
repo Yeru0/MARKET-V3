@@ -90,6 +90,19 @@ describe.sequential("Testing front end db interactions", async () => {
 		expect(productsFromBackEnd.map((item) => item.id)).toEqual(products.map((item) => item.id));
 	});
 
+	it("check if the next products are read", async () => {
+		productsFromBackEnd = await productsDB.read("next", { skip: 0, limit: 25 });
+		products = await readProductDB();
+
+		expect(productsFromBackEnd.length).toEqual(25);
+		expect(productsFromBackEnd.map((item) => item.id)).toEqual(products.slice(0, 25).map((item) => item.id));
+
+		productsFromBackEnd = await productsDB.read("next", { skip: 25, limit: 25 });
+
+		expect(productsFromBackEnd.length).toEqual(25);
+		expect(productsFromBackEnd.map((item) => item.id)).toEqual(products.slice(25, 50).map((item) => item.id));
+	});
+
 	it("checks if name property of a single product updates from 'test' to 'test1' then back to 'test'", async () => {
 		product = (await db.product.findMany({ where: { id: dummyProduct.id } }))[0];
 		expect(product.name).toEqual("test");
@@ -161,8 +174,21 @@ describe.sequential("Testing front end db interactions", async () => {
 
 	it("checks if all sales are read", async () => {
 		salesFromBackEnd = await salesDB.read();
-		sales = await db.saleEvent.findMany();
+		sales = await readSaleDB();
 
 		expect(salesFromBackEnd.map((item) => item.id)).toEqual(sales.map((item) => item.id));
+	});
+
+	it("check if the next sales are read", async () => {
+		salesFromBackEnd = await salesDB.read("next", { skip: 0, limit: 25 });
+		sales = await readSaleDB();
+
+		expect(salesFromBackEnd.length).toEqual(25);
+		expect(salesFromBackEnd.map((item) => item.id)).toEqual(sales.slice(0, 25).map((item) => item.id));
+
+		salesFromBackEnd = await salesDB.read("next", { skip: 25, limit: 25 });
+
+		expect(salesFromBackEnd.length).toEqual(25);
+		expect(salesFromBackEnd.map((item) => item.id)).toEqual(sales.slice(25, 50).map((item) => item.id));
 	});
 });

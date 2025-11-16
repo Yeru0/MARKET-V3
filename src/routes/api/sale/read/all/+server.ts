@@ -12,6 +12,9 @@ export const POST = async (): Promise<Response> => {
 
 	await db.saleEvent
 		.findMany({
+			orderBy: {
+				timestamp: "desc"
+			},
 			include: {
 				Products: true
 			}

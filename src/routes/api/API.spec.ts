@@ -53,11 +53,26 @@ describe.sequential("API CRUD operations", async () => {
 		expect(sale.id).toEqual(saleFromAPI.id);
 	});
 
+	// sale/read/next
+	it("check if the next sales are read", async () => {
+		response = await api("sale/read/next", "POST", { skip: 0, limit: 25 });
+		salesFromAPI = (await response.json()) as SaleEvent[];
+
+		expect(salesFromAPI.length).toEqual(25);
+		expect(salesFromAPI.map((item) => item.id)).toEqual(sales.slice(0, 25).map((item) => item.id));
+
+		response = await api("sale/read/next", "POST", { skip: 25, limit: 25 });
+		salesFromAPI = (await response.json()) as SaleEvent[];
+
+		expect(salesFromAPI.length).toEqual(25);
+		expect(salesFromAPI.map((item) => item.id)).toEqual(sales.slice(25, 50).map((item) => item.id));
+	});
+
 	// sale/register
 	it("check if sale is registered", async () => {
 		await eraseSaleDB();
 
-		response = await api("sale/register", "POST", { productIDs: products.map((item) => `${item.id}`) });
+		response = await api("sale/register", "POST", { productIDs: products.map((item) => `${item.id}`), to: "n" });
 		saleFromAPI = (await response.json()) as SaleEvent;
 
 		let salesDB: SaleEvent[] = await readSaleDB();
@@ -96,6 +111,21 @@ describe.sequential("API CRUD operations", async () => {
 
 		productFromAPI = (await response.json()) as Product;
 		expect(product.id).toEqual(productFromAPI.id);
+	});
+
+	// product/read/next
+	it("check if the next products are read", async () => {
+		response = await api("product/read/next", "POST", { skip: 0, limit: 25 });
+		productsFromAPI = (await response.json()) as Product[];
+
+		expect(productsFromAPI.length).toEqual(25);
+		expect(productsFromAPI.map((item) => item.id)).toEqual(products.slice(0, 25).map((item) => item.id));
+
+		response = await api("product/read/next", "POST", { skip: 25, limit: 25 });
+		productsFromAPI = (await response.json()) as Product[];
+
+		expect(productsFromAPI.length).toEqual(25);
+		expect(productsFromAPI.map((item) => item.id)).toEqual(products.slice(25, 50).map((item) => item.id));
 	});
 
 	// product/update

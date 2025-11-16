@@ -1,7 +1,6 @@
-import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import { createDummyProducts, createDummySales, nuke, readProductDB, readSaleDB } from "$lib/server/api/test";
 import { ProductC, ProductsC } from "./objects.svelte";
-
 describe.sequential("Testing the product object", () => {
 	let Products = new ProductsC();
 
@@ -35,11 +34,26 @@ describe.sequential("Testing the product object", () => {
 	});
 
 	it("checks if all products can be read", async () => {
+		await createDummyProducts();
 		let productsFromDB = await readProductDB();
 		let products = await Products.get();
 
 		expect(productsFromDB.length).toEqual(products.length);
-		expect(productsFromDB).toEqual(products);
+		expect(productsFromDB.map((item) => item.id)).toEqual(products.map((item) => item.id));
+	});
+
+	it("check if the next products are read", async () => {
+		await createDummyProducts();
+		let productsFromDB = await readProductDB();
+		let products = await Products.get("next", { skip: 0, limit: 25 });
+
+		expect(products.length).toEqual(25);
+		expect(products.map((item) => item.id)).toEqual(productsFromDB.slice(0, 25).map((item) => item.id));
+
+		products = await Products.get("next", { skip: 25, limit: 25 });
+
+		expect(products.length).toEqual(25);
+		expect(products.map((item) => item.id)).toEqual(productsFromDB.slice(25, 50).map((item) => item.id));
 	});
 
 	it("checks if a product can be modified", async () => {
@@ -127,5 +141,44 @@ describe.sequential("Testing the product object", () => {
 
 		expect(salesFromDB.length).toEqual(sales.length);
 		expect(salesFromDB.map((item) => item.id)).toEqual(sales.map((item) => item.id));
+	});
+
+	it("checks if a single sale is read", async () => {
+		await createDummyProducts();
+		let productsFromDB = await readProductDB();
+		await createDummySales(
+			productsFromDB.map((item) => ({
+				id: item.id
+			})),
+			50
+		);
+		let salesFromDB = await readSaleDB();
+		let saleFromDB = salesFromDB[0];
+
+		let sale = await Products.getSales(saleFromDB.id);
+
+		expect(sale[0].id).toEqual(saleFromDB.id);
+	});
+
+	it("check if the next sales are read", async () => {
+		await createDummyProducts();
+		let productsFromDB = await readProductDB();
+		await createDummySales(
+			productsFromDB.map((item) => ({
+				id: item.id
+			})),
+			50
+		);
+		let salesFromDB = await readSaleDB();
+
+		let sales = await Products.getSales("next", { skip: 0, limit: 25 });
+
+		expect(sales.length).toEqual(25);
+		expect(sales.map((item) => item.id)).toEqual(salesFromDB.slice(0, 25).map((item) => item.id));
+
+		sales = await Products.getSales("next", { skip: 25, limit: 25 });
+
+		expect(sales.length).toEqual(25);
+		expect(sales.map((item) => item.id)).toEqual(salesFromDB.slice(25, 50).map((item) => item.id));
 	});
 });

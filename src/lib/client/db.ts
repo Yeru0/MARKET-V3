@@ -1,5 +1,5 @@
 import { api } from "$lib/api";
-import type { Product, SaleEvent } from "$lib/prisma/client";
+import type { Product } from "$lib/prisma/client";
 import type { ProductWE } from "$lib/types/db/product";
 import type { SaleEventWP } from "$lib/types/db/sale";
 
@@ -46,12 +46,15 @@ export class ProductDB {
 		return (await response.json()) as ProductWE;
 	}
 
-	async read(id: string = "all"): Promise<ProductWE[]> {
+	async read(id: string = "all", obj: { skip: number; limit: number } = { skip: 0, limit: 0 }): Promise<ProductWE[]> {
 		let response: Response;
 
 		switch (id) {
 			case "all":
 				response = await api("product/read/all", "POST", {});
+				return (await response.json()) as ProductWE[];
+			case "next":
+				response = await api("product/read/next", "POST", obj);
 				return (await response.json()) as ProductWE[];
 			default:
 				response = await api("product/read/one", "POST", { id });
@@ -95,12 +98,18 @@ export class SaleDB {
 		return (await response.json()) as SaleEventWP;
 	}
 
-	async read(id: string = "all"): Promise<SaleEventWP[]> {
+	async read(
+		id: string = "all",
+		obj: { skip: number; limit: number } = { skip: 0, limit: 0 }
+	): Promise<SaleEventWP[]> {
 		let response: Response;
 
 		switch (id) {
 			case "all":
 				response = await api("sale/read/all", "POST", {});
+				return (await response.json()) as SaleEventWP[];
+			case "next":
+				response = await api("sale/read/next", "POST", obj);
 				return (await response.json()) as SaleEventWP[];
 			default:
 				response = await api("sale/read/one", "POST", { id });

@@ -8,3 +8,8 @@ export interface RequestCreateJSONBody {
 export interface RequestReadJSONBody {
 	id: string;
 }
+
+export interface RequestReadNextJSONBody {
+	skip: number;
+	limit: number;
+}
