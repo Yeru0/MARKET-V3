@@ -1,6 +1,7 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { createDummyProducts, createDummySales, nuke, readProductDB, readSaleDB } from "$lib/server/api/test";
-import { ProductC, ProductsC } from "./objects.svelte";
+import { ProductC, ProductsC, toProdC } from "./objects.svelte";
+import { ProductDB } from "./db";
 describe.sequential("Testing the product object", () => {
 	let Products = new ProductsC();
 
@@ -180,5 +181,13 @@ describe.sequential("Testing the product object", () => {
 
 		expect(sales.length).toEqual(25);
 		expect(sales.map((item) => item.id)).toEqual(salesFromDB.slice(25, 50).map((item) => item.id));
+	});
+
+	it("checks if ProductWE[] can be converted into ProductC", async () => {
+		await createDummyProducts();
+
+		let products = await new ProductDB().read();
+
+		expect(toProdC(products)[0] instanceof ProductC).toBeTruthy();
 	});
 });

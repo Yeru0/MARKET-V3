@@ -148,3 +148,11 @@ export class ProductsC {
 		}
 	}
 }
+
+export const toProdC = (obj: ProductWE[]): ProductC[] => {
+	let returnList: ProductC[] = [];
+	for (let o of obj) {
+		returnList.push(new ProductC(o));
+	}
+	return returnList;
+};
