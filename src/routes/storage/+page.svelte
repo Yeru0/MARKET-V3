@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidate, invalidateAll } from "$app/navigation";
 	import { ProductC, ProductsC, toProdC } from "$lib/client/objects.svelte";
-	import AddPopup from "./addPopup.svelte";
+	import ManagePopup from "./managePopup.svelte";
 	import DeletePopup from "./deletePopup.svelte";
 	import RenderProduct from "./renderProduct.svelte";
 
@@ -26,11 +26,11 @@
 	}
 	let addPopupProps: { add: () => Promise<ProductC>; newProduct: obj } = $state({
 		newProduct: {
-			name: "test",
-			markup: 85,
-			staffMarkup: 25,
-			allSupplies: 24,
-			supplyPrice: 500
+			name: "",
+			markup: 0,
+			staffMarkup: 0,
+			allSupplies: 0,
+			supplyPrice: 0
 		},
 		add: async () => {
 			let newProd = await Products.new(addPopupProps.newProduct);
@@ -51,11 +51,32 @@
 			return removedProduct
 		}
 	}
+
+	// Setup for modify popup
+	let modPopupProps: {
+		modProduct: obj,
+		modify: (id: string | null) => Promise<ProductC | undefined>
+	} = $state({
+		modProduct: {
+			name: "",
+			markup: 0,
+			staffMarkup: 0,
+			allSupplies: 0,
+			supplyPrice: 0
+		},
+		modify: async (id: string | null) => {
+			if (id === null) return
+			let modifiedProduct = await Products.update(id, modPopupProps.modProduct)
+			await getData()
+
+			return modifiedProduct
+		}
+	})
 </script>
 
 <h1>Storage</h1>
 
-<AddPopup add={addPopupProps.add} bind:newProduct={addPopupProps.newProduct}></AddPopup>
+<ManagePopup caller={addPopupProps.add} bind:product={addPopupProps.newProduct} type="new" id={null}></ManagePopup>
 
 {#await toProdC(productsPOJO)}
 <p>Termékek betöltése...</p>
@@ -63,6 +84,7 @@
 	{#each value as p}
 		<RenderProduct product={p}></RenderProduct>
 		<DeletePopup remove={deletePopupProps.remove} product={p}></DeletePopup>
+		<ManagePopup caller={modPopupProps.modify} bind:product={modPopupProps.modProduct} type="mod" id={p.id}></ManagePopup>
 	{/each}
 {:catch error}
 	<p>Hiba történt a termékek betöltése közben!</p>
