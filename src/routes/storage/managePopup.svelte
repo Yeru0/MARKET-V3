@@ -107,6 +107,7 @@
 <h2>{type == "new" ? "Új termék hozzáadása" : type == "mod" ? "Termék módosítása" : "Ezt hogy csináltad?"}</h2>
 <p>{validationMessage}</p>
 
+<!-- <p>Profit megadása:</p> <button>Százalékban</button><button>Forintban</button> TODO -->
 
 <form onsubmit={() => {caller(id)}} onchange={validateNewProduct}>
 	<label for="name">
