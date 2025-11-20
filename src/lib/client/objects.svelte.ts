@@ -14,8 +14,23 @@ export class ProductC {
 
 	sales: SaleEventWP[] = $state([]);
 
-	updatePopup: boolean = $state(false)
-	deletePopup: boolean = $state(false)
+	updatePopup: boolean = $state(false);
+	deletePopup: boolean = $state(false);
+
+	markupPriceSingle: number = $state(0);
+	staffMarkupPriceSingle: number = $state(0);
+	markupPriceMultiple: number = $state(0);
+	staffMarkupPriceMultiple: number = $state(0);
+	staffProfitSingle: number = $state(0);
+	profitSingle: number = $state(0);
+	staffProfitMultiple: number = $state(0);
+	profitMultiple: number = $state(0);
+
+	suppliesPrice: number = $state(0);
+	soldToStaff: number = $state(0);
+	soldToCustomers: number = $state(0);
+	takenOut: number = $state(0);
+	inStorage: number = $state(0);
 
 	constructor(obj: ProductWE) {
 		this.id = obj.id;
@@ -25,10 +40,48 @@ export class ProductC {
 		this.allSupplies = obj.allSupplies;
 		this.supplyPrice = obj.supplyPrice;
 		this.sales = obj.SaleEvents;
+
+		this.calculateDerivedProperties();
 	}
 
 	async sell() {
 		this.sales = await this.salesDB.read();
+	}
+
+	calculateDerivedProperties() {
+		this.suppliesPrice = this.supplyPrice * this.allSupplies;
+
+		if (this.sales !== undefined) {
+			for (let s of this.sales) {
+				switch (s.to) {
+					case "n":
+						this.soldToCustomers++;
+						break;
+					case "s":
+						this.soldToStaff++;
+						break;
+					case "t":
+						this.takenOut++;
+						break;
+				}
+			}
+		} else {
+			this.sales = [];
+		}
+
+		this.markupPriceSingle = Math.ceil((this.supplyPrice + (this.supplyPrice / 100) * this.markup) / 5) * 5;
+		this.staffMarkupPriceSingle =
+			Math.ceil((this.supplyPrice + (this.supplyPrice / 100) * this.staffMarkup) / 5) * 5;
+		this.markupPriceMultiple =
+			Math.ceil((this.suppliesPrice + (this.suppliesPrice / 100) * this.staffMarkup) / 5) * 5;
+		this.staffMarkupPriceMultiple =
+			Math.ceil((this.suppliesPrice + (this.suppliesPrice / 100) * this.markup) / 5) * 5;
+		this.staffProfitSingle = this.staffMarkupPriceSingle - this.supplyPrice;
+		this.profitSingle = this.markupPriceSingle - this.supplyPrice;
+		this.staffProfitMultiple = this.staffMarkupPriceMultiple - this.suppliesPrice;
+		this.profitMultiple = this.markupPriceMultiple - this.suppliesPrice;
+
+		this.inStorage = this.allSupplies - this.sales.length;
 	}
 }
 

@@ -11,10 +11,11 @@
 
 	let Products = new ProductsC();
 
-	let getData = async () => { // Invalidate "data" and reassings dependant variables
+	let getData = async () => {
+		// Invalidate "data" and reassings dependant variables
 		await invalidate("/api/product/read/all");
-		productsPOJO = JSON.parse(data.products);		
-	}
+		productsPOJO = JSON.parse(data.products);
+	};
 
 	// Setup for the add popup
 	interface obj {
@@ -24,7 +25,7 @@
 		allSupplies: number;
 		supplyPrice: number;
 	}
-	let addPopupProps: { add: () => Promise<ProductC>; newProduct: obj, show: boolean } = $state({
+	let addPopupProps: { add: () => Promise<ProductC>; newProduct: obj; show: boolean } = $state({
 		show: false,
 		newProduct: {
 			name: "",
@@ -35,7 +36,7 @@
 		},
 		add: async () => {
 			let newProd = await Products.new(addPopupProps.newProduct);
-			await getData()
+			await getData();
 
 			return newProd;
 		}
@@ -43,21 +44,21 @@
 
 	// Setup for delete popup
 	let deletePopupProps: {
-		remove: (id: string) => Promise<{count: number}>
+		remove: (id: string) => Promise<{ count: number }>;
 	} = $state({
 		remove: async (id: string) => {
-			let removedProduct = await Products.delete(id)
-			await getData()
+			let removedProduct = await Products.delete(id);
+			await getData();
 
-			return removedProduct
+			return removedProduct;
 		}
-	})
+	});
 
 	// Setup for modify popup
 	let modPopupProps: {
-		show: boolean,
-		modProduct: obj,
-		modify: (id: string | null) => Promise<ProductC | undefined>
+		show: boolean;
+		modProduct: obj;
+		modify: (id: string | null) => Promise<ProductC | undefined>;
 	} = $state({
 		show: false,
 		modProduct: {
@@ -68,48 +69,67 @@
 			supplyPrice: 0
 		},
 		modify: async (id: string | null) => {
-			if (id === null) return
-			let modifiedProduct = await Products.update(id, modPopupProps.modProduct)
-			await getData()
+			if (id === null) return;
+			let modifiedProduct = await Products.update(id, modPopupProps.modProduct);
+			await getData();
 
-			modPopupProps.show = false
+			modPopupProps.show = false;
 
-			return modifiedProduct
+			return modifiedProduct;
 		}
-	})
+	});
 </script>
 
 <h1>Storage</h1>
 
 {#if addPopupProps.show}
-	<ManagePopup caller={addPopupProps.add} bind:product={addPopupProps.newProduct} type="new" id={null} bind:show={addPopupProps.show}></ManagePopup>
+	<ManagePopup
+		caller={addPopupProps.add}
+		bind:product={addPopupProps.newProduct}
+		type="new"
+		id={null}
+		bind:show={addPopupProps.show}
+	></ManagePopup>
 {:else}
-	<button onclick={() => {addPopupProps.show = true}}>Új termék</button>
+	<button
+		onclick={() => {
+			addPopupProps.show = true;
+		}}>Új termék</button
+	>
 {/if}
 
 {#await toProdC(productsPOJO)}
-<p>Termékek betöltése...</p>
+	<p>Termékek betöltése...</p>
 {:then value: ProductC[]}
-
 	{#each value as p}
-
 		<RenderProduct product={p}></RenderProduct>
 
-		
 		{#if p.deletePopup}
 			<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}></DeletePopup>
 		{:else}
-			<button onclick={() => {p.deletePopup = true}}>Törlés</button>
+			<button
+				onclick={() => {
+					p.deletePopup = true;
+				}}>Törlés</button
+			>
 		{/if}
 
 		{#if p.updatePopup}
-			<ManagePopup caller={modPopupProps.modify} bind:product={modPopupProps.modProduct} type="mod" id={p.id} bind:show={p.updatePopup}></ManagePopup>
+			<ManagePopup
+				caller={modPopupProps.modify}
+				bind:product={modPopupProps.modProduct}
+				type="mod"
+				id={p.id}
+				bind:show={p.updatePopup}
+			></ManagePopup>
 		{:else}
-			<button onclick={() => {p.updatePopup = true}}>Módosítás</button>
+			<button
+				onclick={() => {
+					p.updatePopup = true;
+				}}>Módosítás</button
+			>
 		{/if}
-
 	{/each}
-
 {:catch error}
 	<p>Hiba történt a termékek betöltése közben!</p>
 {/await}
