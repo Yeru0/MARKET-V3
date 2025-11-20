@@ -24,7 +24,8 @@
 		allSupplies: number;
 		supplyPrice: number;
 	}
-	let addPopupProps: { add: () => Promise<ProductC>; newProduct: obj } = $state({
+	let addPopupProps: { add: () => Promise<ProductC>; newProduct: obj, show: boolean } = $state({
+		show: false,
 		newProduct: {
 			name: "",
 			markup: 0,
@@ -43,20 +44,22 @@
 	// Setup for delete popup
 	let deletePopupProps: {
 		remove: (id: string) => Promise<{count: number}>
-	} = {
+	} = $state({
 		remove: async (id: string) => {
 			let removedProduct = await Products.delete(id)
 			await getData()
 
 			return removedProduct
 		}
-	}
+	})
 
 	// Setup for modify popup
 	let modPopupProps: {
+		show: boolean,
 		modProduct: obj,
 		modify: (id: string | null) => Promise<ProductC | undefined>
 	} = $state({
+		show: false,
 		modProduct: {
 			name: "",
 			markup: 0,
@@ -69,6 +72,8 @@
 			let modifiedProduct = await Products.update(id, modPopupProps.modProduct)
 			await getData()
 
+			modPopupProps.show = false
+
 			return modifiedProduct
 		}
 	})
@@ -76,16 +81,35 @@
 
 <h1>Storage</h1>
 
-<ManagePopup caller={addPopupProps.add} bind:product={addPopupProps.newProduct} type="new" id={null}></ManagePopup>
+{#if addPopupProps.show}
+	<ManagePopup caller={addPopupProps.add} bind:product={addPopupProps.newProduct} type="new" id={null} bind:show={addPopupProps.show}></ManagePopup>
+{:else}
+	<button onclick={() => {addPopupProps.show = true}}>Új termék</button>
+{/if}
 
 {#await toProdC(productsPOJO)}
 <p>Termékek betöltése...</p>
 {:then value: ProductC[]}
+
 	{#each value as p}
+
 		<RenderProduct product={p}></RenderProduct>
-		<DeletePopup remove={deletePopupProps.remove} product={p}></DeletePopup>
-		<ManagePopup caller={modPopupProps.modify} bind:product={modPopupProps.modProduct} type="mod" id={p.id}></ManagePopup>
+
+		
+		{#if p.deletePopup}
+			<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}></DeletePopup>
+		{:else}
+			<button onclick={() => {p.deletePopup = true}}>Törlés</button>
+		{/if}
+
+		{#if p.updatePopup}
+			<ManagePopup caller={modPopupProps.modify} bind:product={modPopupProps.modProduct} type="mod" id={p.id} bind:show={p.updatePopup}></ManagePopup>
+		{:else}
+			<button onclick={() => {p.updatePopup = true}}>Módosítás</button>
+		{/if}
+
 	{/each}
+
 {:catch error}
 	<p>Hiba történt a termékek betöltése közben!</p>
 {/await}

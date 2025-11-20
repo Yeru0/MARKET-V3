@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { ProductC } from "$lib/client/objects.svelte";
+	import { ProductC, ProductsC } from "$lib/client/objects.svelte";
+	import { onMount } from "svelte";
 
 	interface obj {
 		name: string;
@@ -9,7 +10,22 @@
 		supplyPrice: number;
 	}
 
-	let { caller, product = $bindable(), type, id = null }: { caller: (id: string | null) => Promise<ProductC | undefined>, product: obj, type: "new" | "mod", id: string | null } = $props();
+	let { caller, product = $bindable(), type, id = null, show = $bindable() }: { caller: (id: string | null) => Promise<ProductC | undefined>, product: obj, type: "new" | "mod", id: string | null, show: boolean } = $props();
+
+		onMount(async () => {
+			if(type == "mod" && id !== null) {
+				let products = new ProductsC()
+				let oldProd = (await products.get(id))[0]
+	
+				product = {
+					name: oldProd.name,
+					markup: oldProd.markup,
+					staffMarkup: oldProd.staffMarkup,
+					allSupplies: oldProd.allSupplies,
+					supplyPrice: oldProd.supplyPrice
+				}
+			}
+		})
 
 	let validationMessage = $state("Töltsd ki a mezőket termék létrehozásához!")
 	let validationBool: boolean = $state(false)
@@ -114,4 +130,5 @@
 		<input type="number" name="supply-price" id="supply-price" bind:value={product.supplyPrice} max="1000000" min="1" required/>
 	</label>
 	<button type="submit" disabled={!validationBool}>{type == "new" ? "Hozzáadás" : type == "mod" ? "Módosítás" : "Ezt hogy csináltad?"}</button>
+	<button type="reset" onclick={() => {show = false}}>Mégsem</button>
 </form>

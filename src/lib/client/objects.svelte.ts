@@ -14,6 +14,9 @@ export class ProductC {
 
 	sales: SaleEventWP[] = $state([]);
 
+	updatePopup: boolean = $state(false)
+	deletePopup: boolean = $state(false)
+
 	constructor(obj: ProductWE) {
 		this.id = obj.id;
 		this.name = obj.name;
