@@ -44,11 +44,13 @@
 
 	// Setup for delete popup
 	let deletePopupProps: {
-		remove: (id: string) => Promise<{ count: number }>;
+		remove: (product: ProductC) => Promise<{ count: number }>;
 	} = $state({
-		remove: async (id: string) => {
-			let removedProduct = await Products.delete(id);
+		remove: async (product: ProductC) => {
+			let removedProduct = await Products.delete(product.id);
 			await getData();
+
+			product.deletePopup = false;
 
 			return removedProduct;
 		}
@@ -56,24 +58,20 @@
 
 	// Setup for modify popup
 	let modPopupProps: {
-		show: boolean;
-		modProduct: obj;
-		modify: (id: string | null) => Promise<ProductC | undefined>;
+		modify: (product: ProductC | obj) => Promise<ProductC | undefined>;
 	} = $state({
-		show: false,
-		modProduct: {
-			name: "",
-			markup: 0,
-			staffMarkup: 0,
-			allSupplies: 0,
-			supplyPrice: 0
-		},
-		modify: async (id: string | null) => {
-			if (id === null) return;
-			let modifiedProduct = await Products.update(id, modPopupProps.modProduct);
+		modify: async (product: ProductC | obj) => {
+			if (product === null || !(product instanceof ProductC)) return;
+			let modifiedProduct = await Products.update(product.id, {
+				name: product.name,
+				markup: product.markup,
+				staffMarkup: product.staffMarkup,
+				allSupplies: product.allSupplies,
+				supplyPrice: product.supplyPrice
+			});
 			await getData();
 
-			modPopupProps.show = false;
+			product.updatePopup = false;
 
 			return modifiedProduct;
 		}
@@ -87,7 +85,6 @@
 		caller={addPopupProps.add}
 		bind:product={addPopupProps.newProduct}
 		type="new"
-		id={null}
 		bind:show={addPopupProps.show}
 	></ManagePopup>
 {:else}
@@ -115,13 +112,7 @@
 		{/if}
 
 		{#if p.updatePopup}
-			<ManagePopup
-				caller={modPopupProps.modify}
-				bind:product={modPopupProps.modProduct}
-				type="mod"
-				id={p.id}
-				bind:show={p.updatePopup}
-			></ManagePopup>
+			<ManagePopup caller={modPopupProps.modify} product={p} type="mod" bind:show={p.updatePopup}></ManagePopup>
 		{:else}
 			<button
 				onclick={() => {

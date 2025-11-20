@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ProductC, ProductsC } from "$lib/client/objects.svelte";
-	import { onMount } from "svelte";
+	import { onDestroy, onMount } from "svelte";
 
 	interface obj {
 		name: string;
@@ -14,31 +14,19 @@
 		caller,
 		product = $bindable(),
 		type,
-		id = null,
 		show = $bindable()
 	}: {
-		caller: (id: string | null) => Promise<ProductC | undefined>;
-		product: obj;
+		caller: (product: ProductC | obj) => Promise<ProductC | undefined>;
+		product: obj | ProductC;
 		type: "new" | "mod";
-		id: string | null;
 		show: boolean;
 	} = $props();
 
-	onMount(async () => {
-		if (type == "mod" && id !== null) {
-			let products = new ProductsC();
-			let oldProd = (await products.get(id))[0];
+	// Input price in percent or in numerals
+	let priceType: "per" | "num" = $state("per");
+	let priceInNumerals = $state({ customer: 0, staff: 0 });
 
-			product = {
-				name: oldProd.name,
-				markup: oldProd.markup,
-				staffMarkup: oldProd.staffMarkup,
-				allSupplies: oldProd.allSupplies,
-				supplyPrice: oldProd.supplyPrice
-			};
-		}
-	});
-
+	//Validation
 	let validationMessage = $state("Töltsd ki a mezőket termék létrehozásához!");
 	let validationBool: boolean = $state(false);
 
@@ -103,22 +91,60 @@
 			return false;
 		}
 
+		if (priceType === "num") {
+			product.markup =
+				Math.round(((priceInNumerals.customer - product.supplyPrice) / (product.supplyPrice / 100)) * 100) /
+				100;
+			product.staffMarkup =
+				Math.round(((priceInNumerals.staff - product.supplyPrice) / (product.supplyPrice / 100)) * 100) / 100;
+		} else if (priceType === "per") {
+			priceInNumerals.customer =
+				Math.ceil((product.supplyPrice + (product.supplyPrice / 100) * product.markup) / 5) * 5;
+			priceInNumerals.staff =
+				Math.ceil((product.supplyPrice + (product.supplyPrice / 100) * product.staffMarkup) / 5) * 5;
+		}
+
 		validationMessage = "Töltsd ki a mezőket termék létrehozásához!";
 		validationBool = true;
 		return true;
 	};
 
 	validateNewProduct();
+
+	// Resetting product
+	onDestroy(() => {
+		if (!(product instanceof ProductC)) {
+			product = {
+				name: "",
+				markup: 0,
+				staffMarkup: 0,
+				allSupplies: 0,
+				supplyPrice: 0
+			};
+		}
+	});
 </script>
 
 <h2>{type == "new" ? "Új termék hozzáadása" : type == "mod" ? "Termék módosítása" : "Ezt hogy csináltad?"}</h2>
 <p>{validationMessage}</p>
 
-<!-- <p>Profit megadása:</p> <button>Százalékban</button><button>Forintban</button> TODO -->
+<p>Ár megadása:</p>
+<button
+	disabled={priceType == "per"}
+	onclick={() => {
+		priceType = "per";
+	}}>Százalékban</button
+><button
+	disabled={priceType == "num"}
+	onclick={() => {
+		priceType = "num";
+	}}>Forintban</button
+>
 
 <form
-	onsubmit={() => {
-		caller(id);
+	onsubmit={(e) => {
+		e.preventDefault();
+		caller(product);
 	}}
 	onchange={validateNewProduct}
 >
@@ -126,24 +152,7 @@
 		Név
 		<input type="text" name="name" id="name" bind:value={product.name} maxlength="64" minlength="1" required />
 	</label>
-	<label for="markup">
-		Profit
-		<input type="number" name="markup" id="markup" bind:value={product.markup} max="1000000" min="0" required />
-		%
-	</label>
-	<label for="staff-markup">
-		Szervezői Profit
-		<input
-			type="number"
-			name="staff-markup"
-			id="staff-markup"
-			bind:value={product.staffMarkup}
-			max="1000000"
-			min="0"
-			required
-		/>
-		%
-	</label>
+
 	<label for="all-supplies">
 		Összes beszerzett termék
 		<input
@@ -158,7 +167,7 @@
 		%
 	</label>
 	<label for="supply-price">
-		Beszerzési ár
+		Beszerzési ár (Ft/db)
 		<input
 			type="number"
 			name="supply-price"
@@ -170,6 +179,57 @@
 		/>
 		Ft
 	</label>
+
+	<div hidden={priceType == "num"}>
+		<label for="markup">
+			Profit
+			<input type="number" name="markup" id="markup" bind:value={product.markup} max="1000000" min="0" required />
+			%
+		</label>
+		<label for="staff-markup">
+			Szervezői Profit
+			<input
+				type="number"
+				name="staff-markup"
+				id="staff-markup"
+				bind:value={product.staffMarkup}
+				max="1000000"
+				min="0"
+				required
+			/>
+			%
+		</label>
+	</div>
+
+	<div hidden={priceType == "per"}>
+		<label for="markup">
+			Ár
+			<input
+				type="number"
+				name="markup"
+				id="markup"
+				bind:value={priceInNumerals.customer}
+				max="1000000"
+				min="0"
+				required
+			/>
+			Ft
+		</label>
+		<label for="staff-markup">
+			Szervezői Ár
+			<input
+				type="number"
+				name="staff-markup"
+				id="staff-markup"
+				bind:value={priceInNumerals.staff}
+				max="1000000"
+				min="0"
+				required
+			/>
+			Ft
+		</label>
+	</div>
+
 	<button type="submit" disabled={!validationBool}
 		>{type == "new" ? "Hozzáadás" : type == "mod" ? "Módosítás" : "Ezt hogy csináltad?"}</button
 	>
