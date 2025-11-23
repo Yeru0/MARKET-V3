@@ -27,3 +27,8 @@ export type Product = Prisma.ProductModel
  * 
  */
 export type SaleEvent = Prisma.SaleEventModel
+/**
+ * Model ProductCategory
+ * 
+ */
+export type ProductCategory = Prisma.ProductCategoryModel

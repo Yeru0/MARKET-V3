@@ -8,17 +8,18 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
 }
 
 model Product {
-  id          String      @id @default(cuid())
-  name        String
-  markup      Int
-  staffMarkup Int
-  allSupplies Int
-  supplyPrice Int
-  SaleEvents  SaleEvent[]
+  id                  String           @id @default(cuid())
+  name                String
+  markup              Int
+  staffMarkup         Int
+  allSupplies         Int
+  supplyPrice         Int
+  SaleEvents          SaleEvent[]
+  productCategories   ProductCategory? @relation(fields: [productCategoriesId], references: [id])
+  productCategoriesId String?
 }
 
 model SaleEvent {
@@ -26,4 +27,10 @@ model SaleEvent {
   Products  Product[]
   to        String
   timestamp DateTime  @default(now())
+}
+
+model ProductCategory {
+  id       String    @id @default(cuid())
+  Products Product[]
+  name     String
 }

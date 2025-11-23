@@ -11,66 +11,39 @@
  * Please import the `PrismaClient` class from the `client.ts` file instead.
  */
 
-import * as runtime from "@prisma/client/runtime/library"
+import * as runtime from "@prisma/client/runtime/client"
 import type * as Prisma from "./prismaNamespace"
 
 
 const config: runtime.GetPrismaClientConfig = {
-  "generator": {
-    "name": "client",
-    "provider": {
-      "fromEnvVar": null,
-      "value": "prisma-client"
-    },
-    "output": {
-      "value": "D:\\Asztal\\MARKET-V3\\src\\lib\\prisma",
-      "fromEnvVar": null
-    },
-    "config": {
-      "engineType": "library"
-    },
-    "binaryTargets": [
-      {
-        "fromEnvVar": null,
-        "value": "windows",
-        "native": true
-      }
-    ],
-    "previewFeatures": [],
-    "sourceFilePath": "D:\\Asztal\\MARKET-V3\\prisma\\schema.prisma",
-    "isCustomOutput": true
-  },
-  "relativePath": "../../../prisma",
-  "clientVersion": "6.19.0",
-  "engineVersion": "2ba551f319ab1df4bc874a89965d8b3641056773",
-  "datasourceNames": [
-    "db"
-  ],
+  "previewFeatures": [],
+  "clientVersion": "7.0.0",
+  "engineVersion": "0c19ccc313cf9911a90d99d2ac2eb0280c76c513",
   "activeProvider": "sqlite",
-  "postinstall": false,
-  "inlineDatasources": {
-    "db": {
-      "url": {
-        "fromEnvVar": null,
-        "value": "file:./dev.db"
-      }
-    }
-  },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/lib/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = \"file:./dev.db\"\n}\n\nmodel Product {\n  id          String      @id @default(cuid())\n  name        String\n  markup      Int\n  staffMarkup Int\n  allSupplies Int\n  supplyPrice Int\n  SaleEvents  SaleEvent[]\n}\n\nmodel SaleEvent {\n  id        String    @id @default(cuid())\n  Products  Product[]\n  to        String\n  timestamp DateTime  @default(now())\n}\n",
-  "inlineSchemaHash": "003fb1be3b32eeda4712b7d49a56214ae8a6131f6a0b97fefd3a362ccd8fd276",
-  "copyEngine": true,
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/lib/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Product {\n  id                  String           @id @default(cuid())\n  name                String\n  markup              Int\n  staffMarkup         Int\n  allSupplies         Int\n  supplyPrice         Int\n  SaleEvents          SaleEvent[]\n  productCategories   ProductCategory? @relation(fields: [productCategoriesId], references: [id])\n  productCategoriesId String?\n}\n\nmodel SaleEvent {\n  id        String    @id @default(cuid())\n  Products  Product[]\n  to        String\n  timestamp DateTime  @default(now())\n}\n\nmodel ProductCategory {\n  id       String    @id @default(cuid())\n  Products Product[]\n  name     String\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
     "types": {}
-  },
-  "dirname": ""
+  }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Product\":{\"dbName\":null,\"schema\":null,\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":true,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"String\",\"nativeType\":null,\"default\":{\"name\":\"cuid\",\"args\":[1]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"name\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"markup\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"staffMarkup\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"allSupplies\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"supplyPrice\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Int\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"SaleEvents\",\"kind\":\"object\",\"isList\":true,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"SaleEvent\",\"nativeType\":null,\"relationName\":\"ProductToSaleEvent\",\"relationFromFields\":[],\"relationToFields\":[],\"isGenerated\":false,\"isUpdatedAt\":false}],\"primaryKey\":null,\"uniqueFields\":[],\"uniqueIndexes\":[],\"isGenerated\":false},\"SaleEvent\":{\"dbName\":null,\"schema\":null,\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":true,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"String\",\"nativeType\":null,\"default\":{\"name\":\"cuid\",\"args\":[1]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"Products\",\"kind\":\"object\",\"isList\":true,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"Product\",\"nativeType\":null,\"relationName\":\"ProductToSaleEvent\",\"relationFromFields\":[],\"relationToFields\":[],\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"to\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"DateTime\",\"nativeType\":null,\"default\":{\"name\":\"now\",\"args\":[]},\"isGenerated\":false,\"isUpdatedAt\":false}],\"primaryKey\":null,\"uniqueFields\":[],\"uniqueIndexes\":[],\"isGenerated\":false}},\"enums\":{},\"types\":{}}")
-config.engineWasm = undefined
-config.compilerWasm = undefined
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Product\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"markup\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"staffMarkup\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"allSupplies\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"supplyPrice\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"SaleEvents\",\"kind\":\"object\",\"type\":\"SaleEvent\",\"relationName\":\"ProductToSaleEvent\"},{\"name\":\"productCategories\",\"kind\":\"object\",\"type\":\"ProductCategory\",\"relationName\":\"ProductToProductCategory\"},{\"name\":\"productCategoriesId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"SaleEvent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"Products\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"ProductToSaleEvent\"},{\"name\":\"to\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"ProductCategory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"Products\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"ProductToProductCategory\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
+async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
+  const { Buffer } = await import('node:buffer')
+  const wasmArray = Buffer.from(wasmBase64, 'base64')
+  return new WebAssembly.Module(wasmArray)
+}
+
+config.compilerWasm = {
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.sqlite.mjs"),
+
+  getQueryCompilerWasmModule: async () => {
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.sqlite.wasm-base64.mjs")
+    return await decodeBase64AsWasm(wasm)
+  }
+}
 
 
 
@@ -97,7 +70,7 @@ export interface PrismaClientConstructor {
     LogOpts extends LogOptions<Options> = LogOptions<Options>,
     OmitOpts extends Prisma.PrismaClientOptions['omit'] = Options extends { omit: infer U } ? U : Prisma.PrismaClientOptions['omit'],
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-  >(options?: Prisma.Subset<Options, Prisma.PrismaClientOptions> ): PrismaClient<LogOpts, OmitOpts, ExtArgs>
+  >(options: Prisma.Subset<Options, Prisma.PrismaClientOptions> ): PrismaClient<LogOpts, OmitOpts, ExtArgs>
 }
 
 /**
@@ -116,7 +89,7 @@ export interface PrismaClientConstructor {
 
 export interface PrismaClient<
   in LogOpts extends Prisma.LogLevel = never,
-  in out OmitOpts extends Prisma.PrismaClientOptions['omit'] = Prisma.PrismaClientOptions['omit'],
+  in out OmitOpts extends Prisma.PrismaClientOptions['omit'] = undefined,
   in out ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -197,7 +170,6 @@ export interface PrismaClient<
 
   $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => runtime.Types.Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): runtime.Types.Utils.JsPromise<R>
 
-
   $extends: runtime.Types.Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<OmitOpts>, ExtArgs, runtime.Types.Utils.Call<Prisma.TypeMapCb<OmitOpts>, {
     extArgs: ExtArgs
   }>>
@@ -221,9 +193,18 @@ export interface PrismaClient<
     * ```
     */
   get saleEvent(): Prisma.SaleEventDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.productCategory`: Exposes CRUD operations for the **ProductCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductCategories
+    * const productCategories = await prisma.productCategory.findMany()
+    * ```
+    */
+  get productCategory(): Prisma.ProductCategoryDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
-export function getPrismaClientClass(dirname: string): PrismaClientConstructor {
-  config.dirname = dirname
+export function getPrismaClientClass(): PrismaClientConstructor {
   return runtime.getPrismaClient(config) as unknown as PrismaClientConstructor
 }
