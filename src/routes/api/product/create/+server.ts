@@ -3,7 +3,7 @@ import type { RequestEvent } from "@sveltejs/kit";
 import type { RequestCreateJSONBody } from "$lib/types/api/product";
 import { validateCreateRequestJSON } from "$lib/server/api/product";
 import { error } from "console";
-import type { ProductWE } from "$lib/types/db/product";
+import type { ProductWA } from "$lib/types/db";
 
 export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 	let json: RequestCreateJSONBody;
@@ -41,7 +41,7 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 					SaleEvents: true
 				}
 			})
-			.then((result: ProductWE) => {
+			.then((result: ProductWA) => {
 				response = new Response(JSON.stringify(result), {
 					status: 201,
 					statusText: "Product created successfully!"

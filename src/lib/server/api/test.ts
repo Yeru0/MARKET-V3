@@ -1,6 +1,6 @@
 import type { SaleEvent } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
-import type { ProductWE } from "$lib/types/db/product";
+import type { ProductWA } from "$lib/types/db";
 
 export const createDummyProducts = async (
 	amount: number = 50,
@@ -17,8 +17,8 @@ export const createDummyProducts = async (
 		allSupplies: 24,
 		supplyPrice: 500
 	}
-): Promise<ProductWE[]> => {
-	let products: ProductWE[] = [];
+): Promise<ProductWA[]> => {
+	let products: ProductWA[] = [];
 	for (let n = 0; n < amount; n++) {
 		const product = await db.product.create({
 			data,
@@ -26,14 +26,14 @@ export const createDummyProducts = async (
 				SaleEvents: true
 			}
 		});
-		products.push(product as ProductWE);
+		products.push(product as ProductWA);
 	}
 
-	return (await db.product.findMany({ orderBy: { name: "asc" }, include: { SaleEvents: true } })) as ProductWE[];
+	return (await db.product.findMany({ orderBy: { name: "asc" }, include: { SaleEvents: true } })) as ProductWA[];
 };
 
 export const readProductDB = async () => {
-	return (await db.product.findMany({ include: { SaleEvents: true }, orderBy: { name: "asc" } })) as ProductWE[];
+	return (await db.product.findMany({ include: { SaleEvents: true }, orderBy: { name: "asc" } })) as ProductWA[];
 };
 
 export const eraseProductDB = async () => {

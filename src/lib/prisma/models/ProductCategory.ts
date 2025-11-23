@@ -195,25 +195,25 @@ export type ProductCategoryScalarWhereWithAggregatesInput = {
 export type ProductCategoryCreateInput = {
   id?: string
   name: string
-  Products?: Prisma.ProductCreateNestedManyWithoutProductCategoriesInput
+  Products?: Prisma.ProductCreateNestedManyWithoutProductCategoryInput
 }
 
 export type ProductCategoryUncheckedCreateInput = {
   id?: string
   name: string
-  Products?: Prisma.ProductUncheckedCreateNestedManyWithoutProductCategoriesInput
+  Products?: Prisma.ProductUncheckedCreateNestedManyWithoutProductCategoryInput
 }
 
 export type ProductCategoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  Products?: Prisma.ProductUpdateManyWithoutProductCategoriesNestedInput
+  Products?: Prisma.ProductUpdateManyWithoutProductCategoryNestedInput
 }
 
 export type ProductCategoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  Products?: Prisma.ProductUncheckedUpdateManyWithoutProductCategoriesNestedInput
+  Products?: Prisma.ProductUncheckedUpdateManyWithoutProductCategoryNestedInput
 }
 
 export type ProductCategoryCreateManyInput = {

@@ -11,15 +11,15 @@ datasource db {
 }
 
 model Product {
-  id                  String           @id @default(cuid())
-  name                String
-  markup              Int
-  staffMarkup         Int
-  allSupplies         Int
-  supplyPrice         Int
-  SaleEvents          SaleEvent[]
-  productCategories   ProductCategory? @relation(fields: [productCategoriesId], references: [id])
-  productCategoriesId String?
+  id                String           @id @default(cuid())
+  name              String
+  markup            Int
+  staffMarkup       Int
+  allSupplies       Int
+  supplyPrice       Int
+  SaleEvents        SaleEvent[]
+  productCategory   ProductCategory? @relation(fields: [productCategoryId], references: [id])
+  productCategoryId String?
 }
 
 model SaleEvent {

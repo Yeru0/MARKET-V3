@@ -1,5 +1,5 @@
-import type { ProductWE } from "$lib/types/db/product";
-import type { SaleEventWP } from "$lib/types/db/sale";
+import type { ProductWA } from "$lib/types/db";
+import type { SaleEventWP } from "$lib/types/db";
 import { ProductDB, SaleDB } from "./db";
 
 export class ProductC {
@@ -32,7 +32,7 @@ export class ProductC {
 	takenOut: number = $state(0);
 	inStorage: number = $state(0);
 
-	constructor(obj: ProductWE) {
+	constructor(obj: ProductWA) {
 		this.id = obj.id;
 		this.name = obj.name;
 		this.markup = obj.markup;
@@ -89,7 +89,7 @@ export class SaleC {
 	id: string = $state("");
 	to: string = $state("");
 	timestamp: Date = $state(new Date());
-	Products: ProductWE[] = $state([]);
+	Products: ProductWA[] = $state([]);
 
 	constructor(obj: SaleEventWP) {
 		this.id = obj.id;
@@ -119,7 +119,7 @@ export class ProductsC {
 	}
 
 	async get(id: string = "all", obj: { skip: number; limit: number } = { skip: 0, limit: 0 }): Promise<ProductC[]> {
-		let products: ProductWE[];
+		let products: ProductWA[];
 		let returnProducts = [];
 		switch (id) {
 			case "all":
@@ -205,7 +205,7 @@ export class ProductsC {
 	}
 }
 
-export const toProdC = (obj: ProductWE[]): ProductC[] => {
+export const toProdC = (obj: ProductWA[]): ProductC[] => {
 	let returnList: ProductC[] = [];
 	for (let o of obj) {
 		returnList.push(new ProductC(o));

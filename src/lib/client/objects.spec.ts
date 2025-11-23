@@ -183,7 +183,7 @@ describe.sequential("Testing the product object", () => {
 		expect(sales.map((item) => item.id)).toEqual(salesFromDB.slice(25, 50).map((item) => item.id));
 	});
 
-	it("checks if ProductWE[] can be converted into ProductC", async () => {
+	it("checks if ProductWA[] can be converted into ProductC", async () => {
 		await createDummyProducts();
 
 		let products = await new ProductDB().read();
