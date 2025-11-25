@@ -4,6 +4,7 @@ export interface RequestCreateJSONBody {
 	staffMarkup: number;
 	allSupplies: number;
 	supplyPrice: number;
+	category: string;
 }
 
 export interface RequestReadJSONBody {
@@ -17,6 +18,7 @@ export interface RequestUpdateJSONBody {
 	staffMarkup: number;
 	allSupplies: number;
 	supplyPrice: number;
+	category: string;
 }
 
 export interface RequestReadNextJSONBody {

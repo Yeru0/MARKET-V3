@@ -89,7 +89,8 @@ describe.sequential("API CRUD operations", async () => {
 			markup: 25,
 			staffMarkup: 85,
 			allSupplies: 24,
-			supplyPrice: 500
+			supplyPrice: 500,
+			category: "test"
 		});
 
 		product = (await readProductDB())[0];
@@ -138,7 +139,8 @@ describe.sequential("API CRUD operations", async () => {
 			markup: product.markup,
 			staffMarkup: product.staffMarkup,
 			allSupplies: product.allSupplies,
-			supplyPrice: product.supplyPrice
+			supplyPrice: product.supplyPrice,
+			category: "test"
 		});
 		product = (await response.json()) as Product;
 		expect(product.name).toEqual("test1");
@@ -149,7 +151,8 @@ describe.sequential("API CRUD operations", async () => {
 			markup: product.markup,
 			staffMarkup: product.staffMarkup,
 			allSupplies: product.allSupplies,
-			supplyPrice: product.supplyPrice
+			supplyPrice: product.supplyPrice,
+			category: "test"
 		});
 
 		product = (await response.json()) as Product;

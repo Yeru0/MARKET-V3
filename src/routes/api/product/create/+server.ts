@@ -2,7 +2,6 @@ import { db } from "$lib/server/db";
 import type { RequestEvent } from "@sveltejs/kit";
 import type { RequestCreateJSONBody } from "$lib/types/api/product";
 import { validateCreateRequestJSON } from "$lib/server/api/product";
-import { error } from "console";
 import type { ProductWA } from "$lib/types/db";
 
 export const POST = async ({ request }: RequestEvent): Promise<Response> => {
@@ -35,7 +34,17 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 					markup: json.markup,
 					staffMarkup: json.staffMarkup,
 					allSupplies: json.allSupplies,
-					supplyPrice: json.supplyPrice
+					supplyPrice: json.supplyPrice,
+					productCategory: {
+						connectOrCreate: {
+							where: {
+								name: json.category
+							},
+							create: {
+								name: json.category
+							}
+						}
+					}
 				},
 				include: {
 					SaleEvents: true

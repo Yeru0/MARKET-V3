@@ -15,7 +15,8 @@ describe.sequential("Testing the product object", () => {
 			markup: 85,
 			staffMarkup: 25,
 			allSupplies: 24,
-			supplyPrice: 500
+			supplyPrice: 500,
+			category: "test"
 		});
 
 		let productsFromDB = await readProductDB();
@@ -67,7 +68,8 @@ describe.sequential("Testing the product object", () => {
 			markup: productFromDB.markup,
 			staffMarkup: productFromDB.staffMarkup,
 			allSupplies: productFromDB.allSupplies,
-			supplyPrice: productFromDB.supplyPrice
+			supplyPrice: productFromDB.supplyPrice,
+			category: "test"
 		});
 		productFromDB = (await readProductDB())[0];
 
@@ -78,7 +80,8 @@ describe.sequential("Testing the product object", () => {
 			markup: productFromDB.markup,
 			staffMarkup: productFromDB.staffMarkup,
 			allSupplies: productFromDB.allSupplies,
-			supplyPrice: productFromDB.supplyPrice
+			supplyPrice: productFromDB.supplyPrice,
+			category: "test"
 		});
 		productFromDB = (await readProductDB())[0];
 

@@ -65,7 +65,8 @@ describe.sequential("Testing front end db interactions", async () => {
 			markup: 85,
 			staffMarkup: 25,
 			allSupplies: 24,
-			supplyPrice: 500
+			supplyPrice: 500,
+			category: "test"
 		});
 
 		products = await readProductDB();
@@ -112,7 +113,8 @@ describe.sequential("Testing front end db interactions", async () => {
 			markup: dummyProduct.markup,
 			staffMarkup: dummyProduct.staffMarkup,
 			allSupplies: dummyProduct.allSupplies,
-			supplyPrice: dummyProduct.supplyPrice
+			supplyPrice: dummyProduct.supplyPrice,
+			category: "test"
 		});
 
 		product = (await db.product.findMany({ where: { id: dummyProduct.id } }))[0];
@@ -123,7 +125,8 @@ describe.sequential("Testing front end db interactions", async () => {
 			markup: dummyProduct.markup,
 			staffMarkup: dummyProduct.staffMarkup,
 			allSupplies: dummyProduct.allSupplies,
-			supplyPrice: dummyProduct.supplyPrice
+			supplyPrice: dummyProduct.supplyPrice,
+			category: "test"
 		});
 
 		product = (await db.product.findMany({ where: { id: dummyProduct.id } }))[0];

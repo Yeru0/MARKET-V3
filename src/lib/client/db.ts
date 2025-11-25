@@ -38,6 +38,7 @@ export class ProductDB {
 		staffMarkup: number;
 		allSupplies: number;
 		supplyPrice: number;
+		category: string;
 	}): Promise<ProductWA> {
 		let response = await api("product/create", "POST", obj);
 
@@ -70,6 +71,7 @@ export class ProductDB {
 			staffMarkup: number;
 			allSupplies: number;
 			supplyPrice: number;
+			category: string;
 		}
 	): Promise<ProductWA> {
 		let response = await api("product/update", "PUT", { id, ...obj });

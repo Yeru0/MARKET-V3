@@ -113,6 +113,7 @@ export class ProductsC {
 		staffMarkup: number;
 		allSupplies: number;
 		supplyPrice: number;
+		category: string;
 	}): Promise<ProductC> {
 		let product = await this.productsDB.create(obj);
 		return new ProductC(product);
@@ -149,6 +150,7 @@ export class ProductsC {
 			staffMarkup: number;
 			allSupplies: number;
 			supplyPrice: number;
+			category: string;
 		}
 	): Promise<ProductC> {
 		let product = await this.productsDB.update(id, obj);

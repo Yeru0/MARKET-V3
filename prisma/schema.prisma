@@ -32,5 +32,5 @@ model SaleEvent {
 model ProductCategory {
   id       String    @id @default(cuid())
   Products Product[]
-  name     String
+  name     String    @unique
 }
