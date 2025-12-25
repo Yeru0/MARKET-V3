@@ -5,6 +5,6 @@ export const api = async (
 ): Promise<Response> => {
 	return await fetch(`http://localhost:5173/api/${endpoint}`, {
 		method,
-		body: JSON.stringify(data)
+		body: JSON.stringify({ ...data })
 	});
 };

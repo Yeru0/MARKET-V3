@@ -1,18 +1,26 @@
 <script lang="ts">
-	import { invalidate, invalidateAll } from "$app/navigation";
+	import { invalidate } from "$app/navigation";
 	import { ProductC, ProductsC, toProdC } from "$lib/client/objects.svelte";
 	import ManagePopup from "./managePopup.svelte";
 	import DeletePopup from "./deletePopup.svelte";
 	import RenderProduct from "./renderProduct.svelte";
+	import { onMount } from "svelte";
 
 	const { data } = $props();
 
 	let productsPOJO = $state(JSON.parse(data.products)); //It is done like that, because a load function can only return POJOs
 
-	let Products = new ProductsC();
+	let Products: ProductsC;
+
+	let renderableProducts: ProductC[] = $state([]);
+
+	onMount(() => {
+		Products = new ProductsC();
+		renderableProducts = toProdC(productsPOJO);
+	});
 
 	let getData = async () => {
-		// Invalidate "data" and reassings dependant variables
+		// Invalidate "data" and reassigns dependant variables
 		await invalidate("/api/product/read/all");
 		productsPOJO = JSON.parse(data.products);
 	};
@@ -24,6 +32,7 @@
 		staffMarkup: number;
 		allSupplies: number;
 		supplyPrice: number;
+		category: string;
 	}
 	let addPopupProps: { add: () => Promise<ProductC>; newProduct: obj; show: boolean } = $state({
 		show: false,
@@ -32,7 +41,8 @@
 			markup: 0,
 			staffMarkup: 0,
 			allSupplies: 0,
-			supplyPrice: 0
+			supplyPrice: 0,
+			category: ""
 		},
 		add: async () => {
 			let newProd = await Products.new(addPopupProps.newProduct);
@@ -67,7 +77,8 @@
 				markup: product.markup,
 				staffMarkup: product.staffMarkup,
 				allSupplies: product.allSupplies,
-				supplyPrice: product.supplyPrice
+				supplyPrice: product.supplyPrice,
+				category: ""
 			});
 			await getData();
 
@@ -95,7 +106,7 @@
 	>
 {/if}
 
-{#await toProdC(productsPOJO)}
+{#await renderableProducts}
 	<p>Termékek betöltése...</p>
 {:then value: ProductC[]}
 	{#each value as p}

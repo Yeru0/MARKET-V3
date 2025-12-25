@@ -8,6 +8,7 @@
 		staffMarkup: number;
 		allSupplies: number;
 		supplyPrice: number;
+		category: string;
 	}
 
 	let {
@@ -119,7 +120,8 @@
 				markup: 0,
 				staffMarkup: 0,
 				allSupplies: 0,
-				supplyPrice: 0
+				supplyPrice: 0,
+				category: ""
 			};
 		}
 	});
