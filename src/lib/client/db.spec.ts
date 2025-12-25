@@ -1,15 +1,17 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { ProductDB, SaleDB } from "./db";
-import type { Product, SaleEvent } from "$lib/prisma/client";
+import { categoryDB, ProductDB, SaleDB } from "./db";
+import type { Product, SaleEvent, ProductCategory } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import {
 	createDummyProducts,
 	createDummySales,
 	eraseSaleDB,
 	nuke,
+	readCategoryDB,
 	readProductDB,
 	readSaleDB
 } from "$lib/server/api/test";
+import type { ProductCategoryWP } from "$lib/types/db";
 
 describe.sequential("Testing front end db interactions", async () => {
 	await nuke();
@@ -18,18 +20,21 @@ describe.sequential("Testing front end db interactions", async () => {
 	let amt: number;
 	let productsDB: ProductDB;
 	let salesDB: SaleDB;
+	let categoriesDB: categoryDB;
 
 	// Responses read from the function that is being tested
 	let productsFromBackEnd: Product[];
 	let productFromBackEnd: Product;
 	let salesFromBackEnd: SaleEvent[];
 	let saleFromBackEnd: SaleEvent;
+	let categoriesFromBackEnd: ProductCategoryWP[];
 
 	// The actual values in the DB
 	let products: Product[];
 	let product: Product;
 	let sales: SaleEvent[];
 	let sale: SaleEvent;
+	let categories: ProductCategory[];
 
 	// Dummy values
 	let dummyProducts: Product[];
@@ -43,6 +48,7 @@ describe.sequential("Testing front end db interactions", async () => {
 		amt = 50;
 		productsDB = new ProductDB();
 		salesDB = new SaleDB();
+		categoriesDB = new categoryDB();
 
 		// Creating some dummy values
 		dummyProducts = await createDummyProducts(amt);
@@ -193,5 +199,12 @@ describe.sequential("Testing front end db interactions", async () => {
 
 		expect(salesFromBackEnd.length).toEqual(25);
 		expect(salesFromBackEnd.map((item) => item.id)).toEqual(sales.slice(25, 50).map((item) => item.id));
+	});
+
+	it("check if all the categories are read", async () => {
+		categoriesFromBackEnd = await categoriesDB.read();
+		categories = await readCategoryDB();
+
+		expect(categoriesFromBackEnd.map((item) => item.id)).toEqual(categories.map((item) => item.id));
 	});
 });

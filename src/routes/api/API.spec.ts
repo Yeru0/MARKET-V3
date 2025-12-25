@@ -42,7 +42,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// sale/read/all
-	it.todo("check if all sales are read", async () => {
+	it("check if all sales are read", async () => {
 		response = await api("sale/read/all", "POST", {});
 		salesFromAPI = (await response.json()) as SaleEvent[];
 
@@ -50,7 +50,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// sale/read/one
-	it.todo("check if one sale is read", async () => {
+	it("check if one sale is read", async () => {
 		response = await api("sale/read/one", "POST", { id: sale.id });
 		saleFromAPI = (await response.json()) as SaleEvent;
 
@@ -58,7 +58,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// sale/read/next
-	it.todo("check if the next sales are read", async () => {
+	it("check if the next sales are read", async () => {
 		response = await api("sale/read/next", "POST", { skip: 0, limit: 25 });
 		salesFromAPI = (await response.json()) as SaleEvent[];
 
@@ -73,7 +73,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// sale/register
-	it.todo("check if sale is registered", async () => {
+	it("check if sale is registered", async () => {
 		await eraseSaleDB();
 
 		response = await api("sale/register", "POST", { productIDs: products.map((item) => `${item.id}`), to: "n" });
@@ -85,7 +85,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// product/create
-	it.todo("check if one product is created", async () => {
+	it("check if one product is created", async () => {
 		await nuke();
 
 		response = await api("product/create", "POST", {
@@ -103,7 +103,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// product/read/all
-	it.todo("checks if all products are read", async () => {
+	it("checks if all products are read", async () => {
 		response = await api("product/read/all", "POST", {});
 		productsFromAPI = (await response.json()) as Product[];
 
@@ -111,7 +111,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// product/read/one
-	it.todo("checks if one product is read", async () => {
+	it("checks if one product is read", async () => {
 		response = await api("product/read/one", "POST", { id: product.id });
 
 		productFromAPI = (await response.json()) as Product;
@@ -119,7 +119,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// product/read/next
-	it.todo("check if the next products are read", async () => {
+	it("check if the next products are read", async () => {
 		response = await api("product/read/next", "POST", { skip: 0, limit: 25 });
 		productsFromAPI = (await response.json()) as Product[];
 
@@ -134,40 +134,37 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// product/update
-	it.todo(
-		"checks if name property of a single product updates from 'test' to 'test1' then back to 'test'",
-		async () => {
-			expect(product.name).toEqual("test");
+	it("checks if name property of a single product updates from 'test' to 'test1' then back to 'test'", async () => {
+		expect(product.name).toEqual("test");
 
-			response = await api("product/update", "PUT", {
-				id: product.id,
-				name: "test1",
-				markup: product.markup,
-				staffMarkup: product.staffMarkup,
-				allSupplies: product.allSupplies,
-				supplyPrice: product.supplyPrice,
-				category: "test"
-			});
-			product = (await response.json()) as Product;
-			expect(product.name).toEqual("test1");
+		response = await api("product/update", "PUT", {
+			id: product.id,
+			name: "test1",
+			markup: product.markup,
+			staffMarkup: product.staffMarkup,
+			allSupplies: product.allSupplies,
+			supplyPrice: product.supplyPrice,
+			category: "test"
+		});
+		product = (await response.json()) as Product;
+		expect(product.name).toEqual("test1");
 
-			response = await api("product/update", "PUT", {
-				id: product.id,
-				name: "test",
-				markup: product.markup,
-				staffMarkup: product.staffMarkup,
-				allSupplies: product.allSupplies,
-				supplyPrice: product.supplyPrice,
-				category: "test"
-			});
+		response = await api("product/update", "PUT", {
+			id: product.id,
+			name: "test",
+			markup: product.markup,
+			staffMarkup: product.staffMarkup,
+			allSupplies: product.allSupplies,
+			supplyPrice: product.supplyPrice,
+			category: "test"
+		});
 
-			product = (await response.json()) as Product;
-			expect(product.name).toEqual("test");
-		}
-	);
+		product = (await response.json()) as Product;
+		expect(product.name).toEqual("test");
+	});
 
 	// product/delete/all
-	it.todo("checks if all products are deleted", async () => {
+	it("checks if all products are deleted", async () => {
 		response = await api("product/delete/all", "DELETE", {});
 
 		let deleteResponse: { count: number } = (await response.json()) as { count: number };
@@ -178,7 +175,7 @@ describe.sequential("API CRUD operations", async () => {
 	});
 
 	// product/delete/one
-	it.todo("checks if one product is deleted", async () => {
+	it("checks if one product is deleted", async () => {
 		response = await api("product/delete/one", "DELETE", { id: product.id });
 		productFromAPI = (await response.json()) as Product;
 		let productDB = await readProductDB();

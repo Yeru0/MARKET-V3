@@ -1,6 +1,6 @@
 import { api } from "$lib/api";
 import type { Product } from "$lib/prisma/client";
-import type { ProductWA } from "$lib/types/db";
+import type { ProductCategoryWP, ProductWA } from "$lib/types/db";
 import type { SaleEventWP } from "$lib/types/db";
 
 export class ProductDB {
@@ -117,5 +117,26 @@ export class SaleDB {
 				response = await api("sale/read/one", "POST", { id });
 				return [await response.json()] as SaleEventWP[];
 		}
+	}
+}
+
+export class categoryDB {
+	categories: ProductCategoryWP[] = [];
+
+	constructor() {
+		api("category/read/all", "POST", {})
+			.then(async (result) => {
+				this.categories = (await result.json()) as ProductCategoryWP[];
+			})
+			.catch((err) => {
+				console.error(err);
+				throw new Error("UNHANDLED ERROR: Categories db could not be read", err); // TODO Handle this error
+			});
+	}
+
+	async read(): Promise<ProductCategoryWP[]> {
+		let response: Response;
+		response = await api("category/read/all", "POST", {});
+		return (await response.json()) as ProductCategoryWP[];
 	}
 }
