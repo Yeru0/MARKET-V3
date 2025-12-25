@@ -1,10 +1,11 @@
 import { api } from "$lib/api";
-import type { Product, SaleEvent } from "$lib/prisma/client";
+import type { Product, ProductCategory, SaleEvent } from "$lib/prisma/client";
 import {
 	createDummyProducts,
 	createDummySales,
 	eraseSaleDB,
 	nuke,
+	readCategoryDB,
 	readProductDB,
 	readSaleDB
 } from "$lib/server/api/test";
@@ -22,6 +23,8 @@ describe.sequential("API CRUD operations", async () => {
 	let product: Product;
 	let productsFromAPI: Product[];
 	let productFromAPI: Product;
+	let categoriesFromAPI: ProductCategory[];
+	let categories: ProductCategory[];
 
 	beforeEach(async () => {
 		await nuke();
@@ -35,6 +38,7 @@ describe.sequential("API CRUD operations", async () => {
 		);
 		sale = sales[0];
 		product = products[0];
+		categories = await readCategoryDB();
 	});
 
 	// sale/read/all
@@ -185,9 +189,15 @@ describe.sequential("API CRUD operations", async () => {
 		expect(productDB.length).toEqual(amt - 1);
 	});
 
+	// category/read/all
+	it("checks if all categories can be read", async () => {
+		response = await api("category/read/all", "POST", {});
+		categoriesFromAPI = (await response.json()) as Product[];
+
+		expect(categories.length).toEqual(categoriesFromAPI.length);
+	});
+
 	afterAll(async () => {
 		await nuke();
 	});
 });
-
-// category/read/all

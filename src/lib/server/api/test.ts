@@ -4,7 +4,8 @@ import type { ProductWA } from "$lib/types/db";
 
 export const createDummyProducts = async (
 	amount: number = 50,
-	data: {
+	category: string = "test",
+	inputData: {
 		name: string;
 		markup: number;
 		staffMarkup: number;
@@ -21,7 +22,19 @@ export const createDummyProducts = async (
 	let products: ProductWA[] = [];
 	for (let n = 0; n < amount; n++) {
 		const product = await db.product.create({
-			data,
+			data: {
+				...inputData,
+				productCategory: {
+					connectOrCreate: {
+						where: {
+							name: category
+						},
+						create: {
+							name: category
+						}
+					}
+				}
+			},
 			include: {
 				SaleEvents: true
 			}
@@ -74,7 +87,20 @@ export const eraseSaleDB = async () => {
 	await db.saleEvent.deleteMany();
 };
 
+export const readCategoryDB = async () => {
+	return await db.productCategory.findMany({
+		include: {
+			Products: true
+		}
+	});
+};
+
+export const deleteCategoryDB = async () => {
+	return await db.productCategory.deleteMany();
+};
+
 export const nuke = async () => {
 	await db.product.deleteMany();
 	await db.saleEvent.deleteMany();
+	await db.productCategory.deleteMany();
 };
