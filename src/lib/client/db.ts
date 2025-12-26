@@ -6,15 +6,23 @@ import type { SaleEventWP } from "$lib/types/db";
 export class ProductDB {
 	products: Product[] = [];
 
-	constructor() {
+	private async setup(i: number) {
 		api("product/read/all", "POST", {})
 			.then(async (result) => {
 				this.products = (await result.json()) as Product[];
 			})
 			.catch((err) => {
-				console.error(err);
-				throw new Error("UNHANDLED ERROR: Products db could not be read", err); // TODO Handle this error
+				if (i < 5) {
+					console.error(err);
+					this.setup(i + 1);
+				} else {
+					//TODO Display error
+				}
 			});
+	}
+
+	constructor() {
+		this.setup(0);
 	}
 
 	async delete(id: string = "all"): Promise<{ count: number }> {
@@ -81,15 +89,23 @@ export class ProductDB {
 export class SaleDB {
 	sales: SaleEventWP[] = [];
 
-	constructor() {
+	private async setup(i: number) {
 		api("sale/read/all", "POST", {})
 			.then(async (result) => {
 				this.sales = (await result.json()) as SaleEventWP[];
 			})
 			.catch((err) => {
-				console.error(err);
-				throw new Error("UNHANDLED ERROR: Sales db could not be read", err); // TODO Handle this error
+				if (i < 5) {
+					console.error(err);
+					this.setup(i + 1);
+				} else {
+					//TODO Display error
+				}
 			});
+	}
+
+	constructor() {
+		this.setup(0);
 	}
 
 	async register(IDs: { productIDs: string[]; to: "n" | "s" | "t" }): Promise<SaleEventWP> {
@@ -123,15 +139,23 @@ export class SaleDB {
 export class CategoryDB {
 	categories: ProductCategoryWP[] = [];
 
-	constructor() {
+	private async setup(i: number) {
 		api("category/read/all", "POST", {})
 			.then(async (result) => {
 				this.categories = (await result.json()) as ProductCategoryWP[];
 			})
 			.catch((err) => {
-				console.error(err);
-				throw new Error("UNHANDLED ERROR: Categories db could not be read", err); // TODO Handle this error
+				if (i < 5) {
+					console.error(err);
+					this.setup(i + 1);
+				} else {
+					//TODO Display error
+				}
 			});
+	}
+
+	constructor() {
+		this.setup(0);
 	}
 
 	async read(): Promise<ProductCategoryWP[]> {
