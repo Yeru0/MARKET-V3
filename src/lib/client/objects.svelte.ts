@@ -1,6 +1,6 @@
-import type { ProductWA } from "$lib/types/db";
+import type { ProductCategoryWP, ProductWA } from "$lib/types/db";
 import type { SaleEventWP } from "$lib/types/db";
-import { ProductDB, SaleDB } from "./db";
+import { CategoryDB, ProductDB, SaleDB } from "./db";
 
 export class ProductC {
 	private salesDB = new SaleDB();
@@ -99,12 +99,27 @@ export class SaleC {
 	}
 }
 
+export class ProductCategoryC {
+	id: string;
+	Products: ProductC[];
+	name: string;
+
+	constructor(object: ProductCategoryWP) {
+		this.id = object.id;
+		this.Products = toProdC(object.Products);
+		this.name = object.name;
+	}
+}
+
 export class ProductsC {
 	private productsDB: ProductDB;
-	private salesDB = new SaleDB();
+	private salesDB: SaleDB;
+	private categoriesDB: CategoryDB;
 
 	constructor() {
 		this.productsDB = new ProductDB();
+		this.salesDB = new SaleDB();
+		this.categoriesDB = new CategoryDB();
 	}
 
 	async new(obj: {
@@ -205,12 +220,24 @@ export class ProductsC {
 				return [new SaleC({ ...sales[0] })];
 		}
 	}
+
+	async getCategories(): Promise<ProductCategoryC[]> {
+		return toCatC(await this.categoriesDB.read());
+	}
 }
 
 export const toProdC = (obj: ProductWA[]): ProductC[] => {
 	let returnList: ProductC[] = [];
 	for (let o of obj) {
 		returnList.push(new ProductC(o));
+	}
+	return returnList;
+};
+
+export const toCatC = (obj: ProductCategoryWP[]): ProductCategoryC[] => {
+	let returnList: ProductCategoryC[] = [];
+	for (let o of obj) {
+		returnList.push(new ProductCategoryC(o));
 	}
 	return returnList;
 };

@@ -1,7 +1,15 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import { createDummyProducts, createDummySales, nuke, readProductDB, readSaleDB } from "$lib/server/api/test";
-import { ProductC, ProductsC, toProdC } from "./objects.svelte";
-import { ProductDB } from "./db";
+import {
+	createDummyProducts,
+	createDummySales,
+	nuke,
+	readCategoryDB,
+	readProductDB,
+	readSaleDB
+} from "$lib/server/api/test";
+import { ProductC, ProductCategoryC, ProductsC, toCatC, toProdC } from "./objects.svelte";
+import { CategoryDB, ProductDB } from "./db";
+
 describe.sequential("Testing the product object", () => {
 	let Products = new ProductsC();
 
@@ -186,11 +194,26 @@ describe.sequential("Testing the product object", () => {
 		expect(sales.map((item) => item.id)).toEqual(salesFromDB.slice(25, 50).map((item) => item.id));
 	});
 
-	it("checks if ProductWA[] can be converted into ProductC", async () => {
+	it("checks if categories can be read", async () => {
+		await createDummyProducts();
+		let categoriesFromDB = await readCategoryDB();
+		let categories = await Products.getCategories();
+
+		expect(categoriesFromDB.length).toEqual(categories.length);
+		expect(categoriesFromDB.map((item) => item.id)).toEqual(categories.map((item) => item.id));
+	});
+
+	it("checks if ProductWA[] can be converted into ProductC[]", async () => {
 		await createDummyProducts();
 
 		let products = await new ProductDB().read();
 
 		expect(toProdC(products)[0] instanceof ProductC).toBeTruthy();
+	});
+
+	it("checks if ProductCategoryWP[] can be converted into ProductCategoryC[]", async () => {
+		await createDummyProducts();
+		let categories = await new CategoryDB().read();
+		expect(toCatC(categories)[0] instanceof ProductCategoryC).toBeTruthy();
 	});
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { categoryDB, ProductDB, SaleDB } from "./db";
+import { CategoryDB, ProductDB, SaleDB } from "./db";
 import type { Product, SaleEvent, ProductCategory } from "$lib/prisma/client";
 import { db } from "$lib/server/db";
 import {
@@ -20,7 +20,7 @@ describe.sequential("Testing front end db interactions", async () => {
 	let amt: number;
 	let productsDB: ProductDB;
 	let salesDB: SaleDB;
-	let categoriesDB: categoryDB;
+	let categoriesDB: CategoryDB;
 
 	// Responses read from the function that is being tested
 	let productsFromBackEnd: Product[];
@@ -48,7 +48,7 @@ describe.sequential("Testing front end db interactions", async () => {
 		amt = 50;
 		productsDB = new ProductDB();
 		salesDB = new SaleDB();
-		categoriesDB = new categoryDB();
+		categoriesDB = new CategoryDB();
 
 		// Creating some dummy values
 		dummyProducts = await createDummyProducts(amt);

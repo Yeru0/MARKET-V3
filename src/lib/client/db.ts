@@ -120,7 +120,7 @@ export class SaleDB {
 	}
 }
 
-export class categoryDB {
+export class CategoryDB {
 	categories: ProductCategoryWP[] = [];
 
 	constructor() {
