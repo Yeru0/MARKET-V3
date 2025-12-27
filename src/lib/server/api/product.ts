@@ -16,6 +16,8 @@ export const validateCreateRequestJSON = (json: RequestCreateJSONBody) => {
 		return false;
 	} else if (!json.supplyPrice || typeof json.supplyPrice !== "number" || json.supplyPrice <= 0) {
 		return false;
+	} else if (!json.category || typeof json.category !== "string" || json.category === "") {
+		return false;
 	}
 
 	return true;

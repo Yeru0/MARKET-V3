@@ -12,6 +12,8 @@ export class ProductC {
 	allSupplies: number = $state(0);
 	supplyPrice: number = $state(0);
 
+	category: ProductCategoryWP;
+	categoryId: string;
 	sales: SaleEventWP[] = $state([]);
 
 	updatePopup: boolean = $state(false);
@@ -39,6 +41,9 @@ export class ProductC {
 		this.staffMarkup = obj.staffMarkup;
 		this.allSupplies = obj.allSupplies;
 		this.supplyPrice = obj.supplyPrice;
+		this.category = obj.productCategory;
+		this.categoryId = obj.productCategoryId;
+
 		this.sales = obj.SaleEvents;
 
 		this.calculateDerivedProperties();
@@ -152,7 +157,6 @@ export class ProductsC {
 				return returnProducts;
 			default:
 				let product = (await this.productsDB.read(id))[0];
-
 				return [new ProductC({ ...product })];
 		}
 	}
@@ -231,6 +235,7 @@ export const toProdC = (obj: ProductWA[]): ProductC[] => {
 	for (let o of obj) {
 		returnList.push(new ProductC(o));
 	}
+
 	return returnList;
 };
 

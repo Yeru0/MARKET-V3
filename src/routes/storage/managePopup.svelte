@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ProductC, ProductsC } from "$lib/client/objects.svelte";
-	import { onDestroy, onMount } from "svelte";
+	import { onDestroy } from "svelte";
 
 	interface obj {
 		name: string;
@@ -23,6 +23,8 @@
 		show: boolean;
 	} = $props();
 
+	let products = new ProductsC();
+
 	// Input price in percent or in numerals
 	let priceType: "per" | "num" = $state("per");
 	let priceInNumerals = $state({ customer: 0, staff: 0 });
@@ -34,6 +36,10 @@
 	let validateNewProduct = (): boolean => {
 		if (!product.name) {
 			validationMessage = "Töltsd ki a név mezőt!";
+			validationBool = false;
+			return false;
+		} else if (!product.category) {
+			validationMessage = "Töltsd ki a kategória mezőt!";
 			validationBool = false;
 			return false;
 		} else if (!product.markup && product.markup !== 0) {
@@ -109,7 +115,6 @@
 		validationBool = true;
 		return true;
 	};
-
 	validateNewProduct();
 
 	// Resetting product
@@ -135,12 +140,12 @@
 	disabled={priceType == "per"}
 	onclick={() => {
 		priceType = "per";
-	}}>Százalékban</button
+	}}>Haszonkulcs</button
 ><button
 	disabled={priceType == "num"}
 	onclick={() => {
 		priceType = "num";
-	}}>Forintban</button
+	}}>Ár</button
 >
 
 <form
@@ -155,6 +160,31 @@
 		<input type="text" name="name" id="name" bind:value={product.name} maxlength="64" minlength="1" required />
 	</label>
 
+	<label for="category">
+		Kategória
+		<input
+			type="text"
+			name="category"
+			id="category"
+			bind:value={product.category}
+			maxlength="64"
+			minlength="1"
+			required
+			list="categories"
+		/>
+		<datalist id="categories">
+			{#await products.getCategories()}
+				<option value="Kategóriák betöltése folyamatban"></option>
+			{:then categories}
+				{#each categories as category}
+					<option value={category.name}></option>
+				{/each}
+			{:catch error}
+				<option value="Kategóriák betöltése folyamatban!"></option>
+			{/await}
+		</datalist>
+	</label>
+
 	<label for="all-supplies">
 		Összes beszerzett termék
 		<input
@@ -166,7 +196,6 @@
 			min="1"
 			required
 		/>
-		%
 	</label>
 	<label for="supply-price">
 		Beszerzési ár (Ft/db)
