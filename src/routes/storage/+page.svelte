@@ -112,7 +112,7 @@
 	});
 </script>
 
-<h1>Storage</h1>
+<h1>Raktár</h1>
 
 {#if addPopupProps.show}
 	<ManagePopup
