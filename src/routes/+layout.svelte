@@ -1,8 +1,21 @@
 <script lang="ts">
+	import { PriceListStateC } from "$lib/client/objects.svelte";
+	import { onMount } from "svelte";
 	import type { LayoutProps } from "./$types";
 
 	let { children }: LayoutProps = $props();
+
+	let priceList = new PriceListStateC();
+	onMount(() => {
+		priceList.connect();
+	});
 </script>
+
+<svelte:window
+	onbeforeunload={() => {
+		priceList.close();
+	}}
+/>
 
 <nav>
 	<ul>
@@ -11,6 +24,13 @@
 		<li><a href="/stats">Statisztika</a></li>
 		<li><a href="/storage">Raktár</a></li>
 	</ul>
+	<p>
+		Jelenleg eladás: <button
+			onclick={() => {
+				priceList.switch();
+			}}>{priceList.state === "par" ? "Résztvevő" : "Szervező"}</button
+		>
+	</p>
 </nav>
 
 {@render children()}

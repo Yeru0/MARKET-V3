@@ -1,3 +1,4 @@
+import { PUBLIC_WEBSOCKET_PORT, PUBLIC_WEBSOCKET_URL } from "$env/static/public";
 import type { ProductCategoryWP, ProductWA } from "$lib/types/db";
 import type { SaleEventWP } from "$lib/types/db";
 import { CategoryDB, ProductDB, SaleDB } from "./db";
@@ -227,6 +228,68 @@ export class ProductsC {
 
 	async getCategories(): Promise<ProductCategoryC[]> {
 		return toCatC(await this.categoriesDB.read());
+	}
+}
+
+export class PriceListStateC {
+	state: "org" | "par" = $state("par");
+	isOrg: boolean = this.state === "org" ? true : false;
+	isPar: boolean = this.state === "par" ? true : false;
+	private ws?: WebSocket;
+	private wsID: string = "";
+
+	constructor(state: "org" | "par" = "par") {
+		this.state = state;
+	}
+
+	connect() {
+		this.ws = new WebSocket(`ws://${PUBLIC_WEBSOCKET_URL}:${PUBLIC_WEBSOCKET_PORT}`);
+
+		this.ws.onerror = (e) => {
+			console.error('Opening of the websocket "priceListState" failed. \n', e);
+		};
+
+		this.ws.onmessage = (message) => {
+			switch (message.data) {
+				case "org":
+					this.state = "org";
+					this.isOrg = true;
+					this.isPar = false;
+					break;
+				case "par":
+					this.state = "par";
+					this.isOrg = false;
+					this.isPar = true;
+					break;
+				default:
+					this.wsID = message.data;
+					this.ws?.send(JSON.stringify({ id: this.wsID, state: "set" }));
+			}
+		};
+	}
+
+	set(newState: "org" | "par") {
+		this.state = newState;
+		this.ws?.send(JSON.stringify({ id: this.wsID, state: newState }));
+
+		this.isOrg = newState === "org" ? true : false;
+		this.isPar = newState === "par" ? true : false;
+	}
+
+	switch() {
+		switch (this.state) {
+			case "org":
+				this.set("par");
+				break;
+			case "par":
+				this.set("org");
+				break;
+		}
+	}
+
+	close() {
+		this.ws?.send(JSON.stringify({ id: this.wsID, state: "clo" }));
+		this.ws?.close();
 	}
 }
 
