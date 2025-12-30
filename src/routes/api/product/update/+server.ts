@@ -29,7 +29,7 @@ export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 			return response;
 		}
 
-		await db.product
+		db.product
 			.update({
 				where: {
 					id: json.id
@@ -55,10 +55,17 @@ export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 					SaleEvents: true
 				}
 			})
-			.then((result: Product) => {
+			.then(async (result: Product) => {
 				response = new Response(JSON.stringify(result), {
 					status: 201,
 					statusText: "Product updated successfully!"
+				});
+				await db.productCategory.deleteMany({
+					where: {
+						Products: {
+							none: {}
+						}
+					}
 				});
 			})
 			.catch((err: Error) => {

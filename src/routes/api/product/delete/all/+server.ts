@@ -9,10 +9,17 @@ export const DELETE = async (): Promise<Response> => {
 
 	await db.product
 		.deleteMany()
-		.then((result: BatchPayload) => {
+		.then(async (result: BatchPayload) => {
 			response = new Response(JSON.stringify(result), {
 				status: 200,
 				statusText: "All products deleted successfully!"
+			});
+			await db.productCategory.deleteMany({
+				where: {
+					Products: {
+						none: {}
+					}
+				}
 			});
 		})
 		.catch((err: Error) => {

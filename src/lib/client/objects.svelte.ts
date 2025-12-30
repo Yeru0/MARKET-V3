@@ -238,11 +238,7 @@ export class PriceListStateC {
 	private ws?: WebSocket;
 	private wsID: string = "";
 
-	constructor(state: "org" | "par" = "par") {
-		this.state = state;
-	}
-
-	connect() {
+	constructor() {
 		this.ws = new WebSocket(`ws://${PUBLIC_WEBSOCKET_URL}:${PUBLIC_WEBSOCKET_PORT}`);
 
 		this.ws.onerror = (e) => {

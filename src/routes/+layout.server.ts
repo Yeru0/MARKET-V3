@@ -14,6 +14,7 @@ wss.on("connection", (ws) => {
 	const id: string = crypto.randomUUID();
 	clients.push({ id, ws });
 	ws.send(id);
+	console.log(id, " connected");
 
 	ws.on("message", (message) => {
 		//Org: Selling to staff
@@ -31,6 +32,7 @@ wss.on("connection", (ws) => {
 			if (c.id === msg.id) {
 				if (msg.state === "clo") {
 					clients.splice(clients.indexOf(c), 1);
+					console.log(id, " disconnected");
 					return;
 				}
 				continue;

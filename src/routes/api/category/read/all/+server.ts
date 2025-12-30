@@ -19,10 +19,17 @@ export const POST = async (): Promise<Response> => {
 				name: "asc"
 			}
 		})
-		.then((result: ProductCategory[]) => {
+		.then(async (result: ProductCategory[]) => {
 			response = new Response(JSON.stringify(result), {
 				status: 200,
 				statusText: "All categories read successfully!"
+			});
+			await db.productCategory.deleteMany({
+				where: {
+					Products: {
+						none: {}
+					}
+				}
 			});
 		})
 		.catch((err: Error) => {

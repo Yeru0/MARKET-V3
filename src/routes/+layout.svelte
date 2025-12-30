@@ -1,14 +1,8 @@
 <script lang="ts">
-	import { PriceListStateC } from "$lib/client/objects.svelte";
-	import { onMount } from "svelte";
+	import { priceList } from "$lib/client/priceList";
 	import type { LayoutProps } from "./$types";
 
 	let { children }: LayoutProps = $props();
-
-	let priceList = new PriceListStateC();
-	onMount(() => {
-		priceList.connect();
-	});
 </script>
 
 <svelte:window

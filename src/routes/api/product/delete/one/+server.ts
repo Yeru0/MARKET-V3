@@ -36,7 +36,7 @@ export const DELETE = async ({ request }: RequestEvent): Promise<Response> => {
 					id: json.id
 				}
 			})
-			.then((result: Product | null) => {
+			.then(async (result: Product | null) => {
 				if (!result) {
 					response = new Response(JSON.stringify("No product found with the specified ID"), {
 						status: 200,
@@ -46,6 +46,13 @@ export const DELETE = async ({ request }: RequestEvent): Promise<Response> => {
 				response = new Response(JSON.stringify(result), {
 					status: 200,
 					statusText: "Product deleted successfully!"
+				});
+				await db.productCategory.deleteMany({
+					where: {
+						Products: {
+							none: {}
+						}
+					}
 				});
 			})
 			.catch((err: Error) => {
