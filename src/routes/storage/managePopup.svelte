@@ -214,7 +214,16 @@
 	<div hidden={priceType == "num"}>
 		<label for="markup">
 			Profit
-			<input type="number" name="markup" id="markup" bind:value={product.markup} max="1000000" min="0" required />
+			<input
+				type="number"
+				name="markup"
+				id="markup"
+				bind:value={product.markup}
+				max="1000000"
+				min="0"
+				step="0.01"
+				required
+			/>
 			%
 		</label>
 		<label for="staff-markup">
@@ -226,6 +235,7 @@
 				bind:value={product.staffMarkup}
 				max="1000000"
 				min="0"
+				step="0.01"
 				required
 			/>
 			%

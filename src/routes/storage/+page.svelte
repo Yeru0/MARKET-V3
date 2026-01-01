@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { invalidate } from "$app/navigation";
-	import { ProductC, ProductsC, toProdC } from "$lib/client/objects.svelte";
+	import { POJOToProdC, ProductC, ProductsC } from "$lib/client/objects.svelte";
 	import ManagePopup from "./managePopup.svelte";
 	import DeletePopup from "./deletePopup.svelte";
 	import RenderProduct from "./renderProduct.svelte";
@@ -19,32 +19,11 @@
 		renderableProducts = POJOToProdC(productsPOJO);
 	});
 
-	let POJOToProdC = (obj: any): ProductC[] => {
-		let returnList: ProductC[] = [];
-		for (let o of obj) {
-			returnList.push(
-				new ProductC({
-					id: o.id,
-					name: o.name,
-					markup: o.markup,
-					staffMarkup: o.staffMarkup,
-					allSupplies: o.allSupplies,
-					supplyPrice: o.supplyPrice,
-					productCategory: o.category.name,
-					productCategoryId: o.category.id,
-					SaleEvents: o.sales
-				})
-			);
-		}
-
-		return returnList;
-	};
-
 	let getData = async () => {
 		// Invalidate "data" and reassigns dependant variables
 		await invalidate("/api/product/read/all");
 		productsPOJO = JSON.parse(data.products);
-		renderableProducts = toProdC(productsPOJO);
+		renderableProducts = POJOToProdC(productsPOJO);
 	};
 
 	// Setup for the add popup

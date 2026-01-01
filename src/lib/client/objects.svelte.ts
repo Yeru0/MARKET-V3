@@ -4,7 +4,7 @@ import type { SaleEventWP } from "$lib/types/db";
 import { CategoryDB, ProductDB, SaleDB } from "./db";
 
 export class ProductC {
-	private salesDB = new SaleDB();
+	private prodsDB = new ProductDB();
 
 	id: string = $state("");
 	name: string = $state("");
@@ -32,6 +32,7 @@ export class ProductC {
 	suppliesPrice: number = $state(0);
 	soldToStaff: number = $state(0);
 	soldToCustomers: number = $state(0);
+	sold: number = $state(0);
 	takenOut: number = $state(0);
 	inStorage: number = $state(0);
 
@@ -51,10 +52,13 @@ export class ProductC {
 	}
 
 	async sell() {
-		this.sales = await this.salesDB.read();
+		let thisProd = await this.prodsDB.read(this.id);
+		this.sales = thisProd[0].SaleEvents;
+		this.calculateDerivedProperties();
 	}
 
 	calculateDerivedProperties() {
+		this.resetPropsDerived();
 		this.suppliesPrice = this.supplyPrice * this.allSupplies;
 
 		if (this.sales !== undefined) {
@@ -75,6 +79,7 @@ export class ProductC {
 			this.sales = [];
 		}
 
+		this.sold = this.soldToStaff + this.soldToCustomers;
 		this.markupPriceSingle = Math.ceil((this.supplyPrice + (this.supplyPrice / 100) * this.markup) / 5) * 5;
 		this.staffMarkupPriceSingle =
 			Math.ceil((this.supplyPrice + (this.supplyPrice / 100) * this.staffMarkup) / 5) * 5;
@@ -88,6 +93,24 @@ export class ProductC {
 		this.profitMultiple = this.markupPriceMultiple - this.suppliesPrice;
 
 		this.inStorage = this.allSupplies - this.sales.length;
+	}
+
+	resetPropsDerived() {
+		this.markupPriceSingle = 0;
+		this.staffMarkupPriceSingle = 0;
+		this.markupPriceMultiple = 0;
+		this.staffMarkupPriceMultiple = 0;
+		this.staffProfitSingle = 0;
+		this.profitSingle = 0;
+		this.staffProfitMultiple = 0;
+		this.profitMultiple = 0;
+
+		this.suppliesPrice = 0;
+		this.soldToStaff = 0;
+		this.soldToCustomers = 0;
+		this.sold = 0;
+		this.takenOut = 0;
+		this.inStorage = 0;
 	}
 }
 
@@ -303,5 +326,26 @@ export const toCatC = (obj: ProductCategoryWP[]): ProductCategoryC[] => {
 	for (let o of obj) {
 		returnList.push(new ProductCategoryC(o));
 	}
+	return returnList;
+};
+
+export let POJOToProdC = (obj: any): ProductC[] => {
+	let returnList: ProductC[] = [];
+	for (let o of obj) {
+		returnList.push(
+			new ProductC({
+				id: o.id,
+				name: o.name,
+				markup: o.markup,
+				staffMarkup: o.staffMarkup,
+				allSupplies: o.allSupplies,
+				supplyPrice: o.supplyPrice,
+				productCategory: o.category.name,
+				productCategoryId: o.category.id,
+				SaleEvents: o.sales
+			})
+		);
+	}
+
 	return returnList;
 };
