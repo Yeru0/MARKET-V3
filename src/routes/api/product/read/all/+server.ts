@@ -10,7 +10,11 @@ export const POST = async (): Promise<Response> => {
 	await db.product
 		.findMany({
 			include: {
-				SaleEvents: true,
+				saleEventProducts: {
+					include: {
+						saleEvent: true
+					}
+				},
 				productCategory: true
 			},
 			orderBy: {

@@ -31,20 +31,23 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 		// Reformatting the input array from string[] to {id: string}[] for simplicity of input
 		let connectableIDs: { id: string }[] = [];
 
-		for (let id of json.productIDs) {
+		for (let id of json.products.map((item) => item.id)) {
 			connectableIDs.push({ id });
 		}
 
 		await db.saleEvent
 			.create({
 				data: {
-					Products: {
-						connect: connectableIDs
+					saleEventProducts: {
+						create: json.products.map((p) => ({
+							amount: p.qty,
+							product: { connect: { id: p.id } }
+						}))
 					},
 					to: json.to
 				},
 				include: {
-					Products: true
+					saleEventProducts: true
 				}
 			})
 			.then((result: SaleEvent) => {

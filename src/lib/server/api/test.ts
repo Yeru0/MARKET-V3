@@ -19,9 +19,8 @@ export const createDummyProducts = async (
 		supplyPrice: 500
 	}
 ): Promise<ProductWA[]> => {
-	let products: ProductWA[] = [];
 	for (let n = 0; n < amount; n++) {
-		const product = await db.product.create({
+		await db.product.create({
 			data: {
 				...inputData,
 				productCategory: {
@@ -34,42 +33,50 @@ export const createDummyProducts = async (
 						}
 					}
 				}
-			},
-			include: {
-				SaleEvents: true
 			}
 		});
-		products.push(product as ProductWA);
 	}
 
-	return (await db.product.findMany({ orderBy: { name: "asc" }, include: { SaleEvents: true } })) as ProductWA[];
+	return (await db.product.findMany({
+		orderBy: { name: "asc" },
+		include: { saleEventProducts: { include: { saleEvent: true } }, productCategory: true }
+	})) as ProductWA[];
 };
 
 export const readProductDB = async () => {
-	return (await db.product.findMany({ include: { SaleEvents: true }, orderBy: { name: "asc" } })) as ProductWA[];
+	return (await db.product.findMany({
+		include: { saleEventProducts: true },
+		orderBy: { name: "asc" }
+	})) as ProductWA[];
 };
 
 export const eraseProductDB = async () => {
 	await db.product.deleteMany();
 };
 
-export const createDummySales = async (ids: { id: string }[], amount: number): Promise<SaleEvent[]> => {
+export const createDummySales = async (
+	products: { id: string; qty: number }[],
+	amount: number
+): Promise<SaleEvent[]> => {
 	let sales: SaleEvent[] = [];
 	for (let n = 0; n < amount; n++) {
 		const sale = await db.saleEvent.create({
 			data: {
-				Products: {
-					connect: ids
+				saleEventProducts: {
+					create: products.map((p) => ({
+						amount: p.qty,
+						product: { connect: { id: p.id } }
+					}))
 				},
-				to: "t"
+				to: "n"
 			},
 			include: {
-				Products: true
+				saleEventProducts: true
 			}
 		});
 		sales.push(sale);
 	}
-	return await db.saleEvent.findMany({ orderBy: { timestamp: "desc" }, include: { Products: true } });
+	return await db.saleEvent.findMany({ orderBy: { timestamp: "desc" }, include: { saleEventProducts: true } });
 };
 
 export const readSaleDB = async () => {
@@ -78,12 +85,13 @@ export const readSaleDB = async () => {
 			timestamp: "desc"
 		},
 		include: {
-			Products: true
+			saleEventProducts: true
 		}
 	});
 };
 
 export const eraseSaleDB = async () => {
+	await db.saleEventProduct.deleteMany();
 	await db.saleEvent.deleteMany();
 };
 
@@ -100,6 +108,7 @@ export const deleteCategoryDB = async () => {
 };
 
 export const nuke = async () => {
+	await db.saleEventProduct.deleteMany();
 	await db.product.deleteMany();
 	await db.saleEvent.deleteMany();
 	await db.productCategory.deleteMany();

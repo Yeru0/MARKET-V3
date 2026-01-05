@@ -166,14 +166,14 @@ export type SaleEventWhereInput = {
   id?: Prisma.StringFilter<"SaleEvent"> | string
   to?: Prisma.StringFilter<"SaleEvent"> | string
   timestamp?: Prisma.DateTimeFilter<"SaleEvent"> | Date | string
-  Products?: Prisma.ProductListRelationFilter
+  saleEventProducts?: Prisma.SaleEventProductListRelationFilter
 }
 
 export type SaleEventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
-  Products?: Prisma.ProductOrderByRelationAggregateInput
+  saleEventProducts?: Prisma.SaleEventProductOrderByRelationAggregateInput
 }
 
 export type SaleEventWhereUniqueInput = Prisma.AtLeast<{
@@ -183,7 +183,7 @@ export type SaleEventWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SaleEventWhereInput | Prisma.SaleEventWhereInput[]
   to?: Prisma.StringFilter<"SaleEvent"> | string
   timestamp?: Prisma.DateTimeFilter<"SaleEvent"> | Date | string
-  Products?: Prisma.ProductListRelationFilter
+  saleEventProducts?: Prisma.SaleEventProductListRelationFilter
 }, "id">
 
 export type SaleEventOrderByWithAggregationInput = {
@@ -208,28 +208,28 @@ export type SaleEventCreateInput = {
   id?: string
   to: string
   timestamp?: Date | string
-  Products?: Prisma.ProductCreateNestedManyWithoutSaleEventsInput
+  saleEventProducts?: Prisma.SaleEventProductCreateNestedManyWithoutSaleEventInput
 }
 
 export type SaleEventUncheckedCreateInput = {
   id?: string
   to: string
   timestamp?: Date | string
-  Products?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleEventsInput
+  saleEventProducts?: Prisma.SaleEventProductUncheckedCreateNestedManyWithoutSaleEventInput
 }
 
 export type SaleEventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Products?: Prisma.ProductUpdateManyWithoutSaleEventsNestedInput
+  saleEventProducts?: Prisma.SaleEventProductUpdateManyWithoutSaleEventNestedInput
 }
 
 export type SaleEventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Products?: Prisma.ProductUncheckedUpdateManyWithoutSaleEventsNestedInput
+  saleEventProducts?: Prisma.SaleEventProductUncheckedUpdateManyWithoutSaleEventNestedInput
 }
 
 export type SaleEventCreateManyInput = {
@@ -250,16 +250,6 @@ export type SaleEventUncheckedUpdateManyInput = {
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type SaleEventListRelationFilter = {
-  every?: Prisma.SaleEventWhereInput
-  some?: Prisma.SaleEventWhereInput
-  none?: Prisma.SaleEventWhereInput
-}
-
-export type SaleEventOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type SaleEventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
@@ -278,103 +268,64 @@ export type SaleEventMinOrderByAggregateInput = {
   timestamp?: Prisma.SortOrder
 }
 
-export type SaleEventCreateNestedManyWithoutProductsInput = {
-  create?: Prisma.XOR<Prisma.SaleEventCreateWithoutProductsInput, Prisma.SaleEventUncheckedCreateWithoutProductsInput> | Prisma.SaleEventCreateWithoutProductsInput[] | Prisma.SaleEventUncheckedCreateWithoutProductsInput[]
-  connectOrCreate?: Prisma.SaleEventCreateOrConnectWithoutProductsInput | Prisma.SaleEventCreateOrConnectWithoutProductsInput[]
-  connect?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-}
-
-export type SaleEventUncheckedCreateNestedManyWithoutProductsInput = {
-  create?: Prisma.XOR<Prisma.SaleEventCreateWithoutProductsInput, Prisma.SaleEventUncheckedCreateWithoutProductsInput> | Prisma.SaleEventCreateWithoutProductsInput[] | Prisma.SaleEventUncheckedCreateWithoutProductsInput[]
-  connectOrCreate?: Prisma.SaleEventCreateOrConnectWithoutProductsInput | Prisma.SaleEventCreateOrConnectWithoutProductsInput[]
-  connect?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-}
-
-export type SaleEventUpdateManyWithoutProductsNestedInput = {
-  create?: Prisma.XOR<Prisma.SaleEventCreateWithoutProductsInput, Prisma.SaleEventUncheckedCreateWithoutProductsInput> | Prisma.SaleEventCreateWithoutProductsInput[] | Prisma.SaleEventUncheckedCreateWithoutProductsInput[]
-  connectOrCreate?: Prisma.SaleEventCreateOrConnectWithoutProductsInput | Prisma.SaleEventCreateOrConnectWithoutProductsInput[]
-  upsert?: Prisma.SaleEventUpsertWithWhereUniqueWithoutProductsInput | Prisma.SaleEventUpsertWithWhereUniqueWithoutProductsInput[]
-  set?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  disconnect?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  delete?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  connect?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  update?: Prisma.SaleEventUpdateWithWhereUniqueWithoutProductsInput | Prisma.SaleEventUpdateWithWhereUniqueWithoutProductsInput[]
-  updateMany?: Prisma.SaleEventUpdateManyWithWhereWithoutProductsInput | Prisma.SaleEventUpdateManyWithWhereWithoutProductsInput[]
-  deleteMany?: Prisma.SaleEventScalarWhereInput | Prisma.SaleEventScalarWhereInput[]
-}
-
-export type SaleEventUncheckedUpdateManyWithoutProductsNestedInput = {
-  create?: Prisma.XOR<Prisma.SaleEventCreateWithoutProductsInput, Prisma.SaleEventUncheckedCreateWithoutProductsInput> | Prisma.SaleEventCreateWithoutProductsInput[] | Prisma.SaleEventUncheckedCreateWithoutProductsInput[]
-  connectOrCreate?: Prisma.SaleEventCreateOrConnectWithoutProductsInput | Prisma.SaleEventCreateOrConnectWithoutProductsInput[]
-  upsert?: Prisma.SaleEventUpsertWithWhereUniqueWithoutProductsInput | Prisma.SaleEventUpsertWithWhereUniqueWithoutProductsInput[]
-  set?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  disconnect?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  delete?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  connect?: Prisma.SaleEventWhereUniqueInput | Prisma.SaleEventWhereUniqueInput[]
-  update?: Prisma.SaleEventUpdateWithWhereUniqueWithoutProductsInput | Prisma.SaleEventUpdateWithWhereUniqueWithoutProductsInput[]
-  updateMany?: Prisma.SaleEventUpdateManyWithWhereWithoutProductsInput | Prisma.SaleEventUpdateManyWithWhereWithoutProductsInput[]
-  deleteMany?: Prisma.SaleEventScalarWhereInput | Prisma.SaleEventScalarWhereInput[]
+export type SaleEventScalarRelationFilter = {
+  is?: Prisma.SaleEventWhereInput
+  isNot?: Prisma.SaleEventWhereInput
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
-export type SaleEventCreateWithoutProductsInput = {
+export type SaleEventCreateNestedOneWithoutSaleEventProductsInput = {
+  create?: Prisma.XOR<Prisma.SaleEventCreateWithoutSaleEventProductsInput, Prisma.SaleEventUncheckedCreateWithoutSaleEventProductsInput>
+  connectOrCreate?: Prisma.SaleEventCreateOrConnectWithoutSaleEventProductsInput
+  connect?: Prisma.SaleEventWhereUniqueInput
+}
+
+export type SaleEventUpdateOneRequiredWithoutSaleEventProductsNestedInput = {
+  create?: Prisma.XOR<Prisma.SaleEventCreateWithoutSaleEventProductsInput, Prisma.SaleEventUncheckedCreateWithoutSaleEventProductsInput>
+  connectOrCreate?: Prisma.SaleEventCreateOrConnectWithoutSaleEventProductsInput
+  upsert?: Prisma.SaleEventUpsertWithoutSaleEventProductsInput
+  connect?: Prisma.SaleEventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SaleEventUpdateToOneWithWhereWithoutSaleEventProductsInput, Prisma.SaleEventUpdateWithoutSaleEventProductsInput>, Prisma.SaleEventUncheckedUpdateWithoutSaleEventProductsInput>
+}
+
+export type SaleEventCreateWithoutSaleEventProductsInput = {
   id?: string
   to: string
   timestamp?: Date | string
 }
 
-export type SaleEventUncheckedCreateWithoutProductsInput = {
+export type SaleEventUncheckedCreateWithoutSaleEventProductsInput = {
   id?: string
   to: string
   timestamp?: Date | string
 }
 
-export type SaleEventCreateOrConnectWithoutProductsInput = {
+export type SaleEventCreateOrConnectWithoutSaleEventProductsInput = {
   where: Prisma.SaleEventWhereUniqueInput
-  create: Prisma.XOR<Prisma.SaleEventCreateWithoutProductsInput, Prisma.SaleEventUncheckedCreateWithoutProductsInput>
+  create: Prisma.XOR<Prisma.SaleEventCreateWithoutSaleEventProductsInput, Prisma.SaleEventUncheckedCreateWithoutSaleEventProductsInput>
 }
 
-export type SaleEventUpsertWithWhereUniqueWithoutProductsInput = {
-  where: Prisma.SaleEventWhereUniqueInput
-  update: Prisma.XOR<Prisma.SaleEventUpdateWithoutProductsInput, Prisma.SaleEventUncheckedUpdateWithoutProductsInput>
-  create: Prisma.XOR<Prisma.SaleEventCreateWithoutProductsInput, Prisma.SaleEventUncheckedCreateWithoutProductsInput>
+export type SaleEventUpsertWithoutSaleEventProductsInput = {
+  update: Prisma.XOR<Prisma.SaleEventUpdateWithoutSaleEventProductsInput, Prisma.SaleEventUncheckedUpdateWithoutSaleEventProductsInput>
+  create: Prisma.XOR<Prisma.SaleEventCreateWithoutSaleEventProductsInput, Prisma.SaleEventUncheckedCreateWithoutSaleEventProductsInput>
+  where?: Prisma.SaleEventWhereInput
 }
 
-export type SaleEventUpdateWithWhereUniqueWithoutProductsInput = {
-  where: Prisma.SaleEventWhereUniqueInput
-  data: Prisma.XOR<Prisma.SaleEventUpdateWithoutProductsInput, Prisma.SaleEventUncheckedUpdateWithoutProductsInput>
+export type SaleEventUpdateToOneWithWhereWithoutSaleEventProductsInput = {
+  where?: Prisma.SaleEventWhereInput
+  data: Prisma.XOR<Prisma.SaleEventUpdateWithoutSaleEventProductsInput, Prisma.SaleEventUncheckedUpdateWithoutSaleEventProductsInput>
 }
 
-export type SaleEventUpdateManyWithWhereWithoutProductsInput = {
-  where: Prisma.SaleEventScalarWhereInput
-  data: Prisma.XOR<Prisma.SaleEventUpdateManyMutationInput, Prisma.SaleEventUncheckedUpdateManyWithoutProductsInput>
-}
-
-export type SaleEventScalarWhereInput = {
-  AND?: Prisma.SaleEventScalarWhereInput | Prisma.SaleEventScalarWhereInput[]
-  OR?: Prisma.SaleEventScalarWhereInput[]
-  NOT?: Prisma.SaleEventScalarWhereInput | Prisma.SaleEventScalarWhereInput[]
-  id?: Prisma.StringFilter<"SaleEvent"> | string
-  to?: Prisma.StringFilter<"SaleEvent"> | string
-  timestamp?: Prisma.DateTimeFilter<"SaleEvent"> | Date | string
-}
-
-export type SaleEventUpdateWithoutProductsInput = {
+export type SaleEventUpdateWithoutSaleEventProductsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type SaleEventUncheckedUpdateWithoutProductsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  to?: Prisma.StringFieldUpdateOperationsInput | string
-  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type SaleEventUncheckedUpdateManyWithoutProductsInput = {
+export type SaleEventUncheckedUpdateWithoutSaleEventProductsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -386,11 +337,11 @@ export type SaleEventUncheckedUpdateManyWithoutProductsInput = {
  */
 
 export type SaleEventCountOutputType = {
-  Products: number
+  saleEventProducts: number
 }
 
 export type SaleEventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Products?: boolean | SaleEventCountOutputTypeCountProductsArgs
+  saleEventProducts?: boolean | SaleEventCountOutputTypeCountSaleEventProductsArgs
 }
 
 /**
@@ -406,8 +357,8 @@ export type SaleEventCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
 /**
  * SaleEventCountOutputType without action
  */
-export type SaleEventCountOutputTypeCountProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProductWhereInput
+export type SaleEventCountOutputTypeCountSaleEventProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SaleEventProductWhereInput
 }
 
 
@@ -415,7 +366,7 @@ export type SaleEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   to?: boolean
   timestamp?: boolean
-  Products?: boolean | Prisma.SaleEvent$ProductsArgs<ExtArgs>
+  saleEventProducts?: boolean | Prisma.SaleEvent$saleEventProductsArgs<ExtArgs>
   _count?: boolean | Prisma.SaleEventCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["saleEvent"]>
 
@@ -439,7 +390,7 @@ export type SaleEventSelectScalar = {
 
 export type SaleEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "timestamp", ExtArgs["result"]["saleEvent"]>
 export type SaleEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Products?: boolean | Prisma.SaleEvent$ProductsArgs<ExtArgs>
+  saleEventProducts?: boolean | Prisma.SaleEvent$saleEventProductsArgs<ExtArgs>
   _count?: boolean | Prisma.SaleEventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SaleEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -448,7 +399,7 @@ export type SaleEventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $SaleEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SaleEvent"
   objects: {
-    Products: Prisma.$ProductPayload<ExtArgs>[]
+    saleEventProducts: Prisma.$SaleEventProductPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -848,7 +799,7 @@ readonly fields: SaleEventFieldRefs;
  */
 export interface Prisma__SaleEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Products<T extends Prisma.SaleEvent$ProductsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SaleEvent$ProductsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  saleEventProducts<T extends Prisma.SaleEvent$saleEventProductsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SaleEvent$saleEventProductsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SaleEventProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1267,27 +1218,27 @@ export type SaleEventDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * SaleEvent.Products
+ * SaleEvent.saleEventProducts
  */
-export type SaleEvent$ProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SaleEvent$saleEventProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Product
+   * Select specific fields to fetch from the SaleEventProduct
    */
-  select?: Prisma.ProductSelect<ExtArgs> | null
+  select?: Prisma.SaleEventProductSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Product
+   * Omit specific fields from the SaleEventProduct
    */
-  omit?: Prisma.ProductOmit<ExtArgs> | null
+  omit?: Prisma.SaleEventProductOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProductInclude<ExtArgs> | null
-  where?: Prisma.ProductWhereInput
-  orderBy?: Prisma.ProductOrderByWithRelationInput | Prisma.ProductOrderByWithRelationInput[]
-  cursor?: Prisma.ProductWhereUniqueInput
+  include?: Prisma.SaleEventProductInclude<ExtArgs> | null
+  where?: Prisma.SaleEventProductWhereInput
+  orderBy?: Prisma.SaleEventProductOrderByWithRelationInput | Prisma.SaleEventProductOrderByWithRelationInput[]
+  cursor?: Prisma.SaleEventProductWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ProductScalarFieldEnum | Prisma.ProductScalarFieldEnum[]
+  distinct?: Prisma.SaleEventProductScalarFieldEnum | Prisma.SaleEventProductScalarFieldEnum[]
 }
 
 /**

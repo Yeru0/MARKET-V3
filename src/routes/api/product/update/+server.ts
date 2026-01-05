@@ -14,7 +14,6 @@ export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 
 	try {
 		json = (await request.json()) as RequestUpdateJSONBody;
-
 		if (!validateUpdateRequestJSON(json)) {
 			response = new Response(
 				JSON.stringify(
@@ -29,7 +28,7 @@ export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 			return response;
 		}
 
-		db.product
+		await db.product
 			.update({
 				where: {
 					id: json.id
@@ -52,7 +51,7 @@ export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 					}
 				},
 				include: {
-					SaleEvents: true
+					saleEventProducts: true
 				}
 			})
 			.then(async (result: Product) => {

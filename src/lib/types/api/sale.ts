@@ -1,5 +1,5 @@
 export interface RequestCreateJSONBody {
-	productIDs: string[];
+	products: { id: string; qty: number }[];
 	to: "n" | "s" | "t";
 }
 

@@ -108,7 +108,7 @@ export class SaleDB {
 		this.setup(0);
 	}
 
-	async register(IDs: { productIDs: string[]; to: "n" | "s" | "t" }): Promise<SaleEventWP> {
+	async register(IDs: { products: { id: string; qty: number }[]; to: "n" | "s" | "t" }): Promise<SaleEventWP> {
 		let response = await api("sale/register", "POST", IDs);
 
 		this.sales = await this.read();

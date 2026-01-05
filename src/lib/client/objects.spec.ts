@@ -10,7 +10,9 @@ import {
 import { ProductC, ProductCategoryC, ProductsC, toCatC, toProdC } from "./objects.svelte";
 import { CategoryDB, ProductDB } from "./db";
 
-describe.sequential("Testing the product object", () => {
+const runs = Array(20).fill(null);
+
+describe.sequential.each(runs)("Testing the product object", () => {
 	let Products = new ProductsC();
 
 	beforeEach(async () => {
@@ -29,7 +31,7 @@ describe.sequential("Testing the product object", () => {
 
 		let productsFromDB = await readProductDB();
 
-		expect((await productsFromDB).map((item) => item.id)).toContain(product.id);
+		expect(productsFromDB.map((item) => item.id)).toContain(product.id);
 	});
 
 	it("checks if a product can be read", async () => {
@@ -126,7 +128,7 @@ describe.sequential("Testing the product object", () => {
 
 		for (let p of productsFromDB) {
 			productClasses.push(
-				new ProductC({
+				await new ProductC({
 					...p
 				})
 			);
@@ -137,14 +139,27 @@ describe.sequential("Testing the product object", () => {
 		let sales = await readSaleDB();
 
 		expect(sales.length).toEqual(1);
-		expect(sales[0].Products.map((item) => item.id)).toEqual(productsFromDB.map((item) => item.id));
+		expect(
+			sales[0].saleEventProducts
+				.map((item) => item.productId)
+				.sort((a, b) => {
+					return a.localeCompare(b);
+				})
+		).toEqual(
+			productsFromDB
+				.map((item) => item.id)
+				.sort((a, b) => {
+					return a.localeCompare(b);
+				})
+		);
 	});
 
 	it("checks if sales can be read", async () => {
 		let productsFromDB = await createDummyProducts();
 		let salesFromDB = await createDummySales(
 			productsFromDB.map((item) => ({
-				id: item.id
+				id: item.id,
+				qty: 5
 			})),
 			50
 		);
@@ -160,7 +175,8 @@ describe.sequential("Testing the product object", () => {
 		let productsFromDB = await readProductDB();
 		await createDummySales(
 			productsFromDB.map((item) => ({
-				id: item.id
+				id: item.id,
+				qty: 5
 			})),
 			50
 		);
@@ -177,7 +193,8 @@ describe.sequential("Testing the product object", () => {
 		let productsFromDB = await readProductDB();
 		await createDummySales(
 			productsFromDB.map((item) => ({
-				id: item.id
+				id: item.id,
+				qty: 5
 			})),
 			50
 		);

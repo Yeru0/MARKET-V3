@@ -10,5 +10,6 @@
  */
 export type * from './models/Product'
 export type * from './models/SaleEvent'
+export type * from './models/SaleEventProduct'
 export type * from './models/ProductCategory'
 export type * from './commonInputTypes'

@@ -10,6 +10,7 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 		status: 500,
 		statusText: "Database create product action could not be performed!"
 	});
+
 	try {
 		json = (await request.json()) as RequestCreateJSONBody;
 
@@ -47,7 +48,11 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 					}
 				},
 				include: {
-					SaleEvents: true
+					saleEventProducts: {
+						include: {
+							saleEvent: true
+						}
+					}
 				}
 			})
 			.then((result: Product) => {
@@ -57,14 +62,14 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 				});
 			})
 			.catch((err: Error) => {
-				console.error(err);
+				// console.error(err);
 				response = new Response(JSON.stringify(err.message), {
 					status: 500,
 					statusText: err.message
 				});
 			});
 	} catch (error) {
-		console.error(error);
+		// console.error(error);
 	}
 	return response;
 };

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { priceList } from "$lib/client/priceList.js";
+	import { priceList } from "$lib/client/priceList.svelte.js";
 
 	let { data } = $props();
 

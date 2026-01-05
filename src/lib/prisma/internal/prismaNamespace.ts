@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Product: 'Product',
   SaleEvent: 'SaleEvent',
+  SaleEventProduct: 'SaleEventProduct',
   ProductCategory: 'ProductCategory'
 } as const
 
@@ -402,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "product" | "saleEvent" | "productCategory"
+    modelProps: "product" | "saleEvent" | "saleEventProduct" | "productCategory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -554,6 +555,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SaleEventProduct: {
+      payload: Prisma.$SaleEventProductPayload<ExtArgs>
+      fields: Prisma.SaleEventProductFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SaleEventProductFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SaleEventProductFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>
+        }
+        findFirst: {
+          args: Prisma.SaleEventProductFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SaleEventProductFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>
+        }
+        findMany: {
+          args: Prisma.SaleEventProductFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>[]
+        }
+        create: {
+          args: Prisma.SaleEventProductCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>
+        }
+        createMany: {
+          args: Prisma.SaleEventProductCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SaleEventProductCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>[]
+        }
+        delete: {
+          args: Prisma.SaleEventProductDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>
+        }
+        update: {
+          args: Prisma.SaleEventProductUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>
+        }
+        deleteMany: {
+          args: Prisma.SaleEventProductDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SaleEventProductUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SaleEventProductUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>[]
+        }
+        upsert: {
+          args: Prisma.SaleEventProductUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaleEventProductPayload>
+        }
+        aggregate: {
+          args: Prisma.SaleEventProductAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSaleEventProduct>
+        }
+        groupBy: {
+          args: Prisma.SaleEventProductGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaleEventProductGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SaleEventProductCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaleEventProductCountAggregateOutputType> | number
+        }
+      }
+    }
     ProductCategory: {
       payload: Prisma.$ProductCategoryPayload<ExtArgs>
       fields: Prisma.ProductCategoryFieldRefs
@@ -684,6 +759,16 @@ export const SaleEventScalarFieldEnum = {
 } as const
 
 export type SaleEventScalarFieldEnum = (typeof SaleEventScalarFieldEnum)[keyof typeof SaleEventScalarFieldEnum]
+
+
+export const SaleEventProductScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  saleEventId: 'saleEventId',
+  productId: 'productId'
+} as const
+
+export type SaleEventProductScalarFieldEnum = (typeof SaleEventProductScalarFieldEnum)[keyof typeof SaleEventProductScalarFieldEnum]
 
 
 export const ProductCategoryScalarFieldEnum = {
@@ -840,6 +925,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   product?: Prisma.ProductOmit
   saleEvent?: Prisma.SaleEventOmit
+  saleEventProduct?: Prisma.SaleEventProductOmit
   productCategory?: Prisma.ProductCategoryOmit
 }
 

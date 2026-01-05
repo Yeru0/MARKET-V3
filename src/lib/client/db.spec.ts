@@ -54,7 +54,8 @@ describe.sequential("Testing front end db interactions", async () => {
 		dummyProducts = await createDummyProducts(amt);
 		dummySales = await createDummySales(
 			(await productsDB.read()).map((item) => ({
-				id: item.id
+				id: item.id,
+				qty: 5
 			})),
 			amt
 		);
@@ -65,7 +66,7 @@ describe.sequential("Testing front end db interactions", async () => {
 	// ==== Products ====
 
 	it("checks if a new product is created", async () => {
-		nuke();
+		await nuke();
 		let productFromBackEnd = await productsDB.create({
 			name: "Test",
 			markup: 85,
@@ -163,7 +164,7 @@ describe.sequential("Testing front end db interactions", async () => {
 
 		await eraseSaleDB();
 		let saleFromBackEnd = await salesDB.register({
-			productIDs: dummyProducts.map((item) => `${item.id}`),
+			products: dummyProducts.map((item) => ({ id: `${item.id}`, qty: 5 })),
 			to: "t"
 		});
 
@@ -200,6 +201,8 @@ describe.sequential("Testing front end db interactions", async () => {
 		expect(salesFromBackEnd.length).toEqual(25);
 		expect(salesFromBackEnd.map((item) => item.id)).toEqual(sales.slice(25, 50).map((item) => item.id));
 	});
+
+	// ==== Categories ====
 
 	it("check if all the categories are read", async () => {
 		categoriesFromBackEnd = await categoriesDB.read();

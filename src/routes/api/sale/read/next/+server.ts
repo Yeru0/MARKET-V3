@@ -38,7 +38,7 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 					timestamp: "desc"
 				},
 				include: {
-					Products: true
+					saleEventProducts: true
 				}
 			})
 			.then((result: SaleEvent[] | null) => {

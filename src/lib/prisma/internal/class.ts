@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "sqlite",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/lib/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Product {\n  id                String           @id @default(cuid())\n  name              String\n  markup            Int\n  staffMarkup       Int\n  allSupplies       Int\n  supplyPrice       Int\n  SaleEvents        SaleEvent[]\n  productCategory   ProductCategory? @relation(fields: [productCategoryId], references: [id])\n  productCategoryId String?\n}\n\nmodel SaleEvent {\n  id        String    @id @default(cuid())\n  Products  Product[]\n  to        String\n  timestamp DateTime  @default(now())\n}\n\nmodel ProductCategory {\n  id       String    @id @default(cuid())\n  Products Product[]\n  name     String    @unique\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/lib/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Product {\n  id                String             @id @default(cuid())\n  name              String\n  markup            Int\n  staffMarkup       Int\n  allSupplies       Int\n  supplyPrice       Int\n  productCategory   ProductCategory?   @relation(fields: [productCategoryId], references: [id])\n  productCategoryId String?\n  saleEventProducts SaleEventProduct[]\n}\n\nmodel SaleEvent {\n  id                String             @id @default(cuid())\n  to                String\n  timestamp         DateTime           @default(now())\n  saleEventProducts SaleEventProduct[]\n}\n\nmodel SaleEventProduct {\n  id          String    @id @default(cuid())\n  amount      Int\n  saleEvent   SaleEvent @relation(fields: [saleEventId], references: [id])\n  saleEventId String\n  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)\n  productId   String\n}\n\nmodel ProductCategory {\n  id       String    @id @default(cuid())\n  Products Product[]\n  name     String    @unique\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Product\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"markup\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"staffMarkup\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"allSupplies\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"supplyPrice\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"SaleEvents\",\"kind\":\"object\",\"type\":\"SaleEvent\",\"relationName\":\"ProductToSaleEvent\"},{\"name\":\"productCategory\",\"kind\":\"object\",\"type\":\"ProductCategory\",\"relationName\":\"ProductToProductCategory\"},{\"name\":\"productCategoryId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"SaleEvent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"Products\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"ProductToSaleEvent\"},{\"name\":\"to\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"ProductCategory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"Products\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"ProductToProductCategory\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Product\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"markup\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"staffMarkup\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"allSupplies\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"supplyPrice\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"productCategory\",\"kind\":\"object\",\"type\":\"ProductCategory\",\"relationName\":\"ProductToProductCategory\"},{\"name\":\"productCategoryId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"saleEventProducts\",\"kind\":\"object\",\"type\":\"SaleEventProduct\",\"relationName\":\"ProductToSaleEventProduct\"}],\"dbName\":null},\"SaleEvent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"to\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"saleEventProducts\",\"kind\":\"object\",\"type\":\"SaleEventProduct\",\"relationName\":\"SaleEventToSaleEventProduct\"}],\"dbName\":null},\"SaleEventProduct\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"saleEvent\",\"kind\":\"object\",\"type\":\"SaleEvent\",\"relationName\":\"SaleEventToSaleEventProduct\"},{\"name\":\"saleEventId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"ProductToSaleEventProduct\"},{\"name\":\"productId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"ProductCategory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"Products\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"ProductToProductCategory\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -193,6 +193,16 @@ export interface PrismaClient<
     * ```
     */
   get saleEvent(): Prisma.SaleEventDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.saleEventProduct`: Exposes CRUD operations for the **SaleEventProduct** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SaleEventProducts
+    * const saleEventProducts = await prisma.saleEventProduct.findMany()
+    * ```
+    */
+  get saleEventProduct(): Prisma.SaleEventProductDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
    * `prisma.productCategory`: Exposes CRUD operations for the **ProductCategory** model.

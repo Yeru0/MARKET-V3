@@ -11,22 +11,31 @@ datasource db {
 }
 
 model Product {
-  id                String           @id @default(cuid())
+  id                String             @id @default(cuid())
   name              String
   markup            Int
   staffMarkup       Int
   allSupplies       Int
   supplyPrice       Int
-  SaleEvents        SaleEvent[]
-  productCategory   ProductCategory? @relation(fields: [productCategoryId], references: [id])
+  productCategory   ProductCategory?   @relation(fields: [productCategoryId], references: [id])
   productCategoryId String?
+  saleEventProducts SaleEventProduct[]
 }
 
 model SaleEvent {
-  id        String    @id @default(cuid())
-  Products  Product[]
-  to        String
-  timestamp DateTime  @default(now())
+  id                String             @id @default(cuid())
+  to                String
+  timestamp         DateTime           @default(now())
+  saleEventProducts SaleEventProduct[]
+}
+
+model SaleEventProduct {
+  id          String    @id @default(cuid())
+  amount      Int
+  saleEvent   SaleEvent @relation(fields: [saleEventId], references: [id])
+  saleEventId String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String
 }
 
 model ProductCategory {

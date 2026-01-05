@@ -1,4 +1,4 @@
-export type ProductWA = { SaleEvents: SaleEventWP[] } & {
+export type ProductWA = { saleEventProducts: saleEventProductsWA[] } & {
 	id: string;
 	name: string;
 	markup: number;
@@ -7,6 +7,15 @@ export type ProductWA = { SaleEvents: SaleEventWP[] } & {
 	supplyPrice: number;
 	productCategory: ProductCategoryWP;
 	productCategoryId: string;
+};
+
+export type saleEventProductsWA = {
+	id: string;
+	product: ProductWA;
+	productId: string;
+	saleEvent: SaleEventWP;
+	saleEventId: string;
+	amount: number;
 };
 
 export type SaleEventWP = {

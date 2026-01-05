@@ -1,7 +1,7 @@
 import type { RequestReadJSONBody, RequestCreateJSONBody, RequestReadNextJSONBody } from "$lib/types/api/sale";
 
 export const validateCreateRequestJSON = (json: RequestCreateJSONBody) => {
-	if (!json.productIDs || typeof json.productIDs !== "object" || json.productIDs.length === 0) {
+	if (!json.products || typeof json.products !== "object" || json.products.length === 0) {
 		return false;
 	}
 

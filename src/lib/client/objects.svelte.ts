@@ -1,5 +1,5 @@
-import { PUBLIC_WEBSOCKET_PORT, PUBLIC_WEBSOCKET_URL } from "$env/static/public";
-import type { ProductCategoryWP, ProductWA } from "$lib/types/db";
+import { priceList } from "$lib/client/priceList.svelte";
+import type { ProductCategoryWP, ProductWA, saleEventProductsWA } from "$lib/types/db";
 import type { SaleEventWP } from "$lib/types/db";
 import { CategoryDB, ProductDB, SaleDB } from "./db";
 
@@ -15,7 +15,7 @@ export class ProductC {
 
 	category: ProductCategoryWP;
 	categoryId: string;
-	sales: SaleEventWP[] = $state([]);
+	sales: saleEventProductsWA[] = $state([]);
 
 	updatePopup: boolean = $state(false);
 	deletePopup: boolean = $state(false);
@@ -46,32 +46,31 @@ export class ProductC {
 		this.category = obj.productCategory;
 		this.categoryId = obj.productCategoryId;
 
-		this.sales = obj.SaleEvents;
+		this.sales = obj.saleEventProducts;
 
 		this.calculateDerivedProperties();
 	}
 
 	async sell() {
 		let thisProd = await this.prodsDB.read(this.id);
-		this.sales = thisProd[0].SaleEvents;
+		this.sales = thisProd[0].saleEventProducts;
 		this.calculateDerivedProperties();
 	}
 
 	calculateDerivedProperties() {
 		this.resetPropsDerived();
-		this.suppliesPrice = this.supplyPrice * this.allSupplies;
 
-		if (this.sales !== undefined) {
+		if (this.sales !== undefined && this.sales.length > 0) {
 			for (let s of this.sales) {
-				switch (s.to) {
+				switch (s.saleEvent.to) {
 					case "n":
-						this.soldToCustomers++;
+						this.soldToCustomers += s.amount;
 						break;
 					case "s":
-						this.soldToStaff++;
+						this.soldToStaff += s.amount;
 						break;
 					case "t":
-						this.takenOut++;
+						this.takenOut += s.amount;
 						break;
 				}
 			}
@@ -79,6 +78,7 @@ export class ProductC {
 			this.sales = [];
 		}
 
+		this.suppliesPrice = this.supplyPrice * this.allSupplies;
 		this.sold = this.soldToStaff + this.soldToCustomers;
 		this.markupPriceSingle = Math.ceil((this.supplyPrice + (this.supplyPrice / 100) * this.markup) / 5) * 5;
 		this.staffMarkupPriceSingle =
@@ -140,15 +140,124 @@ export class ProductCategoryC {
 	}
 }
 
+export class BasketC {
+	content: {
+		amt: number;
+		Product: ProductC;
+	}[] = $state([]);
+	amtSum = $state(0);
+	priceSum = $state(0);
+
+	constructor() {
+		// This is needed, so that I can bind an input to the "item.amt" value
+		// It's a kind of user input validation
+		$effect(() => {
+			for (let item of this.content) {
+				if (item.amt > item.Product.inStorage) {
+					item.amt = item.Product.inStorage;
+				}
+				if (item.amt < 0) {
+					this.remove(item.Product);
+				}
+			}
+		});
+	}
+
+	sumBasketAmount() {
+		this.amtSum = 0;
+		for (let item of this.content) {
+			this.amtSum += item.amt;
+		}
+	}
+
+	sumBasketPrice() {
+		this.priceSum = 0;
+		for (let item of this.content) {
+			this.priceSum +=
+				priceList.state === "par" ? item.Product.markupPriceSingle : item.Product.staffMarkupPriceSingle;
+		}
+	}
+
+	add(prod: ProductC, amt: number = 1) {
+		let productIDs: string[] = this.content.map((item) => {
+			return item.Product.id;
+		});
+
+		// If the product is already in the basket, increase the amount, otherwise add it to basket
+		if (!productIDs.includes(prod.id)) {
+			this.content.push({
+				Product: prod,
+				amt: amt
+			});
+			this.sort();
+			return;
+		}
+
+		let item = this.content[productIDs.indexOf(prod.id)];
+
+		if (item.amt + amt <= item.Product.inStorage) {
+			this.content[productIDs.indexOf(prod.id)].amt += amt;
+		}
+		this.sort();
+	}
+
+	remove(prod: ProductC, cut: boolean = false) {
+		let productIDs: string[] = this.content.map((item) => {
+			return item.Product.id;
+		});
+
+		let selectedProductIndex = productIDs.indexOf(prod.id);
+
+		if (cut || this.content[selectedProductIndex].amt - 1 < 1) {
+			this.content.splice(selectedProductIndex, 1);
+			this.sort();
+			return;
+		}
+		this.content[selectedProductIndex].amt--;
+		this.sort();
+	}
+
+	setAmt(prod: ProductC, amt: number) {
+		let productIDs: string[] = this.content.map((item) => {
+			return item.Product.id;
+		});
+		if (productIDs.includes(prod.id)) {
+			this.content[productIDs.indexOf(prod.id)].amt = amt;
+			this.sort();
+			return;
+		}
+
+		this.content.push({ amt, Product: prod });
+		this.sort();
+	}
+
+	sort() {
+		this.sumBasketAmount();
+		this.sumBasketPrice();
+		this.content.sort((a, b) => {
+			return a.Product.name.localeCompare(b.Product.name);
+		});
+	}
+
+	clear() {
+		this.content = [];
+	}
+	sell(): ProductC[] {
+		return this.content.map((item) => item.Product);
+	}
+}
+
 export class ProductsC {
 	private productsDB: ProductDB;
 	private salesDB: SaleDB;
 	private categoriesDB: CategoryDB;
+	basket: BasketC;
 
 	constructor() {
 		this.productsDB = new ProductDB();
 		this.salesDB = new SaleDB();
 		this.categoriesDB = new CategoryDB();
+		this.basket = new BasketC();
 	}
 
 	async new(obj: {
@@ -212,9 +321,9 @@ export class ProductsC {
 		}
 	}
 
-	async sell(products: ProductC[], to: "n" | "s" | "t"): Promise<SaleC> {
+	async sell(products: ProductC[], to: "n" | "s" | "t", qty: number = 1): Promise<SaleC> {
 		let sales = await this.salesDB.register({
-			productIDs: products.map((item) => item.id),
+			products: products.map((item) => ({ id: `${item.id}`, qty })),
 			to
 		});
 
@@ -222,6 +331,7 @@ export class ProductsC {
 			p.sell();
 		}
 
+		this.basket.clear();
 		return new SaleC({
 			...sales
 		});
@@ -253,62 +363,23 @@ export class ProductsC {
 		return toCatC(await this.categoriesDB.read());
 	}
 }
+export class KeyboardEvents {
+	shift: boolean = $state(false);
+	ctrl: boolean = $state(false);
+	alt: boolean = $state(false);
 
-export class PriceListStateC {
-	state: "org" | "par" = $state("par");
-	isOrg: boolean = this.state === "org" ? true : false;
-	isPar: boolean = this.state === "par" ? true : false;
-	private ws?: WebSocket;
-	private wsID: string = "";
-
-	constructor() {
-		this.ws = new WebSocket(`ws://${PUBLIC_WEBSOCKET_URL}:${PUBLIC_WEBSOCKET_PORT}`);
-
-		this.ws.onerror = (e) => {
-			console.error('Opening of the websocket "priceListState" failed. \n', e);
-		};
-
-		this.ws.onmessage = (message) => {
-			switch (message.data) {
-				case "org":
-					this.state = "org";
-					this.isOrg = true;
-					this.isPar = false;
-					break;
-				case "par":
-					this.state = "par";
-					this.isOrg = false;
-					this.isPar = true;
-					break;
-				default:
-					this.wsID = message.data;
-					this.ws?.send(JSON.stringify({ id: this.wsID, state: "set" }));
-			}
-		};
-	}
-
-	set(newState: "org" | "par") {
-		this.state = newState;
-		this.ws?.send(JSON.stringify({ id: this.wsID, state: newState }));
-
-		this.isOrg = newState === "org" ? true : false;
-		this.isPar = newState === "par" ? true : false;
-	}
-
-	switch() {
-		switch (this.state) {
-			case "org":
-				this.set("par");
+	set(t: "s" | "c" | "a", v: boolean) {
+		switch (t) {
+			case "s":
+				this.shift = v;
 				break;
-			case "par":
-				this.set("org");
+			case "c":
+				this.ctrl = v;
+				break;
+			case "a":
+				this.alt = v;
 				break;
 		}
-	}
-
-	close() {
-		this.ws?.send(JSON.stringify({ id: this.wsID, state: "clo" }));
-		this.ws?.close();
 	}
 }
 
@@ -342,7 +413,7 @@ export let POJOToProdC = (obj: any): ProductC[] => {
 				supplyPrice: o.supplyPrice,
 				productCategory: o.category.name,
 				productCategoryId: o.category.id,
-				SaleEvents: o.sales
+				saleEventProducts: o.sales
 			})
 		);
 	}

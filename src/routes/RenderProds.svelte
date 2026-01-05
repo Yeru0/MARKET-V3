@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { ProductC, ProductsC } from "$lib/client/objects.svelte";
-	import { priceList } from "$lib/client/priceList";
+	import { keyboardEvents } from "$lib/client/keyboardEvents";
+	import { BasketC, ProductC, ProductsC } from "$lib/client/objects.svelte";
+	import { priceList } from "$lib/client/priceList.svelte";
 	import { onMount } from "svelte";
 
-	let { products, basket }: { products: ProductC[]; basket: ProductC[] } = $props();
+	let { products, basket }: { products: ProductC[]; basket: BasketC } = $props();
 
 	let Products: ProductsC;
 	onMount(() => {
@@ -29,7 +30,24 @@
 				<td
 					><button
 						onclick={() => {
-							basket.push(p);
+							if (keyboardEvents.ctrl && keyboardEvents.shift && keyboardEvents.alt) {
+								basket.remove(p, true);
+								return;
+							}
+							if (keyboardEvents.ctrl && keyboardEvents.shift) {
+								basket.setAmt(p, 1);
+								return;
+							}
+							if (keyboardEvents.ctrl) {
+								basket.setAmt(p, p.inStorage);
+								return;
+							}
+							if (keyboardEvents.shift) {
+								basket.remove(p);
+								return;
+							}
+
+							basket.add(p);
 						}}>{p.name}</button
 					></td
 				>

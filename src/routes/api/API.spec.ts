@@ -32,7 +32,8 @@ describe.sequential("API CRUD operations", async () => {
 		products = await createDummyProducts(amt);
 		sales = await createDummySales(
 			products.map((item) => ({
-				id: item.id
+				id: item.id,
+				qty: 5
 			})),
 			amt
 		);
@@ -57,7 +58,7 @@ describe.sequential("API CRUD operations", async () => {
 		expect(sale.id).toEqual(saleFromAPI.id);
 	});
 
-	// sale/read/next
+	// sale/read/next +++++++++++++++++++++++++++++++++
 	it("check if the next sales are read", async () => {
 		response = await api("sale/read/next", "POST", { skip: 0, limit: 25 });
 		salesFromAPI = (await response.json()) as SaleEvent[];
@@ -76,7 +77,7 @@ describe.sequential("API CRUD operations", async () => {
 	it("check if sale is registered", async () => {
 		await eraseSaleDB();
 
-		response = await api("sale/register", "POST", { productIDs: products.map((item) => `${item.id}`), to: "n" });
+		response = await api("sale/register", "POST", { products: [{ qty: 5, id: products[0].id }], to: "n" });
 		saleFromAPI = (await response.json()) as SaleEvent;
 
 		let salesDB: SaleEvent[] = await readSaleDB();
