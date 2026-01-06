@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { keyboardEvents } from "$lib/client/keyboardEvents";
-	import type { BasketC, ProductC, ProductsC } from "$lib/client/objects.svelte";
+	import { ProductC, type BasketC, type ProductsC } from "$lib/client/objects.svelte";
 	import { priceList } from "$lib/client/priceList.svelte";
 
 	let { basket, Products }: { basket: BasketC; Products: ProductsC } = $props();
 
 	let handleAmtChange = (item: { amt: number; Product: ProductC }) => {
 		if (item.amt === 0 || !item.amt) {
-			basket.content[basket.content.indexOf(item)].amt = 1;
+			basket.setAmt(item.Product, 1);
+		} else {
+			basket.setAmt(item.Product, item.amt);
 		}
 	};
 
@@ -95,7 +97,11 @@
 			{/each}
 			<tr>
 				<td><strong>Összesítés</strong></td>
-				<td>{basket.amtSum}</td>
+				<td
+					>{basket.content.reduce((a, item) => {
+						return item.amt + a;
+					}, 0)}</td
+				>
 				<td>*</td>
 				<td>{basket.priceSum}</td>
 				<td>=</td>

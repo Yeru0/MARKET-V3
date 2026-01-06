@@ -51,7 +51,12 @@ export const PUT = async ({ request }: RequestEvent): Promise<Response> => {
 					}
 				},
 				include: {
-					saleEventProducts: true
+					saleEventProducts: {
+						include: {
+							saleEvent: true
+						}
+					},
+					productCategory: true
 				}
 			})
 			.then(async (result: Product) => {

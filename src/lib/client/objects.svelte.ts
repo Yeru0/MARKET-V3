@@ -60,7 +60,7 @@ export class ProductC {
 	calculateDerivedProperties() {
 		this.resetPropsDerived();
 
-		if (this.sales !== undefined && this.sales.length > 0) {
+		if (this.sales && this.sales.length > 0) {
 			for (let s of this.sales) {
 				switch (s.saleEvent.to) {
 					case "n":
