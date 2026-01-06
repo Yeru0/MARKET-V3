@@ -1,4 +1,4 @@
-import { PUBLIC_WEBSOCKET_PORT, PUBLIC_WEBSOCKET_URL } from "$env/static/public";
+import { PUBLIC_WEBSOCKET_PORT, PUBLIC_APP_IP_ADDRESS } from "$env/static/public";
 
 class PriceListStateC {
 	state: "org" | "par" = $state("par");
@@ -8,7 +8,7 @@ class PriceListStateC {
 	private wsID: string = "";
 
 	constructor() {
-		this.ws = new WebSocket(`ws://${PUBLIC_WEBSOCKET_URL}:${PUBLIC_WEBSOCKET_PORT}`);
+		this.ws = new WebSocket(`ws://${PUBLIC_APP_IP_ADDRESS}:${PUBLIC_WEBSOCKET_PORT}`);
 
 		this.ws.onerror = (e) => {
 			console.error('Opening of the websocket "priceListState" failed. \n', e);

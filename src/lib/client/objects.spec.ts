@@ -132,7 +132,10 @@ describe.sequential("Testing the product object", () => {
 			);
 		}
 
-		await Products.sell(productClasses, "t");
+		await Products.sell(
+			productClasses.map((item) => ({ Product: item, amt: 5 })),
+			"t"
+		);
 
 		let sales = await readSaleDB();
 
