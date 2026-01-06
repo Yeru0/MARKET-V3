@@ -10,9 +10,7 @@ import {
 import { ProductC, ProductCategoryC, ProductsC, toCatC, toProdC } from "./objects.svelte";
 import { CategoryDB, ProductDB } from "./db";
 
-const runs = Array(20).fill(null);
-
-describe.sequential.each(runs)("Testing the product object", () => {
+describe.sequential("Testing the product object", () => {
 	let Products = new ProductsC();
 
 	beforeEach(async () => {
