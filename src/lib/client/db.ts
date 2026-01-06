@@ -21,8 +21,8 @@ export class ProductDB {
 			});
 	}
 
-	constructor() {
-		this.setup(0);
+	constructor(reading: boolean = false) {
+		// if (reading) this.setup(0);
 	}
 
 	async delete(id: string = "all"): Promise<{ count: number }> {
@@ -103,9 +103,8 @@ export class SaleDB {
 				}
 			});
 	}
-
-	constructor() {
-		this.setup(0);
+	constructor(reading: boolean = false) {
+		if (reading) this.setup(0);
 	}
 
 	async register(obj: {
@@ -158,8 +157,8 @@ export class CategoryDB {
 			});
 	}
 
-	constructor() {
-		this.setup(0);
+	constructor(reading: boolean = false) {
+		if (reading) this.setup(0);
 	}
 
 	async read(): Promise<ProductCategoryWP[]> {

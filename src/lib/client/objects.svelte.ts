@@ -4,7 +4,7 @@ import type { SaleEventWP } from "$lib/types/db";
 import { CategoryDB, ProductDB, SaleDB } from "./db";
 
 export class ProductC {
-	private prodsDB = new ProductDB();
+	private prodsDB = new ProductDB(false);
 
 	id: string = $state("");
 	name: string = $state("");
@@ -256,13 +256,14 @@ export class ProductsC {
 
 	tips: number = $state(0);
 
-	constructor() {
-		this.productsDB = new ProductDB();
-		this.salesDB = new SaleDB();
-		this.categoriesDB = new CategoryDB();
+	constructor(reading: boolean = false) {
+		this.productsDB = new ProductDB(reading);
+		this.salesDB = new SaleDB(reading);
+		this.categoriesDB = new CategoryDB(reading);
+
 		this.basket = new BasketC();
 
-		this.calculateDerivedProperties();
+		if (reading) this.calculateDerivedProperties();
 	}
 
 	async calculateDerivedProperties() {
@@ -270,7 +271,6 @@ export class ProductsC {
 
 		this.tips = this.products.map((item) => {
 			let saleProds = item.sales;
-
 			return saleProds.reduce((a, item) => {
 				return a + item.saleEvent.tip;
 			}, 0);
@@ -292,6 +292,7 @@ export class ProductsC {
 	async get(id: string = "all", obj: { skip: number; limit: number } = { skip: 0, limit: 0 }): Promise<ProductC[]> {
 		let products: ProductWA[];
 		let returnProducts = [];
+
 		switch (id) {
 			case "all":
 				products = await this.productsDB.read();

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ProductC, ProductsC } from "$lib/client/objects.svelte";
-	import { onDestroy } from "svelte";
+	import { onDestroy, onMount } from "svelte";
 
 	interface obj {
 		name: string;
@@ -23,7 +23,11 @@
 		show: boolean;
 	} = $props();
 
-	let products = new ProductsC();
+	let products: ProductsC | undefined = $state();
+
+	onMount(() => {
+		products = new ProductsC();
+	});
 
 	// Input price in percent or in numerals
 	let priceType: "per" | "num" = $state("per");
@@ -173,7 +177,7 @@
 			list="categories"
 		/>
 		<datalist id="categories">
-			{#await products.getCategories()}
+			{#await products?.getCategories()}
 				<option value="Kategóriák betöltése folyamatban"></option>
 			{:then categories}
 				{#each categories as category}

@@ -8,9 +8,10 @@
 
 	let productsPOJO = JSON.parse(data.products);
 	let products: ProductC[] = $state([]);
-	let Products = new ProductsC();
+	let Products: ProductsC = $state(new ProductsC(false));
 
 	onMount(() => {
+		Products = new ProductsC(true);
 		products = POJOToProdC(productsPOJO);
 	});
 </script>
@@ -19,6 +20,6 @@
 
 <RenderProds {products} basket={Products.basket}></RenderProds>
 
-{#if Products.basket.content.length > 0}
+{#if Products?.basket.content.length > 0}
 	<RenderBasket basket={Products.basket} {Products}></RenderBasket>
 {/if}
