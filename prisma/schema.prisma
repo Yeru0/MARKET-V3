@@ -25,6 +25,7 @@ model Product {
 model SaleEvent {
   id                String             @id @default(cuid())
   to                String
+  tip               Int
   timestamp         DateTime           @default(now())
   saleEventProducts SaleEventProduct[]
 }

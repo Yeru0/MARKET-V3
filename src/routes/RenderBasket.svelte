@@ -17,7 +17,7 @@
 
 <form
 	onsubmit={() => {
-		Products.sell(basket.content, priceList.state === "par" ? "n" : "s");
+		Products.sell(basket.content, priceList.state === "par" ? "n" : "s", tip);
 	}}
 >
 	<h2>Kosár</h2>
@@ -37,6 +37,7 @@
 					<td>{item.Product.name}</td>
 					<td>
 						<button
+							type="button"
 							onclick={() => {
 								if (keyboardEvents.ctrl) {
 									basket.setAmt(item.Product, 1);
@@ -59,6 +60,7 @@
 							required
 						/>
 						<button
+							type="button"
 							onclick={() => {
 								if (keyboardEvents.ctrl) {
 									basket.setAmt(item.Product, item.Product.inStorage);

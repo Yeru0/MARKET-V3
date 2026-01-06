@@ -20,45 +20,69 @@ export type SaleEventModel = runtime.Types.Result.DefaultSelection<Prisma.$SaleE
 
 export type AggregateSaleEvent = {
   _count: SaleEventCountAggregateOutputType | null
+  _avg: SaleEventAvgAggregateOutputType | null
+  _sum: SaleEventSumAggregateOutputType | null
   _min: SaleEventMinAggregateOutputType | null
   _max: SaleEventMaxAggregateOutputType | null
+}
+
+export type SaleEventAvgAggregateOutputType = {
+  tip: number | null
+}
+
+export type SaleEventSumAggregateOutputType = {
+  tip: number | null
 }
 
 export type SaleEventMinAggregateOutputType = {
   id: string | null
   to: string | null
+  tip: number | null
   timestamp: Date | null
 }
 
 export type SaleEventMaxAggregateOutputType = {
   id: string | null
   to: string | null
+  tip: number | null
   timestamp: Date | null
 }
 
 export type SaleEventCountAggregateOutputType = {
   id: number
   to: number
+  tip: number
   timestamp: number
   _all: number
 }
 
 
+export type SaleEventAvgAggregateInputType = {
+  tip?: true
+}
+
+export type SaleEventSumAggregateInputType = {
+  tip?: true
+}
+
 export type SaleEventMinAggregateInputType = {
   id?: true
   to?: true
+  tip?: true
   timestamp?: true
 }
 
 export type SaleEventMaxAggregateInputType = {
   id?: true
   to?: true
+  tip?: true
   timestamp?: true
 }
 
 export type SaleEventCountAggregateInputType = {
   id?: true
   to?: true
+  tip?: true
   timestamp?: true
   _all?: true
 }
@@ -101,6 +125,18 @@ export type SaleEventAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inte
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SaleEventAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SaleEventSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SaleEventMinAggregateInputType
@@ -131,6 +167,8 @@ export type SaleEventGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   _count?: SaleEventCountAggregateInputType | true
+  _avg?: SaleEventAvgAggregateInputType
+  _sum?: SaleEventSumAggregateInputType
   _min?: SaleEventMinAggregateInputType
   _max?: SaleEventMaxAggregateInputType
 }
@@ -138,8 +176,11 @@ export type SaleEventGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type SaleEventGroupByOutputType = {
   id: string
   to: string
+  tip: number
   timestamp: Date
   _count: SaleEventCountAggregateOutputType | null
+  _avg: SaleEventAvgAggregateOutputType | null
+  _sum: SaleEventSumAggregateOutputType | null
   _min: SaleEventMinAggregateOutputType | null
   _max: SaleEventMaxAggregateOutputType | null
 }
@@ -165,6 +206,7 @@ export type SaleEventWhereInput = {
   NOT?: Prisma.SaleEventWhereInput | Prisma.SaleEventWhereInput[]
   id?: Prisma.StringFilter<"SaleEvent"> | string
   to?: Prisma.StringFilter<"SaleEvent"> | string
+  tip?: Prisma.IntFilter<"SaleEvent"> | number
   timestamp?: Prisma.DateTimeFilter<"SaleEvent"> | Date | string
   saleEventProducts?: Prisma.SaleEventProductListRelationFilter
 }
@@ -172,6 +214,7 @@ export type SaleEventWhereInput = {
 export type SaleEventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
+  tip?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   saleEventProducts?: Prisma.SaleEventProductOrderByRelationAggregateInput
 }
@@ -182,6 +225,7 @@ export type SaleEventWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SaleEventWhereInput[]
   NOT?: Prisma.SaleEventWhereInput | Prisma.SaleEventWhereInput[]
   to?: Prisma.StringFilter<"SaleEvent"> | string
+  tip?: Prisma.IntFilter<"SaleEvent"> | number
   timestamp?: Prisma.DateTimeFilter<"SaleEvent"> | Date | string
   saleEventProducts?: Prisma.SaleEventProductListRelationFilter
 }, "id">
@@ -189,10 +233,13 @@ export type SaleEventWhereUniqueInput = Prisma.AtLeast<{
 export type SaleEventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
+  tip?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   _count?: Prisma.SaleEventCountOrderByAggregateInput
+  _avg?: Prisma.SaleEventAvgOrderByAggregateInput
   _max?: Prisma.SaleEventMaxOrderByAggregateInput
   _min?: Prisma.SaleEventMinOrderByAggregateInput
+  _sum?: Prisma.SaleEventSumOrderByAggregateInput
 }
 
 export type SaleEventScalarWhereWithAggregatesInput = {
@@ -201,12 +248,14 @@ export type SaleEventScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SaleEventScalarWhereWithAggregatesInput | Prisma.SaleEventScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SaleEvent"> | string
   to?: Prisma.StringWithAggregatesFilter<"SaleEvent"> | string
+  tip?: Prisma.IntWithAggregatesFilter<"SaleEvent"> | number
   timestamp?: Prisma.DateTimeWithAggregatesFilter<"SaleEvent"> | Date | string
 }
 
 export type SaleEventCreateInput = {
   id?: string
   to: string
+  tip: number
   timestamp?: Date | string
   saleEventProducts?: Prisma.SaleEventProductCreateNestedManyWithoutSaleEventInput
 }
@@ -214,6 +263,7 @@ export type SaleEventCreateInput = {
 export type SaleEventUncheckedCreateInput = {
   id?: string
   to: string
+  tip: number
   timestamp?: Date | string
   saleEventProducts?: Prisma.SaleEventProductUncheckedCreateNestedManyWithoutSaleEventInput
 }
@@ -221,6 +271,7 @@ export type SaleEventUncheckedCreateInput = {
 export type SaleEventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
+  tip?: Prisma.IntFieldUpdateOperationsInput | number
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   saleEventProducts?: Prisma.SaleEventProductUpdateManyWithoutSaleEventNestedInput
 }
@@ -228,6 +279,7 @@ export type SaleEventUpdateInput = {
 export type SaleEventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
+  tip?: Prisma.IntFieldUpdateOperationsInput | number
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   saleEventProducts?: Prisma.SaleEventProductUncheckedUpdateManyWithoutSaleEventNestedInput
 }
@@ -235,37 +287,51 @@ export type SaleEventUncheckedUpdateInput = {
 export type SaleEventCreateManyInput = {
   id?: string
   to: string
+  tip: number
   timestamp?: Date | string
 }
 
 export type SaleEventUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
+  tip?: Prisma.IntFieldUpdateOperationsInput | number
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SaleEventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
+  tip?: Prisma.IntFieldUpdateOperationsInput | number
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SaleEventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
+  tip?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+}
+
+export type SaleEventAvgOrderByAggregateInput = {
+  tip?: Prisma.SortOrder
 }
 
 export type SaleEventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
+  tip?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
 }
 
 export type SaleEventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
+  tip?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+}
+
+export type SaleEventSumOrderByAggregateInput = {
+  tip?: Prisma.SortOrder
 }
 
 export type SaleEventScalarRelationFilter = {
@@ -294,12 +360,14 @@ export type SaleEventUpdateOneRequiredWithoutSaleEventProductsNestedInput = {
 export type SaleEventCreateWithoutSaleEventProductsInput = {
   id?: string
   to: string
+  tip: number
   timestamp?: Date | string
 }
 
 export type SaleEventUncheckedCreateWithoutSaleEventProductsInput = {
   id?: string
   to: string
+  tip: number
   timestamp?: Date | string
 }
 
@@ -322,12 +390,14 @@ export type SaleEventUpdateToOneWithWhereWithoutSaleEventProductsInput = {
 export type SaleEventUpdateWithoutSaleEventProductsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
+  tip?: Prisma.IntFieldUpdateOperationsInput | number
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SaleEventUncheckedUpdateWithoutSaleEventProductsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   to?: Prisma.StringFieldUpdateOperationsInput | string
+  tip?: Prisma.IntFieldUpdateOperationsInput | number
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -365,6 +435,7 @@ export type SaleEventCountOutputTypeCountSaleEventProductsArgs<ExtArgs extends r
 export type SaleEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   to?: boolean
+  tip?: boolean
   timestamp?: boolean
   saleEventProducts?: boolean | Prisma.SaleEvent$saleEventProductsArgs<ExtArgs>
   _count?: boolean | Prisma.SaleEventCountOutputTypeDefaultArgs<ExtArgs>
@@ -373,22 +444,25 @@ export type SaleEventSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type SaleEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   to?: boolean
+  tip?: boolean
   timestamp?: boolean
 }, ExtArgs["result"]["saleEvent"]>
 
 export type SaleEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   to?: boolean
+  tip?: boolean
   timestamp?: boolean
 }, ExtArgs["result"]["saleEvent"]>
 
 export type SaleEventSelectScalar = {
   id?: boolean
   to?: boolean
+  tip?: boolean
   timestamp?: boolean
 }
 
-export type SaleEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "timestamp", ExtArgs["result"]["saleEvent"]>
+export type SaleEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "tip" | "timestamp", ExtArgs["result"]["saleEvent"]>
 export type SaleEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   saleEventProducts?: boolean | Prisma.SaleEvent$saleEventProductsArgs<ExtArgs>
   _count?: boolean | Prisma.SaleEventCountOutputTypeDefaultArgs<ExtArgs>
@@ -404,6 +478,7 @@ export type $SaleEventPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     to: string
+    tip: number
     timestamp: Date
   }, ExtArgs["result"]["saleEvent"]>
   composites: {}
@@ -831,6 +906,7 @@ export interface Prisma__SaleEventClient<T, Null = never, ExtArgs extends runtim
 export interface SaleEventFieldRefs {
   readonly id: Prisma.FieldRef<"SaleEvent", 'String'>
   readonly to: Prisma.FieldRef<"SaleEvent", 'String'>
+  readonly tip: Prisma.FieldRef<"SaleEvent", 'Int'>
   readonly timestamp: Prisma.FieldRef<"SaleEvent", 'DateTime'>
 }
     

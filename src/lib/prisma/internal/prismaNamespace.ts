@@ -755,6 +755,7 @@ export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeo
 export const SaleEventScalarFieldEnum = {
   id: 'id',
   to: 'to',
+  tip: 'tip',
   timestamp: 'timestamp'
 } as const
 

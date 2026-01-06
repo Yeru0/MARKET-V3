@@ -77,7 +77,11 @@ describe.sequential("API CRUD operations", async () => {
 	it("check if sale is registered", async () => {
 		await eraseSaleDB();
 
-		response = await api("sale/register", "POST", { products: [{ qty: 5, id: products[0].id }], to: "n" });
+		response = await api("sale/register", "POST", {
+			products: [{ qty: 5, id: products[0].id }],
+			to: "n",
+			tip: 500
+		});
 		saleFromAPI = (await response.json()) as SaleEvent;
 
 		let salesDB: SaleEvent[] = await readSaleDB();

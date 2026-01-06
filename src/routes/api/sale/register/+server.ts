@@ -44,7 +44,8 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 							product: { connect: { id: p.id } }
 						}))
 					},
-					to: json.to
+					to: json.to,
+					tip: json.tip
 				},
 				include: {
 					saleEventProducts: true

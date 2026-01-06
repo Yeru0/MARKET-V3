@@ -68,7 +68,8 @@ export const createDummySales = async (
 						product: { connect: { id: p.id } }
 					}))
 				},
-				to: "n"
+				to: "n",
+				tip: 0
 			},
 			include: {
 				saleEventProducts: true

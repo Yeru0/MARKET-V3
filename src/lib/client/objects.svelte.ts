@@ -251,13 +251,30 @@ export class ProductsC {
 	private productsDB: ProductDB;
 	private salesDB: SaleDB;
 	private categoriesDB: CategoryDB;
+	private products: ProductC[] = [];
 	basket: BasketC;
+
+	tips: number = $state(0);
 
 	constructor() {
 		this.productsDB = new ProductDB();
 		this.salesDB = new SaleDB();
 		this.categoriesDB = new CategoryDB();
 		this.basket = new BasketC();
+
+		this.calculateDerivedProperties();
+	}
+
+	async calculateDerivedProperties() {
+		this.products = await this.get();
+
+		this.tips = this.products.map((item) => {
+			let saleProds = item.sales;
+
+			return saleProds.reduce((a, item) => {
+				return a + item.saleEvent.tip;
+			}, 0);
+		})[0];
 	}
 
 	async new(obj: {
@@ -321,12 +338,13 @@ export class ProductsC {
 		}
 	}
 
-	async sell(object: { amt: number; Product: ProductC }[], to: "n" | "s" | "t"): Promise<SaleC> {
+	async sell(object: { amt: number; Product: ProductC }[], to: "n" | "s" | "t", tip: number): Promise<SaleC> {
 		let sales = await this.salesDB.register({
 			products: object
 				.filter((item) => item.Product.inStorage > item.amt)
 				.map((item) => ({ id: item.Product.id, qty: item.amt })),
-			to
+			to,
+			tip
 		});
 
 		for (let p of object.map((item) => item.Product)) {

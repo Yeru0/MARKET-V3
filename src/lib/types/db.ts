@@ -22,6 +22,7 @@ export type SaleEventWP = {
 	id: string;
 	to: "n" | "s" | "t";
 	timestamp: Date;
+	tip: number;
 } & {
 	Products: ProductWA[];
 };
