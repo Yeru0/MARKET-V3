@@ -128,6 +128,6 @@
 <button
 	disabled={payed - basket.amtSum * basket.priceSum < 0}
 	onclick={() => {
-		Products.sell(basket.sell(), priceList.state === "par" ? "n" : "s");
+		Products.sell(basket.content, priceList.state === "par" ? "n" : "s");
 	}}>Eladás</button
 >

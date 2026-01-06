@@ -92,7 +92,7 @@ export class ProductC {
 		this.staffProfitMultiple = this.staffMarkupPriceMultiple - this.suppliesPrice;
 		this.profitMultiple = this.markupPriceMultiple - this.suppliesPrice;
 
-		this.inStorage = this.allSupplies - this.sales.length;
+		this.inStorage = this.allSupplies - this.sold;
 	}
 
 	resetPropsDerived() {
@@ -321,13 +321,13 @@ export class ProductsC {
 		}
 	}
 
-	async sell(products: ProductC[], to: "n" | "s" | "t", qty: number = 1): Promise<SaleC> {
+	async sell(object: { amt: number; Product: ProductC }[], to: "n" | "s" | "t"): Promise<SaleC> {
 		let sales = await this.salesDB.register({
-			products: products.map((item) => ({ id: `${item.id}`, qty })),
+			products: object.map((item) => ({ id: item.Product.id, qty: item.amt })),
 			to
 		});
 
-		for (let p of products) {
+		for (let p of object.map((item) => item.Product)) {
 			p.sell();
 		}
 
