@@ -58,7 +58,7 @@
 				<td
 					><button
 						onclick={async () => {
-							await Products.sell([p], "t");
+							await Products.sell([{ Product: p, amt: 1 }], "t");
 						}}>Kivétel</button
 					></td
 				>
