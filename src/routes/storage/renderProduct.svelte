@@ -19,6 +19,6 @@
 <p>Beszerzési ár (Ft/db) {product.supplyPrice} Ft</p>
 <p>Beszerzési ár (összes) {product.suppliesPrice} Ft</p>
 
-<p>Eladott (általános): {product.soldToCustomers}</p>
+<p>Eladott (általános): {product.sold}</p>
 <p>Eladott (szervezői): {product.soldToStaff}</p>
 <p>Eladott (kivett): {product.takenOut}</p>

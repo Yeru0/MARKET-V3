@@ -29,10 +29,19 @@ export class ProductC {
 	staffProfitMultiple: number = $state(0);
 	profitMultiple: number = $state(0);
 
+	income: number = $state(0);
+	staffIncome: number = $state(0);
+	allIncome: number = $state(0);
+
+	//Profit of the sold products
+	currentProfit: number = $state(0);
+	currentStaffProfit: number = $state(0);
+	currentAllProfit: number = $state(0);
+
 	suppliesPrice: number = $state(0);
 	soldToStaff: number = $state(0);
-	soldToCustomers: number = $state(0);
 	sold: number = $state(0);
+	soldAll: number = $state(0);
 	takenOut: number = $state(0);
 	inStorage: number = $state(0);
 
@@ -64,7 +73,7 @@ export class ProductC {
 			for (let s of this.sales) {
 				switch (s.saleEvent.to) {
 					case "n":
-						this.soldToCustomers += s.amount;
+						this.sold += s.amount;
 						break;
 					case "s":
 						this.soldToStaff += s.amount;
@@ -79,7 +88,7 @@ export class ProductC {
 		}
 
 		this.suppliesPrice = this.supplyPrice * this.allSupplies;
-		this.sold = this.soldToStaff + this.soldToCustomers;
+		this.soldAll = this.soldToStaff + this.sold;
 		this.markupPriceSingle = Math.ceil((this.supplyPrice + (this.supplyPrice / 100) * this.markup) / 5) * 5;
 		this.staffMarkupPriceSingle =
 			Math.ceil((this.supplyPrice + (this.supplyPrice / 100) * this.staffMarkup) / 5) * 5;
@@ -92,7 +101,15 @@ export class ProductC {
 		this.staffProfitMultiple = this.staffMarkupPriceMultiple - this.suppliesPrice;
 		this.profitMultiple = this.markupPriceMultiple - this.suppliesPrice;
 
-		this.inStorage = this.allSupplies - (this.sold + this.takenOut);
+		this.income = this.markupPriceSingle * this.sold;
+		this.staffIncome = this.staffMarkupPriceSingle * this.soldToStaff;
+		this.allIncome = this.income + this.staffIncome;
+
+		this.currentProfit = this.profitSingle * this.sold;
+		this.currentStaffProfit = this.profitSingle * this.soldToStaff;
+		this.currentAllProfit = this.currentProfit + this.currentStaffProfit;
+
+		this.inStorage = this.allSupplies - (this.soldAll + this.takenOut);
 	}
 
 	resetPropsDerived() {
@@ -104,11 +121,16 @@ export class ProductC {
 		this.profitSingle = 0;
 		this.staffProfitMultiple = 0;
 		this.profitMultiple = 0;
+		this.income = 0;
+		this.staffIncome = 0;
+		this.currentProfit = 0;
+		this.currentAllProfit = 0;
+		this.currentStaffProfit = 0;
 
 		this.suppliesPrice = 0;
 		this.soldToStaff = 0;
-		this.soldToCustomers = 0;
 		this.sold = 0;
+		this.soldAll = 0;
 		this.takenOut = 0;
 		this.inStorage = 0;
 	}
@@ -271,18 +293,12 @@ export class ProductsC {
 	tips: number = $state(0);
 
 	profit: number = $state(0);
-	profitPossible: number = $state(0);
 	staffProfit: number = $state(0);
-	staffProfitPossible: number = $state(0);
 	allProfit: number = $state(0);
-	allProfitPossible: number = $state(0);
 
 	income: number = $state(0);
-	incomePossible: number = $state(0);
 	staffIncome: number = $state(0);
-	staffIncomePossible: number = $state(0);
 	allIncome: number = $state(0);
-	allIncomePossible: number = $state(0);
 
 	suppliesPrice: number = $state(0);
 
@@ -293,6 +309,7 @@ export class ProductsC {
 	inStorage: number = $state(0);
 	allSupplies: number = $state(0);
 	inStorageTypes: number = $state(0);
+	allSupplyTypes: number = $state(0);
 	inStorageCategories: number = $state(0);
 
 	constructor(reading: boolean = false) {
@@ -312,7 +329,25 @@ export class ProductsC {
 			return item.suppliesPrice + a;
 		}, 0);
 
-		// TODO a productsban legyen income
+		this.profit = this.products.reduce((a, item) => {
+			return item.currentProfit + a;
+		}, 0);
+
+		this.staffProfit = this.products.reduce((a, item) => {
+			return item.currentStaffProfit + a;
+		}, 0);
+
+		this.allProfit = this.profit + this.staffProfit;
+
+		this.income = this.products.reduce((a, item) => {
+			return item.income + a;
+		}, 0);
+
+		this.staffIncome = this.products.reduce((a, item) => {
+			return item.staffIncome + a;
+		}, 0);
+
+		this.allIncome = this.income + this.staffIncome;
 
 		this.tips = this.products.map((item) => {
 			let saleProds = item.sales;
@@ -320,6 +355,27 @@ export class ProductsC {
 				return a + item.saleEvent.tip;
 			}, 0);
 		})[0];
+
+		this.sold = this.products.reduce((a, item) => {
+			return item.sold + a;
+		}, 0);
+		this.soldToStaff = this.products.reduce((a, item) => {
+			return item.soldToStaff + a;
+		}, 0);
+		this.soldAll = this.products.reduce((a, item) => {
+			return item.soldAll + a;
+		}, 0);
+
+		this.takenOut = this.products.reduce((a, item) => {
+			return item.takenOut + a;
+		}, 0);
+
+		this.inStorage = this.products.reduce((a, item) => {
+			return item.inStorage + a;
+		}, 0);
+		this.allSupplies = this.products.reduce((a, item) => {
+			return item.allSupplies + a;
+		}, 0);
 	}
 
 	async new(obj: {
@@ -387,7 +443,7 @@ export class ProductsC {
 	async sell(object: { amt: number; Product: ProductC }[], to: "n" | "s" | "t", tip: number): Promise<SaleC> {
 		let sales = await this.salesDB.register({
 			products: object
-				.filter((item) => item.Product.inStorage > item.amt)
+				.filter((item) => item.Product.inStorage >= item.amt)
 				.map((item) => ({ id: item.Product.id, qty: item.amt })),
 			to,
 			tip

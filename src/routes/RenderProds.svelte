@@ -53,12 +53,12 @@
 				>
 				<td>{priceList.state === "par" ? p.markupPriceSingle : p.staffMarkupPriceSingle} Ft</td>
 				<td>{p.inStorage}/{p.allSupplies}</td>
-				<td>{p.sold} db</td>
+				<td>{p.soldAll} db</td>
 				<td>{p.takenOut} db</td>
 				<td
 					><button
 						onclick={async () => {
-							await Products.sell([{ Product: p, amt: 1 }], "t");
+							await Products.sell([{ Product: p, amt: 1 }], "t", 0);
 						}}>Kivétel</button
 					></td
 				>

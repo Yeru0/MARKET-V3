@@ -25,27 +25,27 @@
 	<tbody>
 		<tr>
 			<th>Profit</th>
-			<td>{Products.profit} Ft/{Products.profitPossible} Ft</td>
+			<td>{Products.profit} Ft</td>
 		</tr>
 		<tr>
 			<th>Szervezői Profit</th>
-			<td>{Products.staffProfit} Ft/{Products.staffProfitPossible} Ft</td>
+			<td>{Products.staffProfit} Ft</td>
 		</tr>
 		<tr>
 			<th>Összes Profit</th>
-			<td>{Products.staffProfit} Ft/{Products.staffProfitPossible} Ft</td>
+			<td>{Products.allProfit} Ft</td>
 		</tr>
 		<tr>
 			<th>Bevétel</th>
-			<td>{Products.income} Ft/{Products.incomePossible} Ft</td>
+			<td>{Products.income} Ft</td>
 		</tr>
 		<tr>
 			<th>Szervezői bevétel</th>
-			<td>{Products.staffIncome} Ft/{Products.staffIncomePossible} Ft</td>
+			<td>{Products.staffIncome} Ft</td>
 		</tr>
 		<tr>
 			<th>Összes bevétel</th>
-			<td>{Products.allIncome} Ft/{Products.allIncomePossible} Ft</td>
+			<td>{Products.allIncome} Ft</td>
 		</tr>
 		<tr>
 			<th>Borravaló ❤</th>
@@ -74,11 +74,11 @@
 		</tr>
 		<tr>
 			<th>Raktáron</th>
-			<td>{Products.inStorage} db/{Products.allSupplies} db</td>
+			<td>{Products.inStorage}/{Products.allSupplies}</td>
 		</tr>
 		<tr>
 			<th>Termékfajták</th>
-			<td>{Products.inStorageTypes} db</td>
+			<td>{Products.inStorageTypes}/{Products.allSupplyTypes}</td>
 		</tr>
 		<tr>
 			<th>Termékkategóriák</th>
