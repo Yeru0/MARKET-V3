@@ -68,19 +68,19 @@
 			validationMessage = "A név hossza nem lehet több, mint 64 karakter!";
 			validationBool = false;
 			return false;
-		} else if (product.markup > 100000) {
+		} else if (product.markup > 1000000) {
 			validationMessage = "A profit nem lehet több, mint 1.000.000!";
 			validationBool = false;
 			return false;
-		} else if (product.staffMarkup > 100000) {
+		} else if (product.staffMarkup > 1000000) {
 			validationMessage = "A szervezői profit nem lehet több, mint 1.000.000!";
 			validationBool = false;
 			return false;
-		} else if (product.allSupplies > 100000) {
+		} else if (product.allSupplies > 1000000) {
 			validationMessage = "Az összes beszerzett termék nem lehet több, mint 1.000.000!";
 			validationBool = false;
 			return false;
-		} else if (product.supplyPrice > 100000) {
+		} else if (product.supplyPrice > 1000000) {
 			validationMessage = "A beszerzési ár nem lehet több, mint 1.000.000!";
 			validationBool = false;
 			return false;

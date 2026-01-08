@@ -79,7 +79,7 @@
 				staffMarkup: product.staffMarkup,
 				allSupplies: product.allSupplies,
 				supplyPrice: product.supplyPrice,
-				category: ""
+				category: product.category
 			});
 			await getData();
 

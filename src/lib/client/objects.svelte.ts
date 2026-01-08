@@ -13,7 +13,7 @@ export class ProductC {
 	allSupplies: number = $state(0);
 	supplyPrice: number = $state(0);
 
-	category: ProductCategoryWP;
+	category: string;
 	categoryId: string;
 	sales: saleEventProductsWA[] = $state([]);
 
@@ -161,6 +161,20 @@ export class BasketC {
 				}
 			}
 		});
+
+		$effect(() => {
+			this.amtSum = this.content.reduce((a, item) => {
+				return a + item.amt;
+			}, 0);
+		});
+
+		$effect(() => {
+			this.priceSum = this.content.reduce((a, item) => {
+				return priceList.state === "par"
+					? item.Product.markupPriceSingle + a
+					: item.Product.staffMarkupPriceSingle + a;
+			}, 0);
+		});
 	}
 
 	sumBasketAmount() {
@@ -256,6 +270,31 @@ export class ProductsC {
 
 	tips: number = $state(0);
 
+	profit: number = $state(0);
+	profitPossible: number = $state(0);
+	staffProfit: number = $state(0);
+	staffProfitPossible: number = $state(0);
+	allProfit: number = $state(0);
+	allProfitPossible: number = $state(0);
+
+	income: number = $state(0);
+	incomePossible: number = $state(0);
+	staffIncome: number = $state(0);
+	staffIncomePossible: number = $state(0);
+	allIncome: number = $state(0);
+	allIncomePossible: number = $state(0);
+
+	suppliesPrice: number = $state(0);
+
+	sold: number = $state(0);
+	soldToStaff: number = $state(0);
+	soldAll: number = $state(0);
+	takenOut: number = $state(0);
+	inStorage: number = $state(0);
+	allSupplies: number = $state(0);
+	inStorageTypes: number = $state(0);
+	inStorageCategories: number = $state(0);
+
 	constructor(reading: boolean = false) {
 		this.productsDB = new ProductDB(reading);
 		this.salesDB = new SaleDB(reading);
@@ -268,6 +307,12 @@ export class ProductsC {
 
 	async calculateDerivedProperties() {
 		this.products = await this.get();
+
+		this.suppliesPrice = this.products.reduce((a, item) => {
+			return item.suppliesPrice + a;
+		}, 0);
+
+		// TODO a productsban legyen income
 
 		this.tips = this.products.map((item) => {
 			let saleProds = item.sales;

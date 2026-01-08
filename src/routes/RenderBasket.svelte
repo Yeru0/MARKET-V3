@@ -97,11 +97,7 @@
 			{/each}
 			<tr>
 				<td><strong>Összesítés</strong></td>
-				<td
-					>{basket.content.reduce((a, item) => {
-						return item.amt + a;
-					}, 0)}</td
-				>
+				<td>{basket.priceSum}</td>
 				<td>*</td>
 				<td>{basket.priceSum}</td>
 				<td>=</td>

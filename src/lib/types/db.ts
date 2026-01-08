@@ -5,7 +5,7 @@ export type ProductWA = { saleEventProducts: saleEventProductsWA[] } & {
 	staffMarkup: number;
 	allSupplies: number;
 	supplyPrice: number;
-	productCategory: ProductCategoryWP;
+	productCategory: string;
 	productCategoryId: string;
 };
 
