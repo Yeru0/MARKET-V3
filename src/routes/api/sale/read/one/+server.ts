@@ -36,7 +36,11 @@ export const POST = async ({ request }: RequestEvent): Promise<Response> => {
 					id: json.id
 				},
 				include: {
-					saleEventProducts: true
+					saleEventProducts: {
+						include: {
+							product: true
+						}
+					}
 				}
 			})
 			.then((result: SaleEvent | null) => {

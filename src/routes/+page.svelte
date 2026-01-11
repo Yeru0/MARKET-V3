@@ -2,7 +2,7 @@
 	import { POJOToProdC, ProductC, ProductsC } from "$lib/client/objects.svelte";
 	import { onMount } from "svelte";
 	import RenderProds from "./RenderProds.svelte";
-	import RenderBasket from "./RenderBasket.svelte";
+	import RenderInteractiveBasket from "./RenderInteractiveBasket.svelte";
 
 	let { data } = $props();
 
@@ -21,5 +21,5 @@
 <RenderProds {products} basket={Products.basket}></RenderProds>
 
 {#if Products?.basket.content.length > 0}
-	<RenderBasket basket={Products.basket} {Products}></RenderBasket>
+	<RenderInteractiveBasket basket={Products.basket} {Products}></RenderInteractiveBasket>
 {/if}

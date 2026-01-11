@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { POJOToProdC, ProductC, ProductsC } from "$lib/client/objects.svelte";
+	import { POJOToProdC, ProductC, ProductsC, SaleC } from "$lib/client/objects.svelte";
 	import { onMount } from "svelte";
+	import RenderSale from "./RenderSale.svelte";
 
 	let { data } = $props();
 
@@ -8,10 +9,49 @@
 	let products: ProductC[] = $state([]);
 	let Products: ProductsC = $state(new ProductsC(false));
 
-	onMount(() => {
+	let sales: SaleC[] = $state([]);
+	let isLoading: boolean = $state(false);
+	let didLoadAll: boolean = $state(false);
+
+	onMount(async () => {
 		Products = new ProductsC(true);
 		products = POJOToProdC(productsPOJO);
+
+		sales = await Products.getSales("next");
 	});
+
+	const loadMore = (node: HTMLElement) => {
+		const observer = new IntersectionObserver(
+			async (entries) => {
+				if (entries[0].isIntersecting) {
+					isLoading = true;
+					let newSales = await Products.getSales("next");
+					if (newSales.length === 0) {
+						didLoadAll = true;
+						return;
+					}
+					for (let s of newSales) {
+						const existingIDs = sales.map((item) => item.id);
+						if (!existingIDs.includes(s.id)) sales.push(s);
+					}
+
+					isLoading = false;
+				}
+			},
+			{
+				threshold: 0.001,
+				rootMargin: "100px"
+			}
+		);
+
+		observer.observe(node);
+
+		return {
+			destroy() {
+				observer.unobserve(node);
+			}
+		};
+	};
 </script>
 
 <h1>Statisztika</h1>
@@ -48,7 +88,7 @@
 			<td>{Products.allIncome} Ft</td>
 		</tr>
 		<tr>
-			<th>Borravaló ❤</th>
+			<th>Borravaló 😋</th>
 			<td>{Products.tips} Ft</td>
 		</tr>
 	</tbody>
@@ -86,3 +126,15 @@
 		</tr>
 	</tbody>
 </table>
+
+{#each sales as s}
+	<RenderSale sale={s}></RenderSale>
+{/each}
+
+{#if !didLoadAll}
+	<div use:loadMore>
+		{#if isLoading}
+			<p>Eladások betöltése...</p>
+		{/if}
+	</div>
+{/if}

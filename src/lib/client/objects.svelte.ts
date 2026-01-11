@@ -20,6 +20,8 @@ export class ProductC {
 	updatePopup: boolean = $state(false);
 	deletePopup: boolean = $state(false);
 
+	isActive: boolean = $state(true);
+
 	markupPriceSingle: number = $state(0);
 	staffMarkupPriceSingle: number = $state(0);
 	markupPriceMultiple: number = $state(0);
@@ -110,6 +112,12 @@ export class ProductC {
 		this.currentAllProfit = this.currentProfit + this.currentStaffProfit;
 
 		this.inStorage = this.allSupplies - (this.soldAll + this.takenOut);
+
+		if (this.inStorage > 0) {
+			this.isActive = true;
+		} else {
+			this.isActive = false;
+		}
 	}
 
 	resetPropsDerived() {
@@ -140,13 +148,17 @@ export class SaleC {
 	id: string = $state("");
 	to: string = $state("");
 	timestamp: Date = $state(new Date());
-	Products: ProductWA[] = $state([]);
+	saleEventProducts: saleEventProductsWA[] = $state([]);
+	tip: number = $state(0);
+
+	productsPopup: boolean = $state(false);
 
 	constructor(obj: SaleEventWP) {
 		this.id = obj.id;
 		this.to = obj.to;
 		this.timestamp = obj.timestamp;
-		this.Products = obj.Products;
+		this.saleEventProducts = obj.saleEventProducts;
+		this.tip = obj.tip;
 	}
 }
 
@@ -288,6 +300,7 @@ export class ProductsC {
 	private salesDB: SaleDB;
 	private categoriesDB: CategoryDB;
 	private products: ProductC[] = [];
+	private skip: number = 0;
 	basket: BasketC;
 
 	tips: number = $state(0);
@@ -349,12 +362,7 @@ export class ProductsC {
 
 		this.allIncome = this.income + this.staffIncome;
 
-		this.tips = this.products.map((item) => {
-			let saleProds = item.sales;
-			return saleProds.reduce((a, item) => {
-				return a + item.saleEvent.tip;
-			}, 0);
-		})[0];
+		this.tips = (await this.salesDB.read()).map((item) => item.tip).reduce((a, b) => a + b);
 
 		this.sold = this.products.reduce((a, item) => {
 			return item.sold + a;
@@ -376,6 +384,13 @@ export class ProductsC {
 		this.allSupplies = this.products.reduce((a, item) => {
 			return item.allSupplies + a;
 		}, 0);
+
+		this.allSupplyTypes = this.products.length;
+		this.inStorageTypes = this.products.reduce((a, item) => {
+			return item.isActive ? a + 1 : a;
+		}, 0);
+
+		this.inStorageCategories = (await this.categoriesDB.read()).length;
 	}
 
 	async new(obj: {
@@ -459,7 +474,7 @@ export class ProductsC {
 		});
 	}
 
-	async getSales(id: string = "all", obj: { skip: number; limit: number } = { skip: 0, limit: 0 }): Promise<SaleC[]> {
+	async getSales(id: string = "all", limit: number = 20): Promise<SaleC[]> {
 		let sales: SaleEventWP[];
 		let returnValue: SaleC[] = [];
 		switch (id) {
@@ -470,10 +485,11 @@ export class ProductsC {
 				}
 				return returnValue;
 			case "next":
-				sales = await this.salesDB.read("next", { skip: obj.skip, limit: obj.limit });
+				sales = await this.salesDB.read("next", { skip: this.skip, limit: limit });
 				for (let s of sales) {
 					returnValue.push(new SaleC({ ...s }));
 				}
+				this.skip += limit;
 				return returnValue;
 			default:
 				sales = await this.salesDB.read(id);

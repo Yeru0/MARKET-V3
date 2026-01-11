@@ -97,7 +97,7 @@
 			{/each}
 			<tr>
 				<td><strong>Összesítés</strong></td>
-				<td>{basket.priceSum}</td>
+				<td>{basket.amtSum}</td>
 				<td>*</td>
 				<td>{basket.priceSum}</td>
 				<td>=</td>

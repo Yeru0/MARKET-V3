@@ -24,7 +24,7 @@ export type SaleEventWP = {
 	timestamp: Date;
 	tip: number;
 } & {
-	Products: ProductWA[];
+	saleEventProducts: saleEventProductsWA[];
 };
 
 export type ProductCategoryWP = {
