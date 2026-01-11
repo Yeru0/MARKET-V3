@@ -1,18 +1,21 @@
 import { PUBLIC_WEBSOCKET_PORT } from "$env/static/public";
 import { WebSocketServer, WebSocket } from "ws";
 
-const wss = new WebSocketServer({ port: parseInt(PUBLIC_WEBSOCKET_PORT) });
+const PriceListWss = new WebSocketServer({ port: parseInt(PUBLIC_WEBSOCKET_PORT) });
+const InvalidateWss = new WebSocketServer({ port: parseInt(PUBLIC_WEBSOCKET_PORT + 1) });
 
-let clients: {
+let PriceListClients: {
 	id: string;
 	ws: WebSocket;
 }[] = [];
 
+let InvalidateClients: WebSocket[] = [];
+
 let currentState: "org" | "par" = "par";
 
-wss.on("connection", (ws) => {
+PriceListWss.on("connection", (ws) => {
 	const id: string = crypto.randomUUID();
-	clients.push({ id, ws });
+	PriceListClients.push({ id, ws });
 	ws.send(id);
 
 	ws.on("message", (message) => {
@@ -27,10 +30,10 @@ wss.on("connection", (ws) => {
 			return;
 		}
 
-		for (let c of clients) {
+		for (let c of PriceListClients) {
 			if (c.id === msg.id) {
 				if (msg.state === "clo") {
-					clients.splice(clients.indexOf(c), 1);
+					PriceListClients.splice(PriceListClients.indexOf(c), 1);
 					return;
 				}
 				continue;
@@ -56,5 +59,17 @@ wss.on("connection", (ws) => {
 		// To the "set" message the server simply responds with the
 		// current state. The code lines above are responsible to
 		// keep the current state up to date in the server as well.
+	});
+});
+
+InvalidateWss.on("connection", (ws) => {
+	InvalidateClients.push(ws);
+
+	ws.on("message", (message) => {
+		const msg = JSON.parse(`${message}`);
+
+		for (let c of InvalidateClients) {
+			c.send(msg);
+		}
 	});
 });

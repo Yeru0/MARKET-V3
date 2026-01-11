@@ -5,6 +5,7 @@
 	import DeletePopup from "./deletePopup.svelte";
 	import RenderProduct from "./renderProduct.svelte";
 	import { onMount } from "svelte";
+	import { invalid } from "$lib/client/invalidate.svelte";
 
 	const { data } = $props();
 
@@ -25,6 +26,8 @@
 		productsPOJO = JSON.parse(data.products);
 		renderableProducts = POJOToProdC(productsPOJO);
 	};
+
+	invalid.add(getData);
 
 	// Setup for the add popup
 	interface obj {

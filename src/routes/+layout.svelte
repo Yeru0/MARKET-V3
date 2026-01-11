@@ -2,6 +2,7 @@
 	import { priceList } from "$lib/client/priceList.svelte";
 	import type { LayoutProps } from "./$types";
 	import { keyboardEvents } from "$lib/client/keyboardEvents";
+	import { invalid } from "$lib/client/invalidate.svelte";
 
 	let { children }: LayoutProps = $props();
 </script>
@@ -37,5 +38,11 @@
 		>
 	</p>
 </nav>
+
+<button
+	onclick={() => {
+		invalid.set();
+	}}>Invalidate</button
+>
 
 <main>{@render children()}</main>

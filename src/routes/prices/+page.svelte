@@ -1,16 +1,31 @@
 <script lang="ts">
+	import { invalidateAll } from "$app/navigation";
+	import { invalid } from "$lib/client/invalidate.svelte.js";
 	import { ProductCategoryC, toCatC, type ProductC } from "$lib/client/objects.svelte.js";
 	import { priceList } from "$lib/client/priceList.svelte.js";
+	import { onMount } from "svelte";
 
 	let { data } = $props();
 
-	let Categories = JSON.parse(data.products);
+	let Categories = $state(JSON.parse(data.products));
 
-	// Removes the empty categories
-	for (let cat of Categories) {
-		let isActiveReduced = cat.Products.map((item: ProductC) => item.isActive);
-		if (!isActiveReduced.includes(true)) Categories.splice(Categories.indexOf(cat), 1);
-	}
+	let getData = () => {
+		invalidateAll();
+
+		Categories = JSON.parse(data.products);
+
+		// Removes the empty categories
+		for (let cat of Categories) {
+			let isActiveReduced = cat.Products.map((item: ProductC) => item.isActive);
+			if (!isActiveReduced.includes(true)) Categories.splice(Categories.indexOf(cat), 1);
+		}
+	};
+
+	onMount(() => {
+		getData();
+
+		invalid.add(getData);
+	});
 </script>
 
 <h1>Árlista</h1>
