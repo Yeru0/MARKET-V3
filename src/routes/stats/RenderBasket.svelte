@@ -41,12 +41,9 @@
 			</tr>
 		{/each}
 		<tr>
-			<td><strong>Összesítés</strong></td>
-			<td>{basket.priceSum}</td>
-			<td>*</td>
-			<td>{basket.priceSum}</td>
+			<td colspan="4"><strong>Összesítés</strong></td>
 			<td>=</td>
-			<td>{basket.amtSum * basket.priceSum}</td>
+			<td>{basket.paySum}</td>
 		</tr>
 	</tbody>
 </table>
@@ -60,7 +57,7 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td>{basket.amtSum * basket.priceSum}</td>
+			<td>{basket.paySum}</td>
 			<td>
 				{sale.tip}
 			</td>

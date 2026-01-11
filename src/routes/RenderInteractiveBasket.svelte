@@ -15,6 +15,14 @@
 
 	let payed: number = $state(0);
 	let tip: number = $state(0);
+
+	// This is needed, so that I can bind an input to the "tip" value
+	// It's a kind of user input validation
+	$effect(() => {
+		if (tip > payed - basket.paySum && payed > basket.paySum) {
+			tip = payed - basket.paySum;
+		}
+	});
 </script>
 
 <form
@@ -96,12 +104,9 @@
 				</tr>
 			{/each}
 			<tr>
-				<td><strong>Összesítés</strong></td>
-				<td>{basket.amtSum}</td>
-				<td>*</td>
-				<td>{basket.priceSum}</td>
+				<td colspan="4"><strong>Összesítés</strong></td>
 				<td>=</td>
-				<td>{basket.amtSum * basket.priceSum}</td>
+				<td>{basket.paySum}</td>
 				<td>
 					<button
 						onclick={() => {
@@ -124,17 +129,17 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td>{basket.amtSum * basket.priceSum}</td>
+				<td>{basket.paySum}</td>
 				<td>
 					<input type="number" name="payed" id="payed" bind:value={payed} max="100000000" min="1" required />
 				</td>
 				<td>
-					<input type="number" name="tip" id="tip" bind:value={tip} max="100000000" min="0" />
+					<input type="number" name="tip" id="tip" bind:value={tip} max={payed - basket.paySum} min="0" />
 				</td>
-				<td>{payed - basket.amtSum * basket.priceSum - tip}</td>
+				<td>{payed - basket.paySum - tip}</td>
 			</tr>
 		</tbody>
 	</table>
 
-	<button disabled={payed - basket.amtSum * basket.priceSum < 0} type="submit">Eladás</button>
+	<button disabled={payed - basket.paySum - tip < 0} type="submit">Eladás</button>
 </form>

@@ -179,8 +179,7 @@ export class BasketC {
 		amt: number;
 		Product: ProductC;
 	}[] = $state([]);
-	amtSum = $state(0);
-	priceSum = $state(0);
+	paySum = $state(0);
 
 	constructor() {
 		// This is needed, so that I can bind an input to the "item.amt" value
@@ -197,33 +196,12 @@ export class BasketC {
 		});
 
 		$effect(() => {
-			this.amtSum = this.content.reduce((a, item) => {
-				return a + item.amt;
-			}, 0);
-		});
-
-		$effect(() => {
-			this.priceSum = this.content.reduce((a, item) => {
+			this.paySum = this.content.reduce((a, item) => {
 				return priceList.state === "par"
-					? item.Product.markupPriceSingle + a
-					: item.Product.staffMarkupPriceSingle + a;
+					? item.Product.markupPriceSingle * item.amt + a
+					: item.Product.staffMarkupPriceSingle * item.amt + a;
 			}, 0);
 		});
-	}
-
-	sumBasketAmount() {
-		this.amtSum = 0;
-		for (let item of this.content) {
-			this.amtSum += item.amt;
-		}
-	}
-
-	sumBasketPrice() {
-		this.priceSum = 0;
-		for (let item of this.content) {
-			this.priceSum +=
-				priceList.state === "par" ? item.Product.markupPriceSingle : item.Product.staffMarkupPriceSingle;
-		}
 	}
 
 	add(prod: ProductC, amt: number = 1) {
@@ -280,8 +258,6 @@ export class BasketC {
 	}
 
 	sort() {
-		this.sumBasketAmount();
-		this.sumBasketPrice();
 		this.content.sort((a, b) => {
 			return a.Product.name.localeCompare(b.Product.name);
 		});
@@ -362,7 +338,9 @@ export class ProductsC {
 
 		this.allIncome = this.income + this.staffIncome;
 
-		this.tips = (await this.salesDB.read()).map((item) => item.tip).reduce((a, b) => a + b);
+		if ((await this.salesDB.read()).length > 0) {
+			this.tips = (await this.salesDB.read()).map((item) => item.tip).reduce((a, b) => a + b);
+		}
 
 		this.sold = this.products.reduce((a, item) => {
 			return item.sold + a;
