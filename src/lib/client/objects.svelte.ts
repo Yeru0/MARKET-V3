@@ -121,6 +121,11 @@ export class ProductC {
 	}
 
 	resetPropsDerived() {
+		this.updatePopup = false;
+		this.deletePopup = false;
+
+		this.isActive = true;
+
 		this.markupPriceSingle = 0;
 		this.staffMarkupPriceSingle = 0;
 		this.markupPriceMultiple = 0;
@@ -129,11 +134,14 @@ export class ProductC {
 		this.profitSingle = 0;
 		this.staffProfitMultiple = 0;
 		this.profitMultiple = 0;
+
 		this.income = 0;
 		this.staffIncome = 0;
+		this.allIncome = 0;
+
 		this.currentProfit = 0;
-		this.currentAllProfit = 0;
 		this.currentStaffProfit = 0;
+		this.currentAllProfit = 0;
 
 		this.suppliesPrice = 0;
 		this.soldToStaff = 0;
