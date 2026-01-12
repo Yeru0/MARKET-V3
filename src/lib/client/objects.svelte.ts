@@ -493,8 +493,9 @@ export class KeyboardEvents {
 	shift: boolean = $state(false);
 	ctrl: boolean = $state(false);
 	alt: boolean = $state(false);
+	space: boolean = $state(false);
 
-	set(t: "s" | "c" | "a", v: boolean) {
+	set(t: "s" | "c" | "a" | "p", v: boolean) {
 		switch (t) {
 			case "s":
 				this.shift = v;
@@ -504,6 +505,9 @@ export class KeyboardEvents {
 				break;
 			case "a":
 				this.alt = v;
+				break;
+			case "p":
+				this.space = v;
 				break;
 		}
 	}

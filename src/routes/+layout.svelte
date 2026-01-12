@@ -2,7 +2,6 @@
 	import { priceList } from "$lib/client/priceList.svelte";
 	import type { LayoutProps } from "./$types";
 	import { keyboardEvents } from "$lib/client/keyboardEvents";
-	import { invalid } from "$lib/client/invalidate.svelte";
 
 	let { children }: LayoutProps = $props();
 </script>
@@ -15,11 +14,17 @@
 		if (e.key == "Shift") keyboardEvents.set("s", true);
 		if (e.key == "Control") keyboardEvents.set("c", true);
 		if (e.key == "Alt") keyboardEvents.set("a", true);
+		if (e.key == " ") keyboardEvents.set("p", true);
+
+		if (keyboardEvents.shift && keyboardEvents.space) {
+			priceList.switch();
+		}
 	}}
 	onkeyup={(e) => {
 		if (e.key == "Shift") keyboardEvents.set("s", false);
 		if (e.key == "Control") keyboardEvents.set("c", false);
 		if (e.key == "Alt") keyboardEvents.set("a", false);
+		if (e.key == " ") keyboardEvents.set("p", false);
 	}}
 />
 
