@@ -187,29 +187,27 @@ export class BasketC {
 		amt: number;
 		Product: ProductC;
 	}[] = $state([]);
-	paySum = $state(0);
+	paySum = $derived(
+		this.content.reduce((a, item) => {
+			return priceList.state === "par"
+				? item.Product.markupPriceSingle * item.amt + a
+				: item.Product.staffMarkupPriceSingle * item.amt + a;
+		}, 0)
+	);
 
-	constructor() {
+	constructor() {}
+
+	validateAmount() {
 		// This is needed, so that I can bind an input to the "item.amt" value
 		// It's a kind of user input validation
-		$effect(() => {
-			for (let item of this.content) {
-				if (item.amt > item.Product.inStorage) {
-					item.amt = item.Product.inStorage;
-				}
-				if (item.amt < 0) {
-					this.remove(item.Product);
-				}
+		for (let item of this.content) {
+			if (item.amt > item.Product.inStorage) {
+				item.amt = item.Product.inStorage;
 			}
-		});
-
-		$effect(() => {
-			this.paySum = this.content.reduce((a, item) => {
-				return priceList.state === "par"
-					? item.Product.markupPriceSingle * item.amt + a
-					: item.Product.staffMarkupPriceSingle * item.amt + a;
-			}, 0);
-		});
+			if (item.amt < 0) {
+				this.remove(item.Product);
+			}
+		}
 	}
 
 	add(prod: ProductC, amt: number = 1) {
@@ -458,6 +456,10 @@ export class ProductsC {
 		return new SaleC({
 			...sales
 		});
+	}
+
+	resetSkip() {
+		this.skip = 0;
 	}
 
 	async getSales(id: string = "all", limit: number = 20): Promise<SaleC[]> {

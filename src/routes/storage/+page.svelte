@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate, invalidateAll } from "$app/navigation";
+	import { invalidateAll } from "$app/navigation";
 	import { POJOToProdC, ProductC, ProductsC } from "$lib/client/objects.svelte";
 	import ManagePopup from "./managePopup.svelte";
 	import DeletePopup from "./deletePopup.svelte";
@@ -11,19 +11,20 @@
 
 	let productsPOJO = $state(JSON.parse(data.products)); //It is done like that, because a load function can only return POJOs
 
-	let Products: ProductsC;
+	let Products: ProductsC = new ProductsC(false);
 
 	let renderableProducts: ProductC[] = $state([]);
 
-	let getData = async () => {
+	let getData = () => {
 		// Invalidate "data" and reassigns dependant variables
-		await invalidateAll();
-		productsPOJO = JSON.parse(data.products);
-		renderableProducts = POJOToProdC(productsPOJO);
+		invalidateAll().then(() => {
+			productsPOJO = JSON.parse(data.products);
+			renderableProducts = POJOToProdC(productsPOJO);
+		});
 	};
 
 	onMount(async () => {
-		Products = new ProductsC();
+		Products = new ProductsC(true);
 		renderableProducts = POJOToProdC(productsPOJO);
 
 		invalid.add(getData);
@@ -51,6 +52,7 @@
 		add: async () => {
 			let newProd = await Products.new(addPopupProps.newProduct);
 			await getData();
+
 			invalid.set();
 
 			return newProd;
@@ -87,8 +89,7 @@
 				category: product.category
 			});
 			await getData();
-
-			await invalid.set();
+			invalid.set();
 
 			product.updatePopup = false;
 

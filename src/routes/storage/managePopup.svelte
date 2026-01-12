@@ -23,10 +23,10 @@
 		show: boolean;
 	} = $props();
 
-	let products: ProductsC | undefined = $state();
+	let products: ProductsC = $state(new ProductsC(false));
 
 	onMount(() => {
-		products = new ProductsC();
+		products = new ProductsC(true);
 	});
 
 	// Input price in percent or in numerals

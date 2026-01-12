@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalid } from "$lib/client/invalidate.svelte";
 	import { keyboardEvents } from "$lib/client/keyboardEvents";
 	import { ProductC, type BasketC, type ProductsC } from "$lib/client/objects.svelte";
 	import { priceList } from "$lib/client/priceList.svelte";
@@ -26,8 +27,9 @@
 </script>
 
 <form
-	onsubmit={() => {
-		Products.sell(basket.content, priceList.state === "par" ? "n" : "s", tip);
+	onsubmit={async () => {
+		await Products.sell(basket.content, priceList.state === "par" ? "n" : "s", tip);
+		invalid.set();
 	}}
 >
 	<h2>Kosár</h2>
@@ -62,6 +64,9 @@
 							name="staff-markup"
 							id="staff-markup"
 							bind:value={item.amt}
+							onkeyup={() => {
+								basket.validateAmount();
+							}}
 							onblur={() => {
 								handleAmtChange(item);
 							}}

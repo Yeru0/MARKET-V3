@@ -2,6 +2,8 @@
 	import { POJOToProdC, ProductC, ProductsC, SaleC } from "$lib/client/objects.svelte";
 	import { onMount } from "svelte";
 	import RenderSale from "./RenderSale.svelte";
+	import { invalidateAll } from "$app/navigation";
+	import { invalid } from "$lib/client/invalidate.svelte";
 
 	let { data } = $props();
 
@@ -13,11 +15,20 @@
 	let isLoading: boolean = $state(false);
 	let didLoadAll: boolean = $state(false);
 
+	const getData = async () => {
+		invalidateAll().then(async () => {
+			products = POJOToProdC(productsPOJO);
+			Products.calculateDerivedProperties();
+		});
+		// TODO A jovoben ez is johetne a serverrol...
+		Products.resetSkip();
+		sales = await Products.getSales("next");
+	};
+
 	onMount(async () => {
 		Products = new ProductsC(true);
-		products = POJOToProdC(productsPOJO);
-
-		sales = await Products.getSales("next");
+		getData();
+		invalid.add(getData);
 	});
 
 	const loadMore = (node: HTMLElement) => {

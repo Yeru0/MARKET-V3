@@ -33,7 +33,7 @@ model SaleEvent {
 model SaleEventProduct {
   id          String    @id @default(cuid())
   amount      Int
-  saleEvent   SaleEvent @relation(fields: [saleEventId], references: [id])
+  saleEvent   SaleEvent @relation(fields: [saleEventId], references: [id], onDelete: Cascade)
   saleEventId String
   product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   String

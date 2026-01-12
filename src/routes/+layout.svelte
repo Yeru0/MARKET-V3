@@ -39,10 +39,4 @@
 	</p>
 </nav>
 
-<button
-	onclick={() => {
-		invalid.set();
-	}}>Invalidate</button
->
-
 <main>{@render children()}</main>

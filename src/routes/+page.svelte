@@ -3,16 +3,26 @@
 	import { onMount } from "svelte";
 	import RenderProds from "./RenderProds.svelte";
 	import RenderInteractiveBasket from "./RenderInteractiveBasket.svelte";
+	import { invalid } from "$lib/client/invalidate.svelte";
+	import { invalidateAll } from "$app/navigation";
 
 	let { data } = $props();
 
-	let productsPOJO = JSON.parse(data.products);
+	let productsPOJO = $state(JSON.parse(data.products));
 	let products: ProductC[] = $state([]);
 	let Products: ProductsC = $state(new ProductsC(false));
 
-	onMount(() => {
+	const getData = () => {
+		invalidateAll().then(() => {
+			productsPOJO = JSON.parse(data.products);
+			products = POJOToProdC(productsPOJO);
+		});
+	};
+
+	onMount(async () => {
+		getData();
 		Products = new ProductsC(true);
-		products = POJOToProdC(productsPOJO);
+		invalid.add(getData);
 	});
 </script>
 

@@ -12,9 +12,9 @@
 <p>Ez nem visszafordítható!</p>
 
 <form
-	onsubmit={(e) => {
+	onsubmit={async (e) => {
 		e.preventDefault();
-		remove(product);
+		await remove(product);
 	}}
 	onreset={() => {
 		show = false;

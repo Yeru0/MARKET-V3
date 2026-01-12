@@ -12,9 +12,15 @@ class InvalidateC {
 		};
 
 		this.ws.onmessage = () => {
-			this.functionList.forEach(async (fn) => {
-				await fn();
-			});
+			// In theory everything is awaited and should run sequentially
+			// In theory
+			// In practice, though, sometimes it works sometimes it doesn't
+			// This supposed to account for the times when it doesn't
+			setTimeout(() => {
+				this.functionList.forEach(async (fn) => {
+					await fn();
+				});
+			}, 100);
 		};
 	}
 

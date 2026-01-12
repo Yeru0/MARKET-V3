@@ -9,20 +9,20 @@
 
 	let Categories = $state(JSON.parse(data.products));
 
-	let getData = async () => {
-		await invalidateAll();
+	let getData = () => {
+		invalidateAll().then(() => {
+			Categories = JSON.parse(data.products);
 
-		Categories = JSON.parse(data.products);
-
-		// Removes the empty categories
-		for (let cat of Categories) {
-			let isActiveReduced = cat.Products.map((item: ProductC) => item.isActive);
-			if (!isActiveReduced.includes(true)) Categories.splice(Categories.indexOf(cat), 1);
-		}
+			// Removes the empty categories
+			for (let cat of Categories) {
+				let isActiveReduced = cat.Products.map((item: ProductC) => item.isActive);
+				if (!isActiveReduced.includes(true)) Categories.splice(Categories.indexOf(cat), 1);
+			}
+		});
 	};
 
-	onMount(() => {
-		getData();
+	onMount(async () => {
+		await getData();
 
 		invalid.add(getData);
 	});
