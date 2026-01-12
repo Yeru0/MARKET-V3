@@ -12,8 +12,8 @@ class InvalidateC {
 		};
 
 		this.ws.onmessage = () => {
-			this.functionList.forEach((fn) => {
-				fn();
+			this.functionList.forEach(async (fn) => {
+				await fn();
 			});
 		};
 	}

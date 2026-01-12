@@ -9,8 +9,8 @@
 
 	let Categories = $state(JSON.parse(data.products));
 
-	let getData = () => {
-		invalidateAll();
+	let getData = async () => {
+		await invalidateAll();
 
 		Categories = JSON.parse(data.products);
 

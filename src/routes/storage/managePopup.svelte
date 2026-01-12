@@ -153,9 +153,9 @@
 >
 
 <form
-	onsubmit={(e) => {
+	onsubmit={async (e) => {
 		e.preventDefault();
-		caller(product);
+		await caller(product);
 	}}
 	onchange={validateNewProduct}
 >

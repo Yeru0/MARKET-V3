@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from "$app/navigation";
+	import { invalidate, invalidateAll } from "$app/navigation";
 	import { POJOToProdC, ProductC, ProductsC } from "$lib/client/objects.svelte";
 	import ManagePopup from "./managePopup.svelte";
 	import DeletePopup from "./deletePopup.svelte";
@@ -15,19 +15,19 @@
 
 	let renderableProducts: ProductC[] = $state([]);
 
-	onMount(async () => {
-		Products = new ProductsC();
-		renderableProducts = POJOToProdC(productsPOJO);
-	});
-
 	let getData = async () => {
 		// Invalidate "data" and reassigns dependant variables
-		await invalidate("/api/product/read/all");
+		await invalidateAll();
 		productsPOJO = JSON.parse(data.products);
 		renderableProducts = POJOToProdC(productsPOJO);
 	};
 
-	invalid.add(getData);
+	onMount(async () => {
+		Products = new ProductsC();
+		renderableProducts = POJOToProdC(productsPOJO);
+
+		invalid.add(getData);
+	});
 
 	// Setup for the add popup
 	interface obj {
@@ -51,6 +51,7 @@
 		add: async () => {
 			let newProd = await Products.new(addPopupProps.newProduct);
 			await getData();
+			invalid.set();
 
 			return newProd;
 		}
@@ -63,6 +64,7 @@
 		remove: async (product: ProductC) => {
 			let removedProduct = await Products.delete(product.id);
 			await getData();
+			invalid.set();
 
 			product.deletePopup = false;
 
@@ -85,6 +87,8 @@
 				category: product.category
 			});
 			await getData();
+
+			await invalid.set();
 
 			product.updatePopup = false;
 
