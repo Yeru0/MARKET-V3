@@ -18,9 +18,9 @@
 	<thead>
 		<tr>
 			<th>Terméknév</th>
-			<th colspan="2">Mennyiség</th>
+			<th>Mennyiség</th>
 			<th colspan="2">Ár</th>
-			<th>Részösszeg</th>
+			<th colspan="2">Részösszeg</th>
 		</tr>
 	</thead>
 	<tbody>
