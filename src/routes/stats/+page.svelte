@@ -65,6 +65,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Market | Statisztika</title>
+</svelte:head>
+
 <h1>Statisztika</h1>
 
 <div>

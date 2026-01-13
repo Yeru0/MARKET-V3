@@ -28,7 +28,11 @@
 	});
 </script>
 
-<h1>Árlista</h1>
+<svelte:head>
+	<title>Market | Termékek</title>
+</svelte:head>
+
+<h1>Termékek</h1>
 
 {#each Categories as cat}
 	<h2>{cat.name}</h2>

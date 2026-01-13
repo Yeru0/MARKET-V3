@@ -98,6 +98,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Market | Raktár</title>
+</svelte:head>
+
 <h1>Raktár</h1>
 
 {#if addPopupProps.show}

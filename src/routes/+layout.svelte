@@ -99,7 +99,7 @@
 	<nav>
 		<ul>
 			<li><a class={activePage.h == true ? "active" : ""} href="/">Eladás</a></li>
-			<li><a class={activePage.p == true ? "active" : ""} href="/prices">Árlista</a></li>
+			<li><a class={activePage.p == true ? "active" : ""} href="/prices">Termékek</a></li>
 			<li><a class={activePage.s == true ? "active" : ""} href="/stats">Statisztika</a></li>
 			<li><a class={activePage.r == true ? "active" : ""} href="/storage">Raktár</a></li>
 		</ul>
@@ -183,11 +183,13 @@
 
 	main {
 		transition: all ease-in-out 0.3s;
-		display: grid;
-		place-content: center;
 		margin-top: 80px;
+		width: 100vw;
+
 		& .root {
+			width: 100%;
 			max-width: 800px;
+			margin: auto;
 		}
 	}
 </style>

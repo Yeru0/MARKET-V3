@@ -26,6 +26,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Market | Eladás</title>
+</svelte:head>
+
 <h1>Termékek</h1>
 
 <RenderProds {products} basket={Products.basket}></RenderProds>

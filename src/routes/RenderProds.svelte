@@ -68,3 +68,9 @@
 		{/each}
 	</tbody>
 </table>
+
+<style>
+	table {
+		width: 100%;
+	}
+</style>
