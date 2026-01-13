@@ -26,7 +26,7 @@
 	});
 </script>
 
-<h1>Eladás</h1>
+<h1>Termékek</h1>
 
 <RenderProds {products} basket={Products.basket}></RenderProds>
 

@@ -1,10 +1,9 @@
 * {
 	color: var(--broken-white);
-	background-color: var(--background-black);
 	font-family: "League Spartan", sans-serif;
 	font-size: 18px;
 	font-optical-sizing: auto;
-	font-weight: normal;
+	font-weight: 400;
 	font-style: normal;
 	text-decoration: none;
 	margin: 0;
@@ -13,10 +12,10 @@
 
 :root {
 	--accent: #ffea00ff;
-	--broken-white: #ffffffbd;
+	--broken-white: #999999;
 	--white: #ffffffff;
 	--transparent-white: #ffffff1e;
-	--background-black: #222222ff;
+	--background-black: #111111ff;
 }
 
 .title,
@@ -31,22 +30,29 @@ h6 {
 	color: var(--white);
 }
 
-button,
-a {
+button {
 	outline: 0;
 	border: 0;
 	padding: 8px 12px;
 	color: #fff;
-	font-weight: bold;
 	border-radius: 6px;
 	transition: all 0.1s ease-in-out;
+	background-color: var(--background-black);
 }
 
 button:hover {
 	background-color: var(--transparent-white);
+	color: #ffffffff;
 }
 
-a:hover {
-	background-color: var(--accent);
-	color: var(--background-black);
+a {
+	background-color: inherit;
+}
+a.active {
+	color: var(--accent);
+	text-decoration: underline;
+}
+
+.accent {
+	color: var(--accent);
 }
