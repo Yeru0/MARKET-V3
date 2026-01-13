@@ -184,7 +184,7 @@
 	main {
 		transition: all ease-in-out 0.3s;
 		margin-top: 80px;
-		width: 100vw;
+		width: 100%;
 
 		& .root {
 			width: 100%;

@@ -37,3 +37,9 @@
 {#if Products?.basket.content.length > 0}
 	<RenderInteractiveBasket basket={Products.basket} {Products}></RenderInteractiveBasket>
 {/if}
+
+<style>
+	h1 {
+		/* margin-bottom: 32px; */
+	}
+</style>
