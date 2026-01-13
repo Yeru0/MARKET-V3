@@ -2,6 +2,7 @@
 	import { priceList } from "$lib/client/priceList.svelte";
 	import type { LayoutProps } from "./$types";
 	import { keyboardEvents } from "$lib/client/keyboardEvents";
+	import "$lib/styles/global.css";
 
 	let { children }: LayoutProps = $props();
 </script>
@@ -45,3 +46,27 @@
 </nav>
 
 <main>{@render children()}</main>
+
+<style>
+	nav {
+		background-color: var(--transparent-white);
+		height: 60px;
+		display: grid;
+
+		& ul {
+			display: inline;
+			list-style-type: none;
+
+			background-color: #00000000;
+			& li {
+				margin: 12px;
+				display: inline;
+			}
+		}
+		& p {
+			display: inline;
+
+			background-color: #00000000;
+		}
+	}
+</style>
