@@ -28,7 +28,7 @@
 			<tr>
 				<td>{item.Product.name}</td>
 				<td>{item.amt}</td>
-				<td>*</td>
+				<td>×</td>
 				<td
 					>{priceList.state === "par" ? item.Product.markupPriceSingle : item.Product.staffMarkupPriceSingle}
 				</td>

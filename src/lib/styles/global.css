@@ -36,7 +36,7 @@ button {
 	padding: 8px 12px;
 	color: #fff;
 	border-radius: 6px;
-	transition: all 0.1s ease-in-out;
+	transition: all x0.1s ease-in-out;
 	background-color: var(--background-black);
 }
 
@@ -53,6 +53,31 @@ a.active {
 	text-decoration: underline;
 }
 
+input {
+	background-color: transparent;
+	outline: none;
+	border: 1px solid var(--broken-white);
+	background-color: var(--transparent-white);
+	padding: 4px;
+	border-radius: 6px;
+}
 .accent {
 	color: var(--accent);
+}
+
+div.header {
+	margin-bottom: 24px;
+	height: fit-content;
+	display: grid;
+	grid-template-columns: repeat(2, auto);
+	width: min-content;
+	place-items: top;
+
+	h2 {
+		padding: 4px;
+	}
+
+	span {
+		font-size: 28px;
+	}
 }

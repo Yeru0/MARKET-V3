@@ -32,13 +32,16 @@
 		invalid.set();
 	}}
 >
-	<h2>Kosár</h2>
+	<div class="header">
+		<span class="material-symbols-outlined accent"> shopping_basket </span>
+		<h2>Kosár</h2>
+	</div>
 	<table>
 		<thead>
 			<tr>
 				<th>Terméknév</th>
 				<th colspan="2">Mennyiség</th>
-				<th colspan="2">Ár</th>
+				<th colspan="2">{priceList.state === "par" ? "Résztvevői ár" : "Szervezői ár"}</th>
 				<th>Részösszeg</th>
 				<th>Művelet</th>
 			</tr>
@@ -47,7 +50,7 @@
 			{#each basket.content as item}
 				<tr>
 					<td>{item.Product.name}</td>
-					<td>
+					<td class="amt">
 						<button
 							type="button"
 							onclick={() => {
@@ -87,7 +90,7 @@
 							}}>+</button
 						>
 					</td>
-					<td>*</td>
+					<td>×</td>
 					<td
 						>{priceList.state === "par"
 							? item.Product.markupPriceSingle
@@ -101,6 +104,7 @@
 					</td>
 					<td
 						><button
+							class="exec"
 							onclick={() => {
 								basket.remove(item.Product, true);
 							}}>Törlés</button
@@ -109,11 +113,12 @@
 				</tr>
 			{/each}
 			<tr>
-				<td colspan="4"><strong>Összesítés</strong></td>
+				<th colspan="4" style="text-align: left">Összesítés</th>
 				<td>=</td>
 				<td>{basket.paySum}</td>
 				<td>
 					<button
+						class="exec"
 						onclick={() => {
 							basket.clear();
 						}}>Kosár ürítése</button
@@ -123,7 +128,7 @@
 		</tbody>
 	</table>
 
-	<table>
+	<table class="pay">
 		<thead>
 			<tr>
 				<th>Fizetendő</th>
@@ -134,17 +139,69 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td>{basket.paySum}</td>
+				<td class="text">{basket.paySum} Ft</td>
 				<td>
 					<input type="number" name="payed" id="payed" bind:value={payed} max="100000000" min="1" required />
 				</td>
 				<td>
 					<input type="number" name="tip" id="tip" bind:value={tip} max={payed - basket.paySum} min="0" />
 				</td>
-				<td>{payed - basket.paySum - tip}</td>
+				<td class="text">{payed - basket.paySum - tip} Ft</td>
 			</tr>
 		</tbody>
 	</table>
 
 	<button disabled={payed - basket.paySum - tip < 0} type="submit">Eladás</button>
 </form>
+
+<style>
+	table {
+		width: 100%;
+		max-width: 700px;
+		margin: auto;
+		height: fit-content;
+
+		& th {
+			font-weight: bold;
+		}
+	}
+
+	button.exec {
+		width: 100%;
+		text-align: left;
+		text-align: center;
+	}
+
+	.amt {
+		display: grid;
+		grid-template-columns: repeat(3, auto);
+		grid-template-rows: auto;
+		gap: 4px;
+
+		& button {
+			max-width: 32px;
+			aspect-ratio: 1/1;
+			text-align: center;
+			padding: 4px;
+		}
+	}
+
+	.pay {
+		margin: 32px 0;
+
+		input {
+			width: 90%;
+		}
+
+		.text {
+			text-align: center;
+		}
+	}
+
+	/* Hide arrows from number input fields */
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+</style>

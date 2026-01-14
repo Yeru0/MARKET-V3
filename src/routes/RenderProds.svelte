@@ -16,7 +16,7 @@
 	<thead>
 		<tr>
 			<th>Terméknév</th>
-			<th>Ár</th>
+			<th>{priceList.state === "par" ? "Résztvevői ár" : "Szervezői ár"}</th>
 			<th>Raktár</th>
 			<th>Eladott</th>
 			<th>Kivett</th>
@@ -58,6 +58,7 @@
 					<td>{p.takenOut} db</td>
 					<td
 						><button
+							class="exec"
 							onclick={async () => {
 								await Products.sell([{ Product: p, amt: 1 }], "t", 0);
 							}}>Kivétel</button
@@ -72,5 +73,24 @@
 <style>
 	table {
 		width: 100%;
+		max-width: 700px;
+		margin: auto;
+	}
+
+	button {
+		width: 100%;
+		text-align: left;
+
+		&.exec {
+			text-align: center;
+		}
+	}
+
+	table {
+		height: fit-content;
+
+		& th {
+			font-weight: bold;
+		}
 	}
 </style>

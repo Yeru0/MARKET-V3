@@ -30,16 +30,27 @@
 	<title>Market | Eladás</title>
 </svelte:head>
 
-<h1>Termékek</h1>
+<div class="body">
+	<div class="header">
+		<span class="material-symbols-outlined accent"> grocery </span>
+		<h1 class="title">Termékek</h1>
+	</div>
 
-<RenderProds {products} basket={Products.basket}></RenderProds>
-
-{#if Products?.basket.content.length > 0}
-	<RenderInteractiveBasket basket={Products.basket} {Products}></RenderInteractiveBasket>
-{/if}
+	<div class="prods">
+		<RenderProds {products} basket={Products.basket}></RenderProds>
+	</div>
+	<div class="basket">
+		{#if Products?.basket.content.length > 0}
+			<RenderInteractiveBasket basket={Products.basket} {Products}></RenderInteractiveBasket>
+		{/if}
+	</div>
+</div>
 
 <style>
-	h1 {
-		/* margin-bottom: 32px; */
+	.body {
+		display: grid;
+		grid-template-columns: auto;
+		grid-template-rows: repeat(3, auto);
+		gap: 60px;
 	}
 </style>
