@@ -41,6 +41,7 @@
 
 	let showHeader: boolean = $state(true);
 	let headerTimeout: NodeJS.Timeout;
+	let floatingHeader: boolean = $state(false);
 
 	onMount(() => {
 		changeActivePage(page.url.pathname);
@@ -65,13 +66,13 @@
 		priceList.close();
 	}}
 	onkeydown={(e) => {
-		e.preventDefault();
 		if (e.key == "Shift") keyboardEvents.set("s", true);
 		if (e.key == "Control") keyboardEvents.set("c", true);
 		if (e.key == "Alt") keyboardEvents.set("a", true);
 		if (e.key == " ") keyboardEvents.set("p", true);
 
 		if (keyboardEvents.shift && keyboardEvents.space) {
+			e.preventDefault();
 			priceList.switch();
 		}
 	}}
@@ -89,9 +90,13 @@
 			showHeader = false;
 		}, 3000);
 	}}
+	onscroll={() => {
+		if (!(window.scrollY == 0)) floatingHeader = true;
+		else floatingHeader = false;
+	}}
 />
 
-<header class={showHeader ? "" : "hide"}>
+<header class:hide={!showHeader} class:float={floatingHeader}>
 	<div class="logo">
 		<span class="material-symbols-outlined accent"> store </span>
 		<h1>Market</h1>
@@ -133,12 +138,13 @@
 		background-color: var(--transparent-white);
 		backdrop-filter: grayscale(0.5) blur(4px) brightness(0.4);
 		height: 60px;
-		width: 100vw;
+		width: 100%;
 		position: sticky;
 		top: 0;
 		display: grid;
 		grid-template-columns: repeat(3, auto);
 		place-items: center;
+		margin: auto;
 
 		& div.logo {
 			display: grid;
@@ -178,6 +184,22 @@
 				color: #000000ff;
 				background-color: var(--accent);
 			}
+		}
+	}
+
+	@media (min-width: 1320px) {
+		header.float {
+			transform: translate(0, 16px);
+			width: 1200px;
+			border-radius: 12px;
+		}
+	}
+
+	@media (max-width: 1319px) {
+		header.float {
+			transform: translate(0, 16px);
+			width: 90%;
+			border-radius: 12px;
 		}
 	}
 
