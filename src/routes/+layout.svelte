@@ -136,7 +136,7 @@
 	header {
 		transition: all ease-in-out 0.3s;
 		background-color: var(--transparent-white);
-		backdrop-filter: grayscale(0.5) blur(4px) brightness(0.4);
+		backdrop-filter: var(--backdrop);
 		height: 60px;
 		width: 100%;
 		position: sticky;

@@ -27,6 +27,10 @@
 
 	onMount(() => {
 		products = new ProductsC(true);
+		document.body.classList.add("noscroll");
+	});
+	onDestroy(() => {
+		document.body.classList.remove("noscroll");
 	});
 
 	// Input price in percent or in numerals
@@ -136,152 +140,236 @@
 	});
 </script>
 
-<h2>{type == "new" ? "Új termék hozzáadása" : type == "mod" ? "Termék módosítása" : "Ezt hogy csináltad?"}</h2>
-<p>{validationMessage}</p>
+<div class="popup">
+	<div class="head">
+		<h2>{type == "new" ? "Új termék hozzáadása" : type == "mod" ? "Termék módosítása" : "Ezt hogy csináltad?"}</h2>
+		<p>{validationMessage}</p>
 
-<p>Ár megadása:</p>
-<button
-	disabled={priceType == "per"}
-	onclick={() => {
-		priceType = "per";
-	}}>Haszonkulcs</button
-><button
-	disabled={priceType == "num"}
-	onclick={() => {
-		priceType = "num";
-	}}>Ár</button
->
-
-<form
-	onsubmit={async (e) => {
-		e.preventDefault();
-		await caller(product);
-	}}
-	onchange={validateNewProduct}
->
-	<label for="name">
-		Név
-		<input type="text" name="name" id="name" bind:value={product.name} maxlength="64" minlength="1" required />
-	</label>
-
-	<label for="category">
-		Kategória
-		<input
-			type="text"
-			name="category"
-			id="category"
-			bind:value={product.category}
-			maxlength="64"
-			minlength="1"
-			required
-			list="categories"
-		/>
-		<datalist id="categories">
-			{#await products?.getCategories()}
-				<option value="Kategóriák betöltése folyamatban"></option>
-			{:then categories}
-				{#each categories as category}
-					<option value={category.name}></option>
-				{/each}
-			{:catch error}
-				<option value="Kategóriák betöltése folyamatban!"></option>
-			{/await}
-		</datalist>
-	</label>
-
-	<label for="all-supplies">
-		Összes beszerzett termék
-		<input
-			type="number"
-			name="all-supplies"
-			id="all-supplies"
-			bind:value={product.allSupplies}
-			max="1000000"
-			min="1"
-			required
-		/>
-	</label>
-	<label for="supply-price">
-		Beszerzési ár (Ft/db)
-		<input
-			type="number"
-			name="supply-price"
-			id="supply-price"
-			bind:value={product.supplyPrice}
-			max="1000000"
-			min="1"
-			required
-		/>
-		Ft
-	</label>
-
-	<div hidden={priceType == "num"}>
-		<label for="markup">
-			Profit
-			<input
-				type="number"
-				name="markup"
-				id="markup"
-				bind:value={product.markup}
-				max="1000000"
-				min="0"
-				step="0.01"
-				required
-			/>
-			%
-		</label>
-		<label for="staff-markup">
-			Szervezői Profit
-			<input
-				type="number"
-				name="staff-markup"
-				id="staff-markup"
-				bind:value={product.staffMarkup}
-				max="1000000"
-				min="0"
-				step="0.01"
-				required
-			/>
-			%
-		</label>
+		<div class="input-switcher">
+			<button
+				disabled={priceType == "per"}
+				class:accent={priceType == "per"}
+				onclick={() => {
+					priceType = "per";
+				}}>Haszonkulcs</button
+			><button
+				disabled={priceType == "num"}
+				class:accent={priceType == "num"}
+				onclick={() => {
+					priceType = "num";
+				}}>Ár</button
+			>
+		</div>
 	</div>
 
-	<div hidden={priceType == "per"}>
-		<label for="markup">
-			Ár
-			<input
-				type="number"
-				name="markup"
-				id="markup"
-				bind:value={priceInNumerals.customer}
-				max="1000000"
-				min="0"
-				required
-			/>
-			Ft
+	<form
+		onsubmit={async (e) => {
+			e.preventDefault();
+			await caller(product);
+		}}
+		onchange={validateNewProduct}
+	>
+		<label for="name">
+			Név
+			<input type="text" name="name" id="name" bind:value={product.name} maxlength="64" minlength="1" required />
 		</label>
-		<label for="staff-markup">
-			Szervezői Ár
-			<input
-				type="number"
-				name="staff-markup"
-				id="staff-markup"
-				bind:value={priceInNumerals.staff}
-				max="1000000"
-				min="0"
-				required
-			/>
-			Ft
-		</label>
-	</div>
 
-	<button type="submit" disabled={!validationBool}
-		>{type == "new" ? "Hozzáadás" : type == "mod" ? "Módosítás" : "Ezt hogy csináltad?"}</button
-	>
-	<button
-		type="reset"
-		onclick={() => {
-			show = false;
-		}}>Mégsem</button
-	>
-</form>
+		<label for="category">
+			Kategória
+			<input
+				type="text"
+				name="category"
+				id="category"
+				bind:value={product.category}
+				maxlength="64"
+				minlength="1"
+				required
+				list="categories"
+			/>
+			<datalist id="categories">
+				{#await products?.getCategories()}
+					<option value="Kategóriák betöltése folyamatban"></option>
+				{:then categories}
+					{#each categories as category}
+						<option value={category.name}></option>
+					{/each}
+				{:catch error}
+					<option value="Kategóriák betöltése folyamatban!"></option>
+				{/await}
+			</datalist>
+		</label>
+
+		<label for="all-supplies">
+			Összes beszerzett termék
+			<input
+				type="number"
+				name="all-supplies"
+				id="all-supplies"
+				bind:value={product.allSupplies}
+				max="1000000"
+				min="1"
+				required
+			/>
+		</label>
+
+		<label for="supply-price">
+			Beszerzési ár (Ft/db)
+			<input
+				type="number"
+				name="supply-price"
+				id="supply-price"
+				bind:value={product.supplyPrice}
+				max="1000000"
+				min="1"
+				required
+			/>
+		</label>
+
+		<div hidden={priceType == "num"} class="set-price">
+			<label for="markup" class="top">
+				Profit (%)
+				<input
+					type="number"
+					name="markup"
+					id="markup"
+					bind:value={product.markup}
+					max="1000000"
+					min="0"
+					step="0.01"
+					required
+				/>
+			</label>
+			<label for="staff-markup">
+				Szervezői Profit (%)
+				<input
+					type="number"
+					name="staff-markup"
+					id="staff-markup"
+					bind:value={product.staffMarkup}
+					max="1000000"
+					min="0"
+					step="0.01"
+					required
+				/>
+			</label>
+		</div>
+
+		<div hidden={priceType == "per"} class="set-price">
+			<label for="markup" class="top">
+				Ár
+				<input
+					type="number"
+					name="markup"
+					id="markup"
+					bind:value={priceInNumerals.customer}
+					max="1000000"
+					min="0"
+					required
+				/>
+			</label>
+			<label for="staff-markup">
+				Szervezői Ár
+				<input
+					type="number"
+					name="staff-markup"
+					id="staff-markup"
+					bind:value={priceInNumerals.staff}
+					max="1000000"
+					min="0"
+					required
+				/>
+			</label>
+		</div>
+
+		<div class="finish">
+			<button
+				type="reset"
+				onclick={() => {
+					show = false;
+				}}>Mégsem</button
+			>
+			<button type="submit" disabled={!validationBool}>
+				{type == "new" ? "Hozzáadás" : type == "mod" ? "Módosítás" : "Ezt hogy csináltad?"}
+			</button>
+		</div>
+	</form>
+</div>
+
+<style>
+	.head {
+		display: grid;
+		grid-template-columns: repeat(2, auto);
+		grid-template-rows: repeat(2, auto);
+		width: 100%;
+		column-gap: 24px;
+		grid-template-areas:
+			"title input"
+			"validation input";
+
+		h2 {
+			grid-area: title;
+		}
+
+		p {
+			grid-area: validation;
+		}
+
+		.input-switcher {
+			grid-area: input;
+			place-self: center end;
+			display: grid;
+			grid-template-columns: repeat(2, auto);
+			gap: 6px;
+
+			.accent {
+				color: #000000ff;
+				background-color: var(--accent);
+				cursor: pointer;
+			}
+		}
+	}
+
+	form {
+		margin-top: 24px;
+		display: grid;
+		gap: 6px;
+
+		label {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			input {
+				width: 50%;
+			}
+		}
+
+		.set-price {
+			.top {
+				padding-bottom: 6px;
+			}
+		}
+
+		.finish {
+			display: flex;
+			gap: 12px;
+
+			button {
+				flex: 1;
+
+				&[type="submit"]:not(:disabled) {
+					background-color: var(--accent);
+					color: #000;
+				}
+			}
+		}
+	}
+
+	button:not:disabled {
+		background-color: var(--transparent-black);
+		&:hover {
+			background-color: var(--transparent-white);
+		}
+	}
+</style>

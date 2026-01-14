@@ -15,6 +15,7 @@
 
 			// Removes the empty categories
 			for (let cat of Categories) {
+				if (!cat.Products) continue;
 				let isActiveReduced = cat.Products.map((item: ProductC) => item.isActive);
 				if (!isActiveReduced.includes(true)) Categories.splice(Categories.indexOf(cat), 1);
 			}
@@ -45,3 +46,10 @@
 		{/if}
 	{/each}
 {/each}
+
+<style>
+	h2 {
+		color: var(--broken-white);
+		font-size: 24px;
+	}
+</style>

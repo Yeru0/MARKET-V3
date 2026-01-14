@@ -16,6 +16,8 @@
 	--white: #ffffffff;
 	--transparent-white: #ffffff1a;
 	--background-black: #111111ff;
+	--transparent-black: #00000075;
+	--backdrop: grayscale(0.5) blur(4px) brightness(0.4);
 }
 
 .title,
@@ -36,7 +38,7 @@ button {
 	padding: 8px 12px;
 	color: #fff;
 	border-radius: 6px;
-	transition: all x0.1s ease-in-out;
+	transition: all 0.1s ease-in-out;
 	background-color: var(--background-black);
 	cursor: pointer;
 }
@@ -44,6 +46,20 @@ button {
 button:hover {
 	background-color: var(--transparent-white);
 	color: #ffffffff;
+}
+
+button:disabled {
+	color: var(--broken-white);
+	background-color: var(--transparent-black);
+	cursor: not-allowed;
+}
+
+button.overlay-button {
+	width: 100vw;
+	height: 100vh;
+	background-color: transparent;
+	position: fixed;
+	backdrop-filter: blur(1px) grayscale(0.5);
 }
 
 a {
@@ -79,5 +95,29 @@ div.header {
 
 	span {
 		font-size: 28px;
+	}
+}
+
+div.overlay-bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: #00000075;
+	/* backdrop-filter: grayscale(0.5) brightness(0.6) blur(1px); */
+
+	display: grid;
+	place-content: center;
+
+	.popup {
+		background-color: var(--transparent-black);
+		backdrop-filter: blur(2px) brightness(0.7) grayscale(0.5);
+		box-shadow: 19px -18px 35px -33px rgba(97, 97, 97, 0.5) inset;
+		border-radius: 32px;
+		padding: 24px;
+
+		margin: auto;
+		width: fit-content;
 	}
 }

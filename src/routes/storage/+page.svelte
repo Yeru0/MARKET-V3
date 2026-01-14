@@ -102,49 +102,89 @@
 	<title>Market | Raktár</title>
 </svelte:head>
 
-<h1>Raktár</h1>
+<div class="body">
+	<div class="head">
+		<h1>Raktár</h1>
 
-{#if addPopupProps.show}
-	<ManagePopup
-		caller={addPopupProps.add}
-		bind:product={addPopupProps.newProduct}
-		type="new"
-		bind:show={addPopupProps.show}
-	></ManagePopup>
-{:else}
-	<button
-		onclick={() => {
-			addPopupProps.show = true;
-		}}>Új termék</button
-	>
-{/if}
-
-{#await renderableProducts}
-	<p>Termékek betöltése...</p>
-{:then value: ProductC[]}
-	{#each value as p}
-		<RenderProduct product={p}></RenderProduct>
-
-		{#if p.deletePopup}
-			<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}></DeletePopup>
+		{#if addPopupProps.show}
+			<div class="overlay-bg">
+				<button
+					onclick={() => {
+						addPopupProps.show = false;
+					}}
+					class="overlay-button"
+					aria-label="close overlay"
+				></button>
+				<ManagePopup
+					caller={addPopupProps.add}
+					bind:product={addPopupProps.newProduct}
+					type="new"
+					bind:show={addPopupProps.show}
+				></ManagePopup>
+			</div>
 		{:else}
 			<button
 				onclick={() => {
-					p.deletePopup = true;
-				}}>Törlés</button
+					addPopupProps.show = true;
+				}}>Új termék</button
 			>
 		{/if}
+	</div>
 
-		{#if p.updatePopup}
-			<ManagePopup caller={modPopupProps.modify} product={p} type="mod" bind:show={p.updatePopup}></ManagePopup>
-		{:else}
-			<button
-				onclick={() => {
-					p.updatePopup = true;
-				}}>Módosítás</button
-			>
-		{/if}
-	{/each}
-{:catch error}
-	<p>Hiba történt a termékek betöltése közben!</p>
-{/await}
+	{#await renderableProducts}
+		<p>Termékek betöltése...</p>
+	{:then value: ProductC[]}
+		{#each value as p}
+			<RenderProduct product={p}></RenderProduct>
+
+			{#if p.deletePopup}
+				<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}></DeletePopup>
+			{:else}
+				<button
+					onclick={() => {
+						p.deletePopup = true;
+					}}>Törlés</button
+				>
+			{/if}
+
+			{#if p.updatePopup}
+				<div class="overlay-bg">
+					<button
+						onclick={() => {
+							p.updatePopup = false;
+						}}
+						class="overlay-button"
+						aria-label="close overlay"
+					></button>
+					<ManagePopup caller={modPopupProps.modify} product={p} type="mod" bind:show={p.updatePopup}
+					></ManagePopup>
+				</div>
+			{:else}
+				<button
+					onclick={() => {
+						p.updatePopup = true;
+					}}>Módosítás</button
+				>
+			{/if}
+		{/each}
+	{:catch error}
+		<p>Hiba történt a termékek betöltése közben!</p>
+	{/await}
+</div>
+
+<style>
+	.head {
+		display: grid;
+		grid-template-columns: auto auto;
+
+		button {
+			place-self: end;
+		}
+	}
+
+	.popup {
+		width: 40%;
+		min-width: 500px;
+		max-width: 620px;
+	}
+</style>
