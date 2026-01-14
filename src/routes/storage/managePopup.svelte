@@ -282,15 +282,15 @@
 		</div>
 
 		<div class="finish">
+			<button type="submit" disabled={!validationBool}>
+				{type == "new" ? "Hozzáadás" : type == "mod" ? "Módosítás" : "Ezt hogy csináltad?"}
+			</button>
 			<button
 				type="reset"
 				onclick={() => {
 					show = false;
 				}}>Mégsem</button
 			>
-			<button type="submit" disabled={!validationBool}>
-				{type == "new" ? "Hozzáadás" : type == "mod" ? "Módosítás" : "Ezt hogy csináltad?"}
-			</button>
 		</div>
 	</form>
 </div>

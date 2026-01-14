@@ -138,7 +138,16 @@
 			<RenderProduct product={p}></RenderProduct>
 
 			{#if p.deletePopup}
-				<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}></DeletePopup>
+				<div class="overlay-bg">
+					<button
+						onclick={() => {
+							p.deletePopup = false;
+						}}
+						class="overlay-button"
+						aria-label="close overlay"
+					></button>
+					<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}></DeletePopup>
+				</div>
 			{:else}
 				<button
 					onclick={() => {
@@ -180,11 +189,5 @@
 		button {
 			place-self: end;
 		}
-	}
-
-	.popup {
-		width: 40%;
-		min-width: 500px;
-		max-width: 620px;
 	}
 </style>

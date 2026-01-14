@@ -112,12 +112,15 @@ div.overlay-bg {
 
 	.popup {
 		background-color: var(--transparent-black);
-		backdrop-filter: blur(2px) brightness(0.7) grayscale(0.5);
+		backdrop-filter: var(--backdrop);
 		box-shadow: 19px -18px 35px -33px rgba(97, 97, 97, 0.5) inset;
 		border-radius: 32px;
 		padding: 24px;
 
 		margin: auto;
 		width: fit-content;
+		width: 40%;
+		min-width: 500px;
+		max-width: 620px;
 	}
 }

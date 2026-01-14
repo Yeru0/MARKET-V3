@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { invalidateAll } from "$app/navigation";
 	import { invalid } from "$lib/client/invalidate.svelte.js";
-	import { ProductCategoryC, toCatC, type ProductC } from "$lib/client/objects.svelte.js";
+	import { type ProductC } from "$lib/client/objects.svelte.js";
 	import { priceList } from "$lib/client/priceList.svelte.js";
-	import { onMount } from "svelte";
+	import { onDestroy, onMount } from "svelte";
 
 	let { data } = $props();
 
 	let Categories = $state(JSON.parse(data.products));
 
 	let getData = () => {
+		console.log("invalidating");
+		clearTimeout(stateTimeout);
+
 		invalidateAll().then(() => {
 			Categories = JSON.parse(data.products);
 
@@ -22,10 +25,27 @@
 		});
 	};
 
+	let stateTimeout: NodeJS.Timeout;
+
+	// I'm not trusting that the invalidation works 100% of the time
+	// This is the backup function
+	let fallbackStateUpdate = () => {
+		// 300000 ms is 5 mins
+		stateTimeout = setTimeout(async () => {
+			await getData();
+			fallbackStateUpdate();
+		}, 300000);
+	};
+
 	onMount(async () => {
+		fallbackStateUpdate();
 		await getData();
 
 		invalid.add(getData);
+	});
+
+	onDestroy(() => {
+		clearTimeout(stateTimeout);
 	});
 </script>
 
