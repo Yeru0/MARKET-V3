@@ -141,20 +141,45 @@
 			<tr>
 				<td class="text">{basket.paySum} Ft</td>
 				<td>
-					<input type="number" name="payed" id="payed" bind:value={payed} max="100000000" min="1" required />
+					<div class="input-container">
+						<input
+							type="number"
+							name="payed"
+							id="payed"
+							bind:value={payed}
+							max="100000000"
+							min="1"
+							required
+						/>
+					</div>
 				</td>
 				<td>
-					<input type="number" name="tip" id="tip" bind:value={tip} max={payed - basket.paySum} min="0" />
+					<div class="input-container">
+						<input type="number" name="tip" id="tip" bind:value={tip} max={payed - basket.paySum} min="0" />
+					</div>
 				</td>
 				<td class="text">{payed - basket.paySum - tip} Ft</td>
 			</tr>
 		</tbody>
 	</table>
 
-	<button disabled={payed - basket.paySum - tip < 0} type="submit">Eladás</button>
+	<button class="sell-button" disabled={payed - basket.paySum - tip < 0} type="submit">Eladás</button>
 </form>
 
 <style>
+	form {
+		margin-bottom: 60px;
+
+		.sell-button {
+			width: 100%;
+			background-color: var(--transparent-white);
+		}
+		.sell-button:hover {
+			background-color: var(--accent);
+			color: #000000ff;
+		}
+	}
+
 	table {
 		width: 100%;
 		max-width: 700px;
@@ -187,10 +212,17 @@
 	}
 
 	.pay {
-		margin: 32px 0;
+		margin: 32px auto;
+
+		.input-container {
+			display: grid;
+			place-items: center;
+			width: 100%;
+		}
 
 		input {
 			width: 90%;
+			margin: auto;
 		}
 
 		.text {

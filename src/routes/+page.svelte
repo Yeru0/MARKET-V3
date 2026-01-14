@@ -51,6 +51,6 @@
 		display: grid;
 		grid-template-columns: auto;
 		grid-template-rows: repeat(3, auto);
-		gap: 60px;
+		gap: 24px;
 	}
 </style>

@@ -38,6 +38,7 @@ button {
 	border-radius: 6px;
 	transition: all x0.1s ease-in-out;
 	background-color: var(--background-black);
+	cursor: pointer;
 }
 
 button:hover {
@@ -50,7 +51,6 @@ a {
 }
 a.active {
 	color: var(--accent);
-	text-decoration: underline;
 }
 
 input {

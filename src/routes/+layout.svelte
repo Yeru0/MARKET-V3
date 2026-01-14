@@ -205,7 +205,7 @@
 
 	main {
 		transition: all ease-in-out 0.3s;
-		margin-top: 80px;
+		margin-top: 60px;
 		width: 100%;
 
 		& .root {

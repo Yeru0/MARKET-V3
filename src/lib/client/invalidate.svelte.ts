@@ -20,7 +20,7 @@ class InvalidateC {
 				this.functionList.forEach(async (fn) => {
 					await fn();
 				});
-			}, 100);
+			}, 300);
 		};
 	}
 
