@@ -18,8 +18,13 @@
 
 <div class="popup">
 	<div class="head">
-		<h2>Biztos törlöd {product.name} terméket?</h2>
-		<p>Ez nem visszafordítható!</p>
+		{#if product.soldAll > 0}
+			<h2>Nem törölheted {product.name} terméket!</h2>
+			<p>Nem lehet törölni {product.name} terméket, mert már vannak hozzá tartozó eladások!</p>
+		{:else}
+			<h2>Biztos törlöd {product.name} terméket?</h2>
+			<p>Ez nem visszafordítható!</p>
+		{/if}
 	</div>
 
 	<form
@@ -32,7 +37,7 @@
 		}}
 	>
 		<div class="finish">
-			<button type="submit">Termék törlése</button>
+			<button type="submit" disabled={product.soldAll > 0}>Termék törlése</button>
 			<button type="reset">Mégsem</button>
 		</div>
 	</form>
@@ -55,6 +60,11 @@
 				&[type="submit"] {
 					background-color: var(--accent);
 					color: #000000ff;
+				}
+
+				&:disabled {
+					background-color: var(--broken-white);
+					color: var(--background-black);
 				}
 			}
 		}
