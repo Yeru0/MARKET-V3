@@ -21,6 +21,7 @@ export class ProductC {
 	deletePopup: boolean = $state(false);
 
 	isActive: boolean = $state(true);
+	isDisabled: boolean = $state(true);
 
 	markupPriceSingle: number = $state(0);
 	staffMarkupPriceSingle: number = $state(0);

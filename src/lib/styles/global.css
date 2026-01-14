@@ -72,7 +72,7 @@ a.active {
 input {
 	background-color: transparent;
 	outline: none;
-	border: 1px solid var(--broken-white);
+	border: none;
 	background-color: var(--transparent-white);
 	padding: 4px;
 	border-radius: 6px;
@@ -112,7 +112,7 @@ div.overlay-bg {
 
 	.popup {
 		background-color: var(--transparent-black);
-		backdrop-filter: var(--backdrop);
+		backdrop-filter: grayscale(0.5) blur(3px) brightness(0.6);
 		box-shadow: 19px -18px 35px -33px rgba(97, 97, 97, 0.5) inset;
 		border-radius: 32px;
 		padding: 24px;

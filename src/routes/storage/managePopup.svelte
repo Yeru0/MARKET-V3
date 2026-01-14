@@ -13,11 +13,13 @@
 
 	let {
 		caller,
+		invalidator,
 		product = $bindable(),
 		type,
 		show = $bindable()
 	}: {
 		caller: (product: ProductC | obj) => Promise<ProductC | undefined>;
+		invalidator: () => void;
 		product: obj | ProductC;
 		type: "new" | "mod";
 		show: boolean;
@@ -289,6 +291,7 @@
 				type="reset"
 				onclick={() => {
 					show = false;
+					invalidator();
 				}}>Mégsem</button
 			>
 		</div>

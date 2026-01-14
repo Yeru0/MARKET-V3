@@ -137,6 +137,7 @@
 		transition: all ease-in-out 0.3s;
 		background-color: var(--transparent-white);
 		backdrop-filter: var(--backdrop);
+		z-index: 100;
 		height: 60px;
 		width: 100%;
 		position: sticky;

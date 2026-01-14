@@ -117,6 +117,7 @@
 				></button>
 				<ManagePopup
 					caller={addPopupProps.add}
+					invalidator={getData}
 					bind:product={addPopupProps.newProduct}
 					type="new"
 					bind:show={addPopupProps.show}
@@ -136,6 +137,15 @@
 	{:then value: ProductC[]}
 		{#each value as p}
 			<div class="product-body">
+				<button
+					class:glass={!p.isActive}
+					class:inactive={!p.isActive && p.isDisabled}
+					class:active={!p.isActive && !p.isDisabled}
+					aria-label="enable disabled product"
+					onclick={() => {
+						p.isDisabled = false;
+					}}
+				></button>
 				<div class="product-head">
 					<h2>{p.name}</h2>
 					<div class="action-buttons">
@@ -169,6 +179,7 @@
 								></button>
 								<ManagePopup
 									caller={modPopupProps.modify}
+									invalidator={getData}
 									product={p}
 									type="mod"
 									bind:show={p.updatePopup}
@@ -206,9 +217,31 @@
 		}
 	}
 
+	button.inactive {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	button.active {
+		opacity: 0;
+		visibility: hidden;
+	}
+	button.glass {
+		transition: all ease-in-out 0.3s !important;
+		background-color: var(--transparent-black);
+		backdrop-filter: blur(1px);
+		z-index: 10;
+		position: absolute;
+		border-radius: 24px;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
 	.product-body {
 		border: 4px dashed var(--broken-white);
 		border-radius: 24px;
+		position: relative;
 		padding: 24px;
 
 		.product-head {
