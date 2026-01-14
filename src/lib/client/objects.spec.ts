@@ -202,12 +202,12 @@ describe.sequential("Testing the product object", () => {
 		);
 		let salesFromDB = await readSaleDB();
 
-		let sales = await Products.getSales("next", { skip: 0, limit: 25 });
+		let sales = await Products.getSales("next", 25);
 
 		expect(sales.length).toEqual(25);
 		expect(sales.map((item) => item.id)).toEqual(salesFromDB.slice(0, 25).map((item) => item.id));
 
-		sales = await Products.getSales("next", { skip: 25, limit: 25 });
+		sales = await Products.getSales("next", 25);
 
 		expect(sales.length).toEqual(25);
 		expect(sales.map((item) => item.id)).toEqual(salesFromDB.slice(25, 50).map((item) => item.id));

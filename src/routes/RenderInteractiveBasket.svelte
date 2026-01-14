@@ -4,7 +4,8 @@
 	import { ProductC, type BasketC, type ProductsC } from "$lib/client/objects.svelte";
 	import { priceList } from "$lib/client/priceList.svelte";
 
-	let { basket, Products }: { basket: BasketC; Products: ProductsC } = $props();
+	let { basket, Products, invalidation }: { basket: BasketC; Products: ProductsC; invalidation: () => void } =
+		$props();
 
 	let handleAmtChange = (item: { amt: number; Product: ProductC }) => {
 		if (item.amt === 0 || !item.amt) {
@@ -29,6 +30,7 @@
 <form
 	onsubmit={async () => {
 		await Products.sell(basket.content, priceList.state === "par" ? "n" : "s", tip);
+		invalidation();
 		invalid.set();
 	}}
 >
@@ -228,12 +230,5 @@
 		.text {
 			text-align: center;
 		}
-	}
-
-	/* Hide arrows from number input fields */
-	input::-webkit-outer-spin-button,
-	input::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
 	}
 </style>

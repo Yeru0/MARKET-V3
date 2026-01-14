@@ -135,46 +135,56 @@
 		<p>Termékek betöltése...</p>
 	{:then value: ProductC[]}
 		{#each value as p}
-			<RenderProduct product={p}></RenderProduct>
-
-			{#if p.deletePopup}
-				<div class="overlay-bg">
-					<button
-						onclick={() => {
-							p.deletePopup = false;
-						}}
-						class="overlay-button"
-						aria-label="close overlay"
-					></button>
-					<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}></DeletePopup>
+			<div class="product-body">
+				<div class="product-head">
+					<h2>{p.name}</h2>
+					<div class="action-buttons">
+						{#if p.deletePopup}
+							<div class="overlay-bg">
+								<button
+									onclick={() => {
+										p.deletePopup = false;
+									}}
+									class="overlay-button"
+									aria-label="close overlay"
+								></button>
+								<DeletePopup remove={deletePopupProps.remove} product={p} bind:show={p.deletePopup}
+								></DeletePopup>
+							</div>
+						{:else}
+							<button
+								onclick={() => {
+									p.deletePopup = true;
+								}}>Törlés</button
+							>
+						{/if}
+						{#if p.updatePopup}
+							<div class="overlay-bg">
+								<button
+									onclick={() => {
+										p.updatePopup = false;
+									}}
+									class="overlay-button"
+									aria-label="close overlay"
+								></button>
+								<ManagePopup
+									caller={modPopupProps.modify}
+									product={p}
+									type="mod"
+									bind:show={p.updatePopup}
+								></ManagePopup>
+							</div>
+						{:else}
+							<button
+								onclick={() => {
+									p.updatePopup = true;
+								}}>Módosítás</button
+							>
+						{/if}
+					</div>
 				</div>
-			{:else}
-				<button
-					onclick={() => {
-						p.deletePopup = true;
-					}}>Törlés</button
-				>
-			{/if}
-
-			{#if p.updatePopup}
-				<div class="overlay-bg">
-					<button
-						onclick={() => {
-							p.updatePopup = false;
-						}}
-						class="overlay-button"
-						aria-label="close overlay"
-					></button>
-					<ManagePopup caller={modPopupProps.modify} product={p} type="mod" bind:show={p.updatePopup}
-					></ManagePopup>
-				</div>
-			{:else}
-				<button
-					onclick={() => {
-						p.updatePopup = true;
-					}}>Módosítás</button
-				>
-			{/if}
+				<RenderProduct product={p}></RenderProduct>
+			</div>
 		{/each}
 	{:catch error}
 		<p>Hiba történt a termékek betöltése közben!</p>
@@ -182,12 +192,29 @@
 </div>
 
 <style>
+	.body {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
 	.head {
 		display: grid;
 		grid-template-columns: auto auto;
 
 		button {
 			place-self: end;
+		}
+	}
+
+	.product-body {
+		border: 4px dashed var(--broken-white);
+		border-radius: 24px;
+		padding: 24px;
+
+		.product-head {
+			display: flex;
+			justify-content: space-between;
+			margin: 12px;
 		}
 	}
 </style>

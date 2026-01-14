@@ -41,7 +41,8 @@
 	</div>
 	<div class="basket">
 		{#if Products?.basket.content.length > 0}
-			<RenderInteractiveBasket basket={Products.basket} {Products}></RenderInteractiveBasket>
+			<RenderInteractiveBasket basket={Products.basket} {Products} invalidation={getData}
+			></RenderInteractiveBasket>
 		{/if}
 	</div>
 </div>

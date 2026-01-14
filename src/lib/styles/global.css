@@ -124,3 +124,10 @@ div.overlay-bg {
 		max-width: 620px;
 	}
 }
+
+/* Hide arrows from number input fields */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
