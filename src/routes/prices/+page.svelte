@@ -10,7 +10,6 @@
 	let Categories = $state(JSON.parse(data.products));
 
 	let getData = () => {
-		console.log("invalidating");
 		clearTimeout(stateTimeout);
 
 		invalidateAll().then(() => {
@@ -58,7 +57,7 @@
 		<span class="material-symbols-outlined accent"> grocery </span>
 		<h1 class="title">Termékek</h1>
 	</div>
-	
+
 	<div class="content">
 		{#each Categories as cat}
 			<div class="cat">
@@ -68,7 +67,9 @@
 						<div class="prod">
 							<div class="content">
 								<p>{prod.name}</p>
-								<p>{priceList.state === "par" ? prod.markupPriceSingle : prod.staffMarkupPriceSingle} Ft</p>
+								<p>
+									{priceList.state === "par" ? prod.markupPriceSingle : prod.staffMarkupPriceSingle} Ft
+								</p>
 							</div>
 						</div>
 					{/if}
@@ -84,19 +85,22 @@
 	}
 
 	.body {
-		height: calc(100vh - (120px));
+		height: calc(100vh - (160px));
 	}
 
 	.content {
 		width: 100%;
 		height: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		flex-direction: column;
+		column-count: 2; /* Number of columns */
+		column-gap: 24px; /* Space between columns */
+		width: 100%;
+		gap: 12px;
 
 		.cat {
-			width: 100%;
-			height: 100%;
+			break-inside: avoid-column;
+			margin-bottom: 20px;
+			display: flex;
+			flex-direction: column;
 			display: flex;
 			flex-direction: column;
 			flex: 1;
@@ -105,7 +109,7 @@
 			flex-wrap: wrap;
 			.prod {
 				display: flex;
-				
+
 				.content {
 					display: flex;
 					flex-direction: row;
@@ -118,5 +122,4 @@
 			}
 		}
 	}
-
 </style>
