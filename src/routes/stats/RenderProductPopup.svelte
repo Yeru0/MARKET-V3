@@ -3,7 +3,7 @@
 	import type { saleEventProductsWA } from "$lib/types/db";
 	import RenderBasket from "./RenderBasket.svelte";
 
-	let { saleEventProducts, sale }: { saleEventProducts: saleEventProductsWA[]; sale: SaleC } = $props();
+	let { saleEventProducts, sale, showPopup = $bindable() }: { saleEventProducts: saleEventProductsWA[]; sale: SaleC, showPopup: boolean} = $props();
 
 	let basket = new BasketC();
 
@@ -13,4 +13,6 @@
 	}
 </script>
 
-<RenderBasket {basket} {sale}></RenderBasket>
+<div class="popup">
+	<RenderBasket {basket} {sale} bind:showPopup = {showPopup}></RenderBasket>
+</div>

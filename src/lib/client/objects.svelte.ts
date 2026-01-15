@@ -430,6 +430,7 @@ export class ProductsC {
 
 	async delete(id: string = "all"): Promise<{ count: number }> {
 		let returnValue: { count: number };
+		if (this.products[this.products.map((item) => item.id).indexOf(id)].sales.length > 0) return {count: 0}
 		switch (id) {
 			case "all":
 				returnValue = await this.productsDB.delete();

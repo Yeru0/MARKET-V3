@@ -104,7 +104,12 @@
 
 <div class="body">
 	<div class="head">
-		<h1>Raktár</h1>
+		<div class="header">
+			<span class="material-symbols-outlined">
+				archive
+			</span>
+			<h1>Raktár</h1>
+		</div>
 
 		{#if addPopupProps.show}
 			<div class="overlay-bg">
@@ -207,6 +212,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 24px;
+		margin-bottom: 24px;
 	}
 	.head {
 		display: grid;

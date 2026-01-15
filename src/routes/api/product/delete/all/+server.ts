@@ -7,6 +7,10 @@ export const DELETE = async (): Promise<Response> => {
 		statusText: "Database delete all products action could not be performed!"
 	});
 
+	let sales = await db.saleEventProduct.findMany()
+
+	if (sales.length > 0) return response
+
 	await db.product
 		.deleteMany()
 		.then(async (result: BatchPayload) => {

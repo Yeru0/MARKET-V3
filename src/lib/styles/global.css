@@ -84,10 +84,9 @@ input {
 div.header {
 	margin-bottom: 24px;
 	height: fit-content;
-	display: grid;
-	grid-template-columns: repeat(2, auto);
-	width: min-content;
-	place-items: top;
+	display: flex;
+	align-items: baseline;
+	gap: 2px;
 
 	h2 {
 		padding: 4px;
@@ -95,6 +94,8 @@ div.header {
 
 	span {
 		font-size: 28px;
+		color: var(--accent) !important;
+		align-self: center;
 	}
 }
 
@@ -105,7 +106,7 @@ div.overlay-bg {
 	width: 100vw;
 	height: 100vh;
 	background-color: #00000075;
-	/* backdrop-filter: grayscale(0.5) brightness(0.6) blur(1px); */
+	z-index: 1000;
 
 	display: grid;
 	place-content: center;

@@ -16,7 +16,7 @@
 
 		const year = date.getFullYear();
 		const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-		const day = date.getDate() + 1 < 10 ? `0${date.getDate() + 1}` : date.getDate() + 1;
+		const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
 
 		if (!options.useDays && !options.useRelativeDays) return `${year}. ${month}. ${day}.`;
 
@@ -60,21 +60,67 @@
 	};
 </script>
 
-<p>
-	Új {sale.saleEventProducts.length > 1
-		? "termékek lettek"
-		: sale.saleEventProducts[0].amount > 1
+<div class="body">
+		<button
+			onclick={() => {
+				sale.productsPopup = !sale.productsPopup;
+			}}>
+	<p>
+		Új {sale.saleEventProducts.length > 1
 			? "termékek lettek"
-			: "termék lett"}
-</p>
-<p>{sale.to === "n" ? "résztvevőnek eladva" : sale.to === "s" ? "szervezőnek eladva" : "kivéve a rendszerből"}</p>
-<p>{transposeDate(sale.timestamp, { useRelativeDays: true, useDays: true, usePostfix: true }).toLowerCase()}</p>
-<button
-	onclick={() => {
-		sale.productsPopup = !sale.productsPopup;
-	}}>Részletek</button
->
+			: sale.saleEventProducts[0].amount > 1
+				? "termékek lettek"
+				: "termék lett"}
+	</p>
+	<p>{sale.to === "n" ? "résztvevőnek eladva" : sale.to === "s" ? "szervezőnek eladva" : "kivéve a rendszerből"}</p>
+	<p>{transposeDate(sale.timestamp, { useRelativeDays: true, useDays: true, usePostfix: true }).toLowerCase()}</p>
+		<span class="material-symbols-outlined">
+			open_in_new
+		</span>
+	</button>
+</div>
 
 {#if sale.productsPopup}
-	<RenderProductPopup saleEventProducts={sale.saleEventProducts} {sale}></RenderProductPopup>
+	<div class="overlay-bg">
+		<button
+			onclick={() => {
+				sale.productsPopup = false;
+			}}
+			class="overlay-button"
+			aria-label="close overlay"
+		></button>
+		<RenderProductPopup saleEventProducts={sale.saleEventProducts} {sale} bind:showPopup={sale.productsPopup}></RenderProductPopup>
+	</div>
 {/if}
+
+
+<style>
+
+	.body button {
+		display: flex;
+		width: 90%;
+		margin: auto;
+		gap: 4px;
+		align-items: baseline;
+		padding: 2px;
+		cursor: pointer;
+		padding: 0;
+		background-color: transparent;
+		color: var(--broken-white);
+
+		span {
+			font-size: 18px;
+			color: inherit;
+		}
+		
+		p {
+			color: inherit;
+		}
+
+		&:hover {
+			color: #fff;
+		}
+	}
+
+
+</style>
