@@ -53,23 +53,70 @@
 	<title>Market | Termékek</title>
 </svelte:head>
 
-<h1>Termékek</h1>
-
-{#each Categories as cat}
-	<h2>{cat.name}</h2>
-	{#each cat.Products as prod}
-		{#if prod.isActive}
-			<div>
-				<p>{prod.name}</p>
-				<p>{priceList.state === "par" ? prod.markupPriceSingle : prod.staffMarkupPriceSingle}</p>
+<div class="body">
+	<div class="header">
+		<span class="material-symbols-outlined accent"> grocery </span>
+		<h1 class="title">Termékek</h1>
+	</div>
+	
+	<div class="content">
+		{#each Categories as cat}
+			<div class="cat">
+				<h2>{cat.name}</h2>
+				{#each cat.Products as prod}
+					{#if prod.isActive}
+						<div class="prod">
+							<div class="content">
+								<p>{prod.name}</p>
+								<p>{priceList.state === "par" ? prod.markupPriceSingle : prod.staffMarkupPriceSingle} Ft</p>
+							</div>
+						</div>
+					{/if}
+				{/each}
 			</div>
-		{/if}
-	{/each}
-{/each}
+		{/each}
+	</div>
+</div>
 
 <style>
 	h2 {
-		color: var(--broken-white);
 		font-size: 24px;
 	}
+
+	.body {
+		height: calc(100vh - (120px));
+	}
+
+	.content {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+
+		.cat {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			row-gap: 8px;
+			column-gap: 18px;
+			flex-wrap: wrap;
+			.prod {
+				display: flex;
+				
+				.content {
+					display: flex;
+					flex-direction: row;
+					padding-bottom: 2px;
+					justify-content: space-between;
+					margin: auto;
+					border-bottom: 1px solid var(--broken-white);
+					width: 100%;
+				}
+			}
+		}
+	}
+
 </style>
