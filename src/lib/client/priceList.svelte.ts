@@ -1,4 +1,5 @@
 import { PUBLIC_WEBSOCKET_PORT, PUBLIC_APP_IP_ADDRESS } from "$env/static/public";
+import { showToast } from "./toastController.svelte";
 
 class PriceListStateC {
 	state: "org" | "par" = $state("par");
@@ -36,6 +37,8 @@ class PriceListStateC {
 	set(newState: "org" | "par") {
 		this.state = newState;
 		this.ws?.send(JSON.stringify({ id: this.wsID, state: newState }));
+
+		showToast(newState === "par" ? "Résztvevői árlista!" : "Szervezői árlista!");
 
 		this.isOrg = newState === "org" ? true : false;
 		this.isPar = newState === "par" ? true : false;

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { keyboardEvents } from "$lib/client/keyboardEvents";
 	import type { SaleC } from "$lib/client/objects.svelte";
 	import RenderProductPopup from "./RenderProductPopup.svelte";
 
@@ -58,25 +59,32 @@
 		if (!options.useDays) return `${year}. ${month}. ${day}.`;
 		return `${year}. ${month}. ${day}., ${dayWithName}`;
 	};
+
+	$effect(() => {
+		if (keyboardEvents.escape) {
+			sale.productsPopup = false;
+		}
+	});
 </script>
 
 <div class="body">
-		<button
-			onclick={() => {
-				sale.productsPopup = !sale.productsPopup;
-			}}>
-	<p>
-		Új {sale.saleEventProducts.length > 1
-			? "termékek lettek"
-			: sale.saleEventProducts[0].amount > 1
+	<button
+		onclick={() => {
+			sale.productsPopup = !sale.productsPopup;
+		}}
+	>
+		<p>
+			Új {sale.saleEventProducts.length > 1
 				? "termékek lettek"
-				: "termék lett"}
-	</p>
-	<p>{sale.to === "n" ? "résztvevőnek eladva" : sale.to === "s" ? "szervezőnek eladva" : "kivéve a rendszerből"}</p>
-	<p>{transposeDate(sale.timestamp, { useRelativeDays: true, useDays: true, usePostfix: true }).toLowerCase()}</p>
-		<span class="material-symbols-outlined">
-			open_in_new
-		</span>
+				: sale.saleEventProducts[0].amount > 1
+					? "termékek lettek"
+					: "termék lett"}
+		</p>
+		<p>
+			{sale.to === "n" ? "résztvevőnek eladva" : sale.to === "s" ? "szervezőnek eladva" : "kivéve a rendszerből"}
+		</p>
+		<p>{transposeDate(sale.timestamp, { useRelativeDays: true, useDays: true, usePostfix: true }).toLowerCase()}</p>
+		<span class="material-symbols-outlined"> open_in_new </span>
 	</button>
 </div>
 
@@ -89,13 +97,12 @@
 			class="overlay-button"
 			aria-label="close overlay"
 		></button>
-		<RenderProductPopup saleEventProducts={sale.saleEventProducts} {sale} bind:showPopup={sale.productsPopup}></RenderProductPopup>
+		<RenderProductPopup saleEventProducts={sale.saleEventProducts} {sale} bind:showPopup={sale.productsPopup}
+		></RenderProductPopup>
 	</div>
 {/if}
 
-
 <style>
-
 	.body button {
 		display: flex;
 		width: 90%;
@@ -112,7 +119,7 @@
 			font-size: 18px;
 			color: inherit;
 		}
-		
+
 		p {
 			color: inherit;
 		}
@@ -121,6 +128,4 @@
 			color: #fff;
 		}
 	}
-
-
 </style>

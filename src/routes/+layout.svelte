@@ -6,6 +6,7 @@
 	import { afterNavigate } from "$app/navigation";
 	import { onMount } from "svelte";
 	import { page } from "$app/state";
+	import Toast from "./Toast.svelte";
 
 	let { children }: LayoutProps = $props();
 
@@ -69,6 +70,7 @@
 		if (e.key == "Shift") keyboardEvents.set("s", true);
 		if (e.key == "Control") keyboardEvents.set("c", true);
 		if (e.key == "Alt") keyboardEvents.set("a", true);
+		if (e.key == "Escape") keyboardEvents.set("e", true);
 		if (e.key == " ") keyboardEvents.set("p", true);
 
 		if (keyboardEvents.shift && keyboardEvents.space) {
@@ -80,6 +82,7 @@
 		if (e.key == "Shift") keyboardEvents.set("s", false);
 		if (e.key == "Control") keyboardEvents.set("c", false);
 		if (e.key == "Alt") keyboardEvents.set("a", false);
+		if (e.key == "Escape") keyboardEvents.set("e", false);
 		if (e.key == " ") keyboardEvents.set("p", false);
 	}}
 	onmousemove={() => {
@@ -95,6 +98,8 @@
 		else floatingHeader = false;
 	}}
 />
+
+<Toast></Toast>
 
 <header class:hide={!showHeader} class:float={floatingHeader}>
 	<div class="logo">

@@ -35,6 +35,7 @@ export class ProductDB {
 				return (await response.json()) as { count: number };
 			default:
 				response = await api("product/delete/one", "DELETE", { id });
+
 				this.products = await this.read();
 				return (await response.json()) as { count: number };
 		}

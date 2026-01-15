@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { keyboardEvents } from "$lib/client/keyboardEvents";
 	import { ProductC } from "$lib/client/objects.svelte";
 	import { onDestroy, onMount } from "svelte";
 
@@ -14,12 +15,18 @@
 	onDestroy(() => {
 		document.body.classList.remove("noscroll");
 	});
+
+	$effect(() => {
+		if (keyboardEvents.escape) {
+			show = false;
+		}
+	});
 </script>
 
 <div class="popup">
 	<div class="head">
 		{#if product.soldAll > 0}
-			<h2>Nem törölheted {product.name} terméket!</h2>
+			<h2>Ezt a terméket nem törölheted!</h2>
 			<p>Nem lehet törölni {product.name} terméket, mert már vannak hozzá tartozó eladások!</p>
 		{:else}
 			<h2>Biztos törlöd {product.name} terméket?</h2>

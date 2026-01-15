@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { keyboardEvents } from "$lib/client/keyboardEvents";
 	import { ProductC, ProductsC } from "$lib/client/objects.svelte";
 	import { onDestroy, onMount } from "svelte";
 
@@ -138,6 +139,12 @@
 				supplyPrice: 0,
 				category: ""
 			};
+		}
+	});
+
+	$effect(() => {
+		if (keyboardEvents.escape) {
+			show = false;
 		}
 	});
 </script>

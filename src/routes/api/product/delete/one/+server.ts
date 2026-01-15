@@ -30,9 +30,13 @@ export const DELETE = async ({ request }: RequestEvent): Promise<Response> => {
 			return response;
 		}
 
-		let sales = await db.saleEventProduct.findMany()
-		
-		if (sales.length > 0) return response
+		let sales = await db.saleEventProduct.findMany({
+			where: {
+				productId: json.id
+			}
+		});
+
+		if (sales.length > 0) return response;
 
 		await db.product
 			.delete({

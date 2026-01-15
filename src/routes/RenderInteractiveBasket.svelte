@@ -3,6 +3,7 @@
 	import { keyboardEvents } from "$lib/client/keyboardEvents";
 	import { ProductC, type BasketC, type ProductsC } from "$lib/client/objects.svelte";
 	import { priceList } from "$lib/client/priceList.svelte";
+	import { showToast } from "$lib/client/toastController.svelte";
 
 	let { basket, Products, invalidation }: { basket: BasketC; Products: ProductsC; invalidation: () => void } =
 		$props();
@@ -24,13 +25,17 @@
 		if (tip > payed - basket.paySum && payed > basket.paySum) {
 			tip = payed - basket.paySum;
 		}
+		console.log(basket.content[0].amt);
 	});
 </script>
 
 <form
 	onsubmit={async () => {
+		let moreThanOne = basket.content.length > 1 || basket.content[0].amt > 1;
 		await Products.sell(basket.content, priceList.state === "par" ? "n" : "s", tip);
 		invalidation();
+
+		showToast(moreThanOne ? "A termékek sikeresen eladva!" : "A termék sikeresen eladva!");
 		invalid.set();
 	}}
 >
@@ -174,11 +179,21 @@
 
 		.sell-button {
 			width: 100%;
-			background-color: var(--transparent-white);
-		}
-		.sell-button:hover {
-			background-color: var(--accent);
-			color: #000000ff;
+			transition: all ease-in-out 0.3s;
+
+			&[type="submit"]:not(:disabled) {
+				background-color: var(--accent);
+				color: #000000ff;
+				&:hover {
+					transform: scale(1.01);
+					box-shadow: 0px 0px 15px 7px #ffea0026;
+				}
+			}
+
+			&:disabled {
+				background-color: var(--broken-white);
+				color: var(--background-black);
+			}
 		}
 	}
 

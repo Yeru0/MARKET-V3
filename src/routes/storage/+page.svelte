@@ -6,6 +6,7 @@
 	import RenderProduct from "./renderProduct.svelte";
 	import { onMount } from "svelte";
 	import { invalid } from "$lib/client/invalidate.svelte";
+	import { showToast } from "$lib/client/toastController.svelte";
 
 	const { data } = $props();
 
@@ -54,6 +55,7 @@
 			await getData();
 
 			invalid.set();
+			showToast("Termék létrehozva!");
 
 			return newProd;
 		}
@@ -67,6 +69,7 @@
 			let removedProduct = await Products.delete(product.id);
 			await getData();
 			invalid.set();
+			showToast("Termék törölve!");
 
 			product.deletePopup = false;
 
@@ -90,6 +93,7 @@
 			});
 			await getData();
 			invalid.set();
+			showToast("Termék módosítva!");
 
 			product.updatePopup = false;
 
@@ -105,9 +109,7 @@
 <div class="body">
 	<div class="head">
 		<div class="header">
-			<span class="material-symbols-outlined">
-				archive
-			</span>
+			<span class="material-symbols-outlined"> archive </span>
 			<h1>Raktár</h1>
 		</div>
 
@@ -152,7 +154,10 @@
 					}}
 				></button>
 				<div class="product-head">
-					<h2>{p.name}</h2>
+					<div class="product-header">
+						<h2>{p.name}</h2>
+						<p>{p.category}</p>
+					</div>
 					<div class="action-buttons">
 						{#if p.deletePopup}
 							<div class="overlay-bg">
@@ -208,6 +213,16 @@
 </div>
 
 <style>
+	.product-header {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.action-buttons {
+		display: flex;
+		align-items: center;
+	}
+
 	.body {
 		display: flex;
 		flex-direction: column;
@@ -253,7 +268,7 @@
 		.product-head {
 			display: flex;
 			justify-content: space-between;
-			margin: 12px;
+			margin-bottom: 12px;
 		}
 	}
 </style>

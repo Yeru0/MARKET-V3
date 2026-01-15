@@ -430,7 +430,7 @@ export class ProductsC {
 
 	async delete(id: string = "all"): Promise<{ count: number }> {
 		let returnValue: { count: number };
-		if (this.products[this.products.map((item) => item.id).indexOf(id)].sales.length > 0) return {count: 0}
+		if (this.products[this.products.map((item) => item.id).indexOf(id)].sales.length > 0) return { count: 0 };
 		switch (id) {
 			case "all":
 				returnValue = await this.productsDB.delete();
@@ -496,8 +496,9 @@ export class KeyboardEvents {
 	ctrl: boolean = $state(false);
 	alt: boolean = $state(false);
 	space: boolean = $state(false);
+	escape: boolean = $state(false);
 
-	set(t: "s" | "c" | "a" | "p", v: boolean) {
+	set(t: "s" | "c" | "a" | "p" | "e", v: boolean) {
 		switch (t) {
 			case "s":
 				this.shift = v;
@@ -510,6 +511,9 @@ export class KeyboardEvents {
 				break;
 			case "p":
 				this.space = v;
+				break;
+			case "e":
+				this.escape = v;
 				break;
 		}
 	}
