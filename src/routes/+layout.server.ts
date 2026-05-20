@@ -2,7 +2,7 @@ import { PUBLIC_WEBSOCKET_PORT } from "$env/static/public";
 import { WebSocketServer, WebSocket } from "ws";
 
 const PriceListWss = new WebSocketServer({ port: parseInt(PUBLIC_WEBSOCKET_PORT) });
-const InvalidateWss = new WebSocketServer({ port: parseInt(PUBLIC_WEBSOCKET_PORT + 1) });
+const InvalidateWss = new WebSocketServer({ port: parseInt(PUBLIC_WEBSOCKET_PORT) + 1 });
 
 let PriceListClients: {
 	id: string;

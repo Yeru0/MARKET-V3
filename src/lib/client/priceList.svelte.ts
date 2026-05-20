@@ -9,7 +9,7 @@ class PriceListStateC {
 	private wsID: string = "";
 
 	constructor() {
-		this.ws = new WebSocket(`ws://${PUBLIC_APP_IP_ADDRESS}:${PUBLIC_WEBSOCKET_PORT}`);
+		this.ws = new WebSocket(`ws://${PUBLIC_APP_IP_ADDRESS}:${parseInt(PUBLIC_WEBSOCKET_PORT)}`);
 
 		this.ws.onerror = (e) => {
 			console.error('Opening of the websocket "priceListState" failed. \n', e);

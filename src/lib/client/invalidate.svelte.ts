@@ -1,11 +1,15 @@
 import { PUBLIC_WEBSOCKET_PORT, PUBLIC_APP_IP_ADDRESS } from "$env/static/public";
 
+import { browser } from "$app/environment";
+
 class InvalidateC {
 	private ws?: WebSocket;
 	private functionList: (() => void)[] = [];
 
 	constructor() {
-		this.ws = new WebSocket(`ws://${PUBLIC_APP_IP_ADDRESS}:${PUBLIC_WEBSOCKET_PORT + 1}`);
+		if (!browser) return;
+
+		this.ws = new WebSocket(`ws://${PUBLIC_APP_IP_ADDRESS}:${parseInt(PUBLIC_WEBSOCKET_PORT) + 1}`);
 
 		this.ws.onerror = (e) => {
 			console.error('Opening of the websocket "priceListState" failed. \n', e);
